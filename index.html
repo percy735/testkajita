@@ -515,8 +515,14 @@ header {
 input[type=text], input[type=number], input[type=date] {
   background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
   padding: 10px 14px; font-family: var(--sans); font-size: 14px; color: var(--k-text);
-  outline: none; transition: all 0.2s; width: 100%; -webkit-appearance: none;
+  outline: none; transition: all 0.2s; width: 100%;
 }
+/* Quitar flechitas solo de inputs numéricos */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+/* Fecha: ocultar ícono nativo del navegador */
+input[type=date]::-webkit-calendar-picker-indicator { opacity: 0; position: absolute; right: 0; width: 100%; cursor: pointer; }
 input::placeholder { color: var(--k-text-3); opacity: 0.6; }
 input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accent-l); background: rgba(0,0,0,0.4); }
 
@@ -1598,10 +1604,37 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .num-fields-row {
   display: grid;
-  grid-template-columns: 80px 1fr 130px;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-.fld-qty, .fld-unit, .fld-amt { min-width: 0; }
+.num-stepper {
+  display: flex; align-items: center;
+  background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; overflow: hidden; width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.num-stepper:focus-within {
+  border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accent-l);
+}
+.num-stepper input {
+  flex: 1; min-width: 0; border: none; background: transparent;
+  text-align: center; padding: 10px 0; font-size: 15px;
+  font-family: var(--sans); color: var(--k-text); outline: none;
+  width: 100%;
+}
+.num-stepper input:focus { box-shadow: none; }
+.step-btn {
+  width: 32px; height: 44px; flex-shrink: 0;
+  background: transparent; border: none;
+  color: var(--k-text-3); font-size: 20px; font-weight: 300;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  padding-bottom: 2px;
+}
+.step-btn:first-child { border-right: 1px solid rgba(255,255,255,0.07); }
+.step-btn:last-child  { border-left:  1px solid rgba(255,255,255,0.07); }
+.step-btn:hover { background: rgba(196,240,66,0.1); color: var(--k-accent); }
+.step-btn:active { background: rgba(196,240,66,0.18); }
 
 
 /* ══ MOBILE BOTTOM NAV ══ */
@@ -1696,7 +1729,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   /* ── FORM ── */
   .form-wrap { padding: 16px 14px; border-radius: 18px; }
   .form-row-main { flex-direction: column; gap: 8px; }
-  .num-fields-row { grid-template-columns: 80px 1fr 110px; gap: 7px; }
+  .num-fields-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .step-btn { width: 28px; height: 42px; }
+  .num-stepper input { font-size:14px; padding: 10px 0; }
   .form-row { grid-template-columns: 1fr; }
   .fld label { font-size: 9px; letter-spacing: .05em; }
   .fld input  { font-size: 14px; padding: 10px; }
@@ -1776,7 +1811,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v12.7</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.3</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -1944,7 +1979,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- ACCIONES: lupa + tuerca + añadir + imprimir -->
     <div class="nav-actions">
       <!-- Número de versión visible -->
-      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v12.7</div>
+      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.3</div>
       <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar movimiento">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -1957,7 +1992,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         </svg>
       </button>
       <button class="btn-nav btn-export" onclick="showPDFPreview()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         <span class="btn-txt">Imprimir</span>
       </button>
       <button class="btn-nav" onclick="handleLogout()" style="background:rgba(255,107,107,0.1);border-color:var(--k-expense);color:var(--k-expense);" title="Cerrar sesión">
@@ -2014,15 +2049,19 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <div class="num-fields-row">
         <div class="fld fld-qty">
           <label>Cant.</label>
-          <input type="number" id="iQty" placeholder="—" min="1" step="1" style="text-align:center;" oninput="recalcAmount()">
+          <div class="num-stepper">
+            <button type="button" class="step-btn" onclick="stepField('iQty',-1)">−</button>
+            <input type="number" id="iQty" placeholder="1" min="1" step="1" oninput="recalcAmount()">
+            <button type="button" class="step-btn" onclick="stepField('iQty',1)">+</button>
+          </div>
         </div>
         <div class="fld fld-unit">
           <label>P. Unit. (S/)</label>
-          <input type="number" id="iUnitPrice" placeholder="—" min="0" step="0.01" oninput="recalcAmount()">
+          <input type="number" id="iUnitPrice" placeholder="0.00" min="0" step="0.01" oninput="recalcAmount()">
         </div>
         <div class="fld fld-amt">
           <label>Monto (S/)</label>
-          <input type="number" id="iAmt" placeholder="0.00" min="0" step="0.01">
+          <input type="number" id="iAmt" placeholder="0.00" min="0" step="0.01" oninput="recalcUnitFromAmt()">
         </div>
       </div>
     </div>
@@ -2556,9 +2595,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
     Clientes
   </button>
-  <button class="mbn-center" onclick="document.querySelector('.form-wrap').scrollIntoView({behavior:'smooth'})">
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#0A0B0E" stroke-width="2.8" stroke-linecap="round"><line x1="13" y1="3" x2="13" y2="23"/><line x1="3" y1="13" x2="23" y2="13"/></svg>
-  </button>
   <button class="mbn-btn" onclick="openPanel('cred')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     Créditos
@@ -2906,6 +2942,9 @@ function selectProduct(id) {
   const p = products.find(x=>String(x.id)===String(id)); if(!p) return;
   document.getElementById('iDesc').value = p.name;
   document.getElementById('iUnitPrice').value = p.price.toFixed(2);
+  // Poner cantidad en 1 por defecto si está vacía o en 0
+  const qtyEl = document.getElementById('iQty');
+  if(!qtyEl.value || qtyEl.value === '0') qtyEl.value = '1';
   productPickerOpen = false;
   _portalClose('productChips');
   document.getElementById('ftbProdIcon').classList.remove('open');
@@ -3754,6 +3793,25 @@ function setPay(p) {
   const cls = {cash:'pc', yape:'py', plin:'pp', transfer:'pt', card:'pca'};
   document.querySelectorAll('.pay-btn').forEach(b=>b.className='pay-btn'+(b.dataset.pay===p?' '+cls[p]:''));
 }
+function stepField(id,delta){
+  const el=document.getElementById(id);
+  const val=parseFloat(el.value)||0;
+  const mn=parseFloat(el.min)||0;
+  const st=parseFloat(el.step)||1;
+  const dec=st<1?2:0;
+  el.value=Math.max(mn,val+delta).toFixed(dec);
+  recalcAmount();
+}
+
+// Cuando el usuario cambia el Monto, recalcula P.Unit
+function recalcUnitFromAmt(){
+  const amt = parseFloat(document.getElementById('iAmt').value)||0;
+  const qty = parseFloat(document.getElementById('iQty').value)||1;
+  if(amt > 0){
+    document.getElementById('iUnitPrice').value = (amt / qty).toFixed(2);
+  }
+}
+
 function recalcAmount() {
   const qty  = parseFloat(document.getElementById('iQty').value);
   const unit = parseFloat(document.getElementById('iUnitPrice').value);
@@ -4082,6 +4140,111 @@ function generateReceipt(id) {
   setTimeout(() => window.print(), 400);
 }
 
+
+async function downloadReport(){
+  toast('⏳ Preparando PDF...');
+
+  // Generar HTML del reporte en memoria (sin mostrarlo)
+  const dayEntries = entries.filter(e=>e.date===activeDay).sort((a,b)=>(b.time||'').localeCompare(a.time||''));
+  const inc  = dayEntries.filter(e=>e.type==='income'&&!e.credit).reduce((s,e)=>s+e.amount,0);
+  const exp  = dayEntries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const cred = dayEntries.filter(e=>e.credit).reduce((s,e)=>s+e.amount,0);
+  const bal  = inc - exp;
+  const cashInc = dayEntries.filter(e=>e.type==='income'&&!e.credit&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
+  const cashExp = dayEntries.filter(e=>e.type==='expense'&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
+  const DIG=['yape','plin','transfer','card'];
+  const digInc  = dayEntries.filter(e=>e.type==='income'&&!e.credit&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
+  const digExp  = dayEntries.filter(e=>e.type==='expense'&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
+
+  const f = n => 'S/ '+n.toFixed(2);
+  const dateObj = new Date(activeDay+'T12:00:00');
+  const dateStr = dateObj.toLocaleDateString('es-PE',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).replace(/^\w/,c=>c.toUpperCase());
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+  const bizName = bizProfile?.name || '';
+
+  const rowsHTML = dayEntries.length ? dayEntries.map(e=>{
+    const payLabel = {cash:'Efectivo',yape:'Yape',plin:'Plin',transfer:'Transferencia',card:'Tarjeta',credit:'Crédito'}[e.pay]||e.pay;
+    const sign = e.credit ? '' : (e.type==='expense'?'−':'+');
+    const color = e.credit?'#B45309':(e.type==='expense'?'#EF4444':'#16A34A');
+    return `<tr><td style="color:#6B7280;font-size:11px;font-family:monospace;padding:10px 8px;">${e.time?.substring(0,5)||''}</td>
+      <td style="padding:10px 8px;font-weight:600;">${e.desc}${e.client?`<br><span style="font-size:11px;color:#6B7280;font-weight:400;">${e.client}</span>`:''}</td>
+      <td style="padding:10px 8px;"><span style="background:#F3F4F6;border-radius:99px;padding:3px 10px;font-size:11px;font-family:monospace;">${payLabel}</span></td>
+      <td style="padding:10px 8px;text-align:right;font-family:monospace;font-weight:700;color:${color};">${sign} ${f(e.amount)}</td></tr>`;
+  }).join('') : `<tr><td colspan="4" style="text-align:center;padding:24px;color:#9CA3AF;font-style:italic;">Sin movimientos en esta fecha.</td></tr>`;
+
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Reporte Kajita ${activeDay}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#fff;color:#111;}
+@page{margin:12mm;size:A4 portrait;}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}
+</style></head>
+<body>
+<div style="background:#F0F4F0;border-radius:10px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#111;">Ka<span style="color:#84cc16;">j</span>ita</span>
+    ${bizName?`<span style="width:1px;height:20px;background:rgba(0,0,0,0.15);display:inline-block;"></span><span style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#374151;">${bizName}</span>`:''}
+  </div>
+  <div style="text-align:right;">
+    <div style="font-size:14px;font-weight:600;color:#111;">${dateStr}</div>
+    <div style="font-family:monospace;font-size:10px;color:#6B7280;margin-top:2px;">Impreso ${now.toLocaleDateString('es-PE')} · ${timeStr} &nbsp;·&nbsp; Cierre de caja · Reporte</div>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
+  ${[['Balance',f(bal),'#2563EB'],['Ingresos',f(inc),'#16A34A'],['Egresos',f(exp),'#DC2626'],['Por cobrar',f(cred),'#D97706']].map(([l,v,c])=>`
+  <div style="border:1.5px solid #E5E7EB;border-radius:10px;padding:12px;border-top:3px solid ${c};">
+    <div style="font-family:monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#6B7280;margin-bottom:4px;">${l}</div>
+    <div style="font-size:18px;font-weight:700;color:${c};">${v}</div>
+  </div>`).join('')}
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+  ${[['Caja física / Efectivo',f(cashInc-cashExp)],['Banca móvil / Digital',f(digInc-digExp)]].map(([l,v])=>`
+  <div style="border:1px solid #E5E7EB;border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-size:12px;color:#374151;font-weight:600;">${l}</div>
+    <div style="font-family:monospace;font-size:16px;font-weight:700;color:#111;">${v}</div>
+  </div>`).join('')}
+</div>
+<div style="font-size:13px;font-weight:700;color:#111;margin-bottom:8px;">Movimientos del día <span style="font-weight:400;color:#6B7280;font-size:12px;">${dayEntries.length} registro${dayEntries.length!==1?'s':''}</span></div>
+<table style="width:100%;border-collapse:collapse;">
+  <thead><tr style="background:#F0F4F0;">
+    <th style="padding:8px;text-align:left;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;font-weight:500;">Hora</th>
+    <th style="padding:8px;text-align:left;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;font-weight:500;">Descripción</th>
+    <th style="padding:8px;text-align:left;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;font-weight:500;">Método</th>
+    <th style="padding:8px;text-align:right;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.08em;color:#6B7280;font-weight:500;">Monto</th>
+  </tr></thead>
+  <tbody>${rowsHTML}</tbody>
+</table>
+<div style="border-top:1px solid #E5E7EB;margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;">
+  <span style="font-size:11px;color:#6B7280;">+ ${f(inc)} ingresos &nbsp;·&nbsp; − ${f(exp)} egresos</span>
+  <span style="font-size:11px;font-weight:700;color:#111;">Neto: ${f(bal)}</span>
+</div>
+<div style="margin-top:30px;border-top:1px solid #E5E7EB;padding-top:8px;display:flex;justify-content:space-between;">
+  <span style="font-size:10px;color:#9CA3AF;">${bizName} · Kajita — Sistema de Caja Diaria</span>
+  <span style="font-size:10px;color:#9CA3AF;">${now.toLocaleDateString('es-PE')} · ${timeStr} · ${dayEntries.length} movimientos</span>
+</div>
+</body></html>`;
+
+  // Imprimir directo sin mostrar preview de Kajita
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:210mm;height:297mm;border:none;';
+  document.body.appendChild(iframe);
+  iframe.contentDocument.open();
+  iframe.contentDocument.write(html);
+  iframe.contentDocument.close();
+
+  iframe.onload = () => {
+    setTimeout(()=>{
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+      setTimeout(()=>document.body.removeChild(iframe), 2000);
+    }, 500);
+  };
+
+  toast('📄 Listo — elige "Guardar como PDF" en el diálogo');
+}
 
 function showPDFPreview() {
   const d = new Date(activeDay + 'T12:00:00');
