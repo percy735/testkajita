@@ -2280,7 +2280,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.6</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.5</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -2448,7 +2448,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- ACCIONES: lupa + tuerca + añadir + imprimir -->
     <div class="nav-actions">
       <!-- Número de versión visible -->
-      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.6</div>
+      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.8.5</div>
       <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar movimiento">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -5051,8 +5051,8 @@ function showPDFPreview() {
   const allRows = makeRows([...incomes, ...expenses, ...credits]);
   const emptyRow = `<tr><td colspan="5" style="padding:24px;text-align:center;color:${C.muted};font-style:italic;font-family:'Fraunces',serif;font-size:13px;">Sin movimientos en esta fecha.</td></tr>`;
 
-  // ── Sección créditos pendientes (todos los activos, no solo del día) ──
-  const allCredits = entries.filter(e => e.credit).sort((a,b) => a.date.localeCompare(b.date));
+  // ── Sección créditos pendientes (solo del día del reporte) ──
+  const allCredits = entries.filter(e => e.credit && e.date === activeDay).sort((a,b) => a.date.localeCompare(b.date));
   const creditsHtml = allCredits.length === 0 ? '' : `
     <div style="margin-top:16px; border:1.5px solid #FCD34D; background:#FFFBEB; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
       <div style="background:#FEF3C7; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
@@ -5085,8 +5085,8 @@ function showPDFPreview() {
       </table>
     </div>`;
 
-  // ── Sección deudas pendientes de pago (todos los activos) ──
-  const allDebts = entries.filter(e => e.debt).sort((a,b) => a.date.localeCompare(b.date));
+  // ── Sección deudas pendientes de pago (solo del día del reporte) ──
+  const allDebts = entries.filter(e => e.debt && e.date === activeDay).sort((a,b) => a.date.localeCompare(b.date));
   const debtsHtml = allDebts.length === 0 ? '' : `
     <div style="margin-top:12px; border:1.5px solid #FCA5A5; background:#FFF1F2; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
       <div style="background:#FEE2E2; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
@@ -5156,7 +5156,7 @@ function showPDFPreview() {
             {lbl:'Ingresos',      val:fmt(inc),             color:C.inc,  bg:'#F0FDF4'},
             {lbl:'Egresos',       val:fmt(exp),             color:C.exp,  bg:'#FFF1F2'},
             {lbl:'Por cobrar',    val:fmt(cred),            color:C.cred, bg:'#FFFBEB'},
-            {lbl:'Por pagar',     val:fmt(allDebts.reduce((s,e)=>s+(e.pendiente||e.amount),0)), color:'#DC2626', bg:'#FFF1F2'},
+            {lbl:'Por pagar',     val:fmt(entries.filter(e=>e.debt&&e.date===activeDay).reduce((s,e)=>s+(e.pendiente||e.amount),0)), color:'#DC2626', bg:'#FFF1F2'},
             {lbl:'Caja física',   val:(cNet<0?'−':'')+fmt(Math.abs(cNet)), color:C.cash, bg:'#FEFCE8'},
             {lbl:'Banca digital', val:(dNet<0?'−':'')+fmt(Math.abs(dNet)), color:C.dig,  bg:'#EFF6FF'},
           ].map(m=>`
