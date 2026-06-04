@@ -566,6 +566,82 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .btn-cancel { width: 100%; margin-top: 10px; padding: 11px; background: transparent; border: 1px solid var(--k-line); border-radius: 99px; font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--k-text-3); cursor: pointer; transition: all 0.2s; }
 .btn-cancel:hover { background: rgba(255,255,255,0.05); color: var(--k-text); }
 
+/* ── NOTA DEL DÍA ── */
+.day-note-wrap {
+  margin-top: 20px; border-top: 1px solid var(--k-line); padding-top: 16px;
+}
+.day-note-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+}
+.day-note-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--k-text-3); display: flex; align-items: center; gap: 6px;
+}
+.day-note-label svg { opacity: 0.6; }
+.day-note-saved {
+  font-family: var(--mono); font-size: 9px; color: var(--k-accent); opacity: 0;
+  transition: opacity 0.4s; pointer-events: none;
+}
+.day-note-saved.show { opacity: 1; }
+.day-note-area {
+  width: 100%; min-height: 56px; max-height: 200px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--k-line);
+  border-radius: 14px; padding: 12px 14px; resize: none; outline: none;
+  font-family: var(--sans); font-size: 13px; color: var(--k-text);
+  line-height: 1.6; transition: all 0.2s; overflow-y: auto;
+}
+.day-note-area::placeholder { color: var(--k-text-3); font-style: italic; }
+.day-note-area:focus {
+  border-color: rgba(196,240,66,0.3);
+  background: rgba(196,240,66,0.03);
+  box-shadow: 0 0 0 3px rgba(196,240,66,0.08);
+}
+
+/* ── RECORDATORIOS DE COBRO ── */
+.reminders-bar {
+  margin: 0 0 16px;
+  background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(251,191,36,0.03) 100%);
+  border: 1px solid rgba(251,191,36,0.25); border-radius: 16px; overflow: hidden;
+}
+.reminders-bar-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; cursor: pointer; user-select: none;
+}
+.reminders-bar-hdr:hover { background: rgba(251,191,36,0.05); }
+.reminders-bar-title {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--k-credit);
+}
+.reminders-bar-count {
+  background: var(--k-credit); color: #000; border-radius: 99px;
+  font-family: var(--mono); font-size: 9px; font-weight: 700; padding: 2px 7px;
+}
+.reminders-bar-toggle { font-size: 11px; color: var(--k-text-3); transition: transform 0.2s; }
+.reminders-bar-toggle.open { transform: rotate(180deg); }
+.reminders-list { display: none; border-top: 1px solid rgba(251,191,36,0.15); }
+.reminders-list.open { display: block; }
+.reminder-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  border-bottom: 1px solid rgba(251,191,36,0.08);
+}
+.reminder-item:last-child { border-bottom: none; }
+.reminder-days {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: var(--mono); font-weight: 700;
+}
+.reminder-days.urgent { background: rgba(255,107,107,0.15); color: var(--k-expense); }
+.reminder-days.warning { background: rgba(251,191,36,0.15); color: var(--k-credit); }
+.reminder-days.normal { background: rgba(255,255,255,0.05); color: var(--k-text-3); }
+.reminder-days-num { font-size: 15px; line-height: 1; }
+.reminder-days-lbl { font-size: 7px; letter-spacing: .05em; text-transform: uppercase; opacity: 0.8; }
+.reminder-info { flex: 1; min-width: 0; }
+.reminder-client { font-size: 13px; font-weight: 600; color: var(--k-text); }
+.reminder-desc { font-size: 11px; color: var(--k-text-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reminder-amt { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--k-credit); flex-shrink: 0; }
+.reminder-cobrar { flex-shrink: 0; padding: 6px 12px; border-radius: 99px; border: 1px solid rgba(196,240,66,0.3); background: rgba(196,240,66,0.08); color: var(--k-accent); font-family: var(--sans); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.reminder-cobrar:hover { background: var(--k-accent); color: var(--k-bg); }
+
 /* ── FILTER BAR ── */
 .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .filter-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--k-text-3); margin-right: 4px; }
@@ -1595,7 +1671,108 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   @page { margin: 12mm; size: A4 portrait; }
 }
 
-/* ── FORM ROW PRINCIPAL ── */
+/* ══ CALENDARIO DE VENTAS ══ */
+.sales-cal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px); z-index: 900;
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.sales-cal-overlay.open { display: flex; }
+.sales-cal-modal {
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 24px; width: 100%; max-width: 560px;
+  padding: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+.sales-cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; gap: 12px;
+}
+.sales-cal-title {
+  font-family: var(--serif); font-size: 20px; font-weight: 700;
+  color: var(--k-text); text-align: center; text-transform: capitalize;
+}
+.sales-cal-subtitle {
+  font-family: var(--mono); font-size: 10px; color: var(--k-text-3);
+  text-align: center; margin-top: 2px; letter-spacing: .06em;
+}
+.sales-cal-nav {
+  background: var(--k-panel-2); border: 1px solid var(--k-line);
+  border-radius: 50%; width: 36px; height: 36px; color: var(--k-text);
+  font-size: 20px; cursor: pointer; flex-shrink: 0;
+  transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+}
+.sales-cal-nav:hover { border-color: var(--k-accent); color: var(--k-accent); }
+.sales-cal-dow {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+.sales-cal-dow span {
+  text-align: center; font-family: var(--mono); font-size: 10px;
+  color: var(--k-text-3); letter-spacing: .06em; padding: 4px 0;
+}
+.sales-cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  margin-bottom: 20px;
+}
+.sc-day {
+  aspect-ratio: 1; border-radius: 12px; border: none;
+  background: transparent; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px; padding: 4px;
+  transition: all 0.15s; position: relative;
+}
+.sc-day:hover:not(.sc-other):not(.sc-future) { background: var(--k-panel-2); }
+.sc-day.sc-other { opacity: 0.2; cursor: default; }
+.sc-day.sc-future { opacity: 0.3; cursor: default; }
+.sc-day.sc-today .sc-num { color: var(--k-accent); font-weight: 700; }
+.sc-day.sc-active { background: var(--k-accent-l); border: 1px solid var(--k-accent); }
+.sc-day.sc-active .sc-num { color: var(--k-accent); }
+.sc-day.sc-has-sales { cursor: pointer; }
+.sc-num {
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--k-text-2); line-height: 1;
+}
+.sc-today .sc-num { color: var(--k-accent) !important; }
+.sc-bar {
+  width: 80%; height: 3px; border-radius: 99px;
+  background: var(--k-accent); opacity: 0.7;
+}
+.sc-amt {
+  font-family: var(--mono); font-size: 8px; color: var(--k-text-3);
+  line-height: 1; white-space: nowrap;
+}
+.sc-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--k-credit); position: absolute; top: 4px; right: 4px;
+}
+.sc-note-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--k-blue); position: absolute; bottom: 4px; right: 4px;
+  opacity: 0.7;
+}
+.sales-cal-summary {
+  border-top: 1px solid var(--k-line); padding-top: 16px;
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+}
+.sc-sum-card {
+  background: var(--k-panel-2); border-radius: 12px; padding: 12px;
+  text-align: center;
+}
+.sc-sum-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 4px;
+}
+.sc-sum-value {
+  font-family: var(--serif); font-size: 18px; font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .sales-cal-modal { padding: 16px; border-radius: 20px; }
+  .sc-num { font-size: 12px; }
+  .sc-amt { display: none; }
+  .sales-cal-summary { grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .sc-sum-value { font-size: 15px; }
+}
 .form-row-main {
   display: flex;
   flex-direction: column;
@@ -1811,7 +1988,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.5</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.6</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -1979,7 +2156,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- ACCIONES: lupa + tuerca + añadir + imprimir -->
     <div class="nav-actions">
       <!-- Número de versión visible -->
-      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.5</div>
+      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.6</div>
       <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar movimiento">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -2189,9 +2366,28 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </button>
   </div>
 
+  <!-- ══ RECORDATORIOS DE COBRO ══ -->
+  <div id="remindersBar" class="reminders-bar" style="display:none;">
+    <div class="reminders-bar-hdr" onclick="toggleRemindersBar()">
+      <div class="reminders-bar-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Pendientes de cobro
+        <span class="reminders-bar-count" id="remindersCount">0</span>
+      </div>
+      <span class="reminders-bar-toggle" id="remindersToggleIcon">▼</span>
+    </div>
+    <div class="reminders-list" id="remindersList"></div>
+  </div>
+
   <div class="entries-hdr">
     <div class="entries-ttl">Movimientos del día</div>
-    <div class="entries-cnt" id="entCnt"></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="openSalesCalendar()" style="background:none;border:1px solid var(--k-line);border-radius:99px;padding:5px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--k-text-3);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;" onmouseover="this.style.borderColor='var(--k-accent)';this.style.color='var(--k-accent)'" onmouseout="this.style.borderColor='var(--k-line)';this.style.color='var(--k-text-3)'">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendario
+      </button>
+      <div class="entries-cnt" id="entCnt"></div>
+    </div>
   </div>
   <div class="filter-bar">
     <span class="filter-lbl">Ver:</span>
@@ -2203,6 +2399,21 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <button class="fpill"      data-f="digital"  onclick="setFilter('digital',this)">Digital</button>
   </div>
   <div id="entList"></div>
+
+  <!-- ══ NOTA DEL DÍA ══ -->
+  <div class="day-note-wrap">
+    <div class="day-note-header">
+      <div class="day-note-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Nota del día
+      </div>
+      <span class="day-note-saved" id="noteSavedLbl">✓ guardado</span>
+    </div>
+    <textarea id="dayNoteArea" class="day-note-area"
+      placeholder="Feriado, faltó luz, buen día… anota lo que quieras."
+      oninput="onDayNoteInput()"
+    ></textarea>
+  </div>
 
 </div>
 
@@ -2608,6 +2819,29 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     Salir
   </button>
 </nav>
+
+<!-- ══ CALENDARIO DE VENTAS ══ -->
+<div class="sales-cal-overlay" id="salesCalOverlay" onclick="if(event.target===this)closeSalesCalendar()">
+  <div class="sales-cal-modal">
+    <div class="sales-cal-header">
+      <button class="sales-cal-nav" onclick="salesCalNav(-1)">‹</button>
+      <div>
+        <div class="sales-cal-title" id="salesCalTitle"></div>
+        <div class="sales-cal-subtitle" id="salesCalSubtitle"></div>
+      </div>
+      <button class="sales-cal-nav" onclick="salesCalNav(1)">›</button>
+      <button onclick="closeSalesCalendar()" style="background:none;border:none;color:var(--k-text-3);font-size:22px;cursor:pointer;padding:4px 8px;margin-left:8px;">✕</button>
+    </div>
+    <!-- Días de semana -->
+    <div class="sales-cal-dow">
+      <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+    </div>
+    <!-- Grid de días -->
+    <div class="sales-cal-grid" id="salesCalGrid"></div>
+    <!-- Resumen del mes -->
+    <div class="sales-cal-summary" id="salesCalSummary"></div>
+  </div>
+</div>
 
 <!-- BOTÓN FLOTANTE AÑADIR -->
 <button class="fab-btn" onclick="openCatalog()" title="Añadir cliente, producto o proveedor">
@@ -3016,6 +3250,131 @@ function renderSupplierDropdown() { if(clientPickerOpen) showClientDropdown(docu
 /* ── CALENDAR ── */
 let calYear = 0, calMonth = 0;
 
+/* ══ CALENDARIO DE VENTAS ══ */
+let scYear = 0, scMonth = 0;
+
+function openSalesCalendar() {
+  const now = new Date();
+  scYear  = now.getFullYear();
+  scMonth = now.getMonth();
+  renderSalesCalendar();
+  document.getElementById('salesCalOverlay').classList.add('open');
+}
+function closeSalesCalendar() {
+  document.getElementById('salesCalOverlay').classList.remove('open');
+}
+function salesCalNav(dir) {
+  scMonth += dir;
+  if(scMonth > 11){ scMonth = 0; scYear++; }
+  if(scMonth < 0) { scMonth = 11; scYear--; }
+  renderSalesCalendar();
+}
+
+function renderSalesCalendar() {
+  const now   = new Date();
+  const today = now.toISOString().split('T')[0];
+
+  // Título del mes
+  const lbl = new Date(scYear, scMonth, 1)
+    .toLocaleDateString('es-PE', {month:'long', year:'numeric'});
+  document.getElementById('salesCalTitle').textContent = lbl.charAt(0).toUpperCase() + lbl.slice(1);
+
+  // Calcular stats del mes desde entries
+  const monthStr = `${scYear}-${String(scMonth+1).padStart(2,'0')}`;
+  const monthEntries = entries.filter(e => e.date && e.date.startsWith(monthStr));
+  const monthInc  = monthEntries.filter(e=>e.type==='income'&&!e.credit).reduce((s,e)=>s+e.amount,0);
+  const monthExp  = monthEntries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const monthDays = new Set(monthEntries.map(e=>e.date)).size;
+
+  document.getElementById('salesCalSubtitle').textContent =
+    `${monthDays} día${monthDays!==1?'s':''} con movimientos`;
+
+  // Agrupar entries por día
+  const dayMap = {};
+  monthEntries.forEach(e => {
+    if(!dayMap[e.date]) dayMap[e.date] = {inc:0, exp:0, cred:0, count:0};
+    if(e.credit)           dayMap[e.date].cred += e.amount;
+    else if(e.type==='income')  dayMap[e.date].inc  += e.amount;
+    else                        dayMap[e.date].exp  += e.amount;
+    dayMap[e.date].count++;
+  });
+
+  // Máximo ingreso del mes para escalar la barra
+  const maxInc = Math.max(...Object.values(dayMap).map(d=>d.inc), 1);
+
+  // Generar grid
+  const firstDow   = (new Date(scYear, scMonth, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(scYear, scMonth+1, 0).getDate();
+  const daysInPrev  = new Date(scYear, scMonth, 0).getDate();
+
+  let html = '';
+
+  // Días del mes anterior
+  for(let i = firstDow-1; i >= 0; i--) {
+    html += `<div class="sc-day sc-other"><span class="sc-num">${daysInPrev-i}</span></div>`;
+  }
+
+  // Días del mes actual
+  for(let d = 1; d <= daysInMonth; d++) {
+    const iso    = `${scYear}-${String(scMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isFuture = iso > today;
+    const isToday  = iso === today;
+    const isActive = iso === activeDay;
+    const data     = dayMap[iso];
+
+    let cls = 'sc-day';
+    if(isFuture)  cls += ' sc-future';
+    if(isToday)   cls += ' sc-today';
+    if(isActive)  cls += ' sc-active';
+    if(data)      cls += ' sc-has-sales';
+
+    const onclick = (!isFuture) ? `onclick="closeSalesCalendar();selectDay('${iso}')"` : '';
+
+    let inner = `<span class="sc-num">${d}</span>`;
+
+    if(data && data.inc > 0) {
+      const pct = Math.max(15, Math.round((data.inc / maxInc) * 100));
+      inner += `<div class="sc-bar" style="opacity:${0.4 + pct/160};"></div>`;
+      inner += `<span class="sc-amt">S/${data.inc % 1 === 0 ? data.inc : data.inc.toFixed(0)}</span>`;
+    } else if(data && data.exp > 0 && data.inc === 0) {
+      inner += `<div class="sc-bar" style="background:var(--k-expense);opacity:0.5;"></div>`;
+    }
+
+    if(data && data.cred > 0) {
+      inner += `<div class="sc-dot"></div>`;
+    }
+    if(dayNotes[iso] && dayNotes[iso].trim()) {
+      inner += `<div class="sc-note-dot"></div>`;
+    }
+
+    html += `<div class="${cls}" ${onclick}>${inner}</div>`;
+  }
+
+  // Relleno siguiente mes
+  const total = firstDow + daysInMonth;
+  const rem   = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for(let d = 1; d <= rem; d++) {
+    html += `<div class="sc-day sc-other"><span class="sc-num">${d}</span></div>`;
+  }
+
+  document.getElementById('salesCalGrid').innerHTML = html;
+
+  // Resumen del mes
+  document.getElementById('salesCalSummary').innerHTML = `
+    <div class="sc-sum-card">
+      <div class="sc-sum-label">Ingresos</div>
+      <div class="sc-sum-value" style="color:var(--k-income);">${fmt(monthInc)}</div>
+    </div>
+    <div class="sc-sum-card">
+      <div class="sc-sum-label">Egresos</div>
+      <div class="sc-sum-value" style="color:var(--k-expense);">${fmt(monthExp)}</div>
+    </div>
+    <div class="sc-sum-card">
+      <div class="sc-sum-label">Balance</div>
+      <div class="sc-sum-value" style="color:${monthInc-monthExp>=0?'var(--k-income)':'var(--k-expense)'};">${fmt(monthInc-monthExp)}</div>
+    </div>`;
+}
+
 function openCalendar() {
   const d = new Date(activeDay + 'T12:00:00');
   calYear  = d.getFullYear();
@@ -3278,7 +3637,7 @@ function renderInvPanel() {
 function renderCredPanel() {
   const list = document.getElementById('panelCredList');
   const pending = entries.filter(e => e.credit).sort((a,b) => b.date.localeCompare(a.date));
-  const total = pending.reduce((s,e) => s+e.amount, 0);
+  const total = pending.reduce((s,e) => s+(e.pendiente||e.amount), 0);
 
   document.getElementById('panelCredTotal').textContent = fmt(total);
   document.getElementById('panelCredCount').textContent = pending.length + '';
@@ -3293,14 +3652,16 @@ function renderCredPanel() {
 
   list.innerHTML = pending.map(e => {
     const fechaLbl = new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});
+    const montoPendiente = e.pendiente > 0 ? e.pendiente : e.amount;
+    const tieneAcuenta = e.acuenta > 0;
     return `
       <div class="cred-card">
         <div class="cred-card-left">
           <div class="cred-card-client">${e.client || 'Sin cliente'}</div>
-          <div class="cred-card-meta">${e.desc} · ${fechaLbl}</div>
+          <div class="cred-card-meta">${e.desc} · ${fechaLbl}${tieneAcuenta ? ` · <span style="color:var(--k-accent);font-weight:600;">S/${e.acuenta.toFixed(2)} a cuenta</span>` : ''}</div>
         </div>
         <div class="cred-card-right">
-          <div class="cred-card-amt">S/ ${e.amount.toFixed(2)}</div>
+          <div class="cred-card-amt">S/ ${montoPendiente.toFixed(2)}</div>
           <button class="cred-cobrar-btn" onclick="cobrarEntry('${e.id}');closePanel('cred');">✓ Cobrar</button>
         </div>
       </div>`;
@@ -3922,6 +4283,10 @@ function editEntry(id){
   document.getElementById('iCredit').checked=!!e.credit;
   document.getElementById('iClient').value=e.client||'';
   onCreditToggle();
+  // Cargar campos a cuenta / pendiente si es crédito
+  const acEl = document.getElementById('iAcuenta');
+  if(acEl) acEl.value = (e.acuenta && e.acuenta > 0) ? e.acuenta : '';
+  calcPendiente();
   document.getElementById('formTtl').textContent='Editar movimiento';
   document.getElementById('btnReg').textContent='Guardar cambios';
   document.getElementById('btnReg').className='btn-reg editing';
@@ -4319,7 +4684,7 @@ function showPDFPreview() {
     <div style="margin-top:18px; border:1.5px solid #FCD34D; background:#FFFBEB; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
       <div style="background:#FEF3C7; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#92400E;">⏳ Créditos pendientes de cobro</div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#92400E;">${fmt(pending.reduce((s,e)=>s+e.amount,0))} total</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#92400E;">${fmt(pending.reduce((s,e)=>s+(e.pendiente||e.amount),0))} total</div>
       </div>
       <table style="width:100%; border-collapse:collapse;">
         <thead><tr style="background:#FEF9C3;">
@@ -4446,7 +4811,7 @@ function showPDFPreview() {
   }, 400);
 }
 
-function render(){ renderHeader(); renderStats(); renderEntries(); renderPendingBar(); }
+function render(){ renderHeader(); renderStats(); renderEntries(); renderPendingBar(); renderReminders(); renderDayNote(); }
 
 function renderHeader(){
   if(!activeDay) return;
@@ -4560,7 +4925,7 @@ function renderEntries(){
       const cobrarBtn=isCredit
         ? `<button class="abtn cobrar" onclick="cobrarEntry('${e.id}')" title="Marcar como cobrado">✓ Cobrar</button>`
         : '';
-      const amtStr=isCredit ? fmt(e.amount) : (e.type==='expense'?'−':'+')+ fmt(e.amount);
+      const amtStr=isCredit ? fmt(e.pendiente > 0 ? e.pendiente : e.amount) : (e.type==='expense'?'−':'+')+ fmt(e.amount);
       return `
         <div class="entry-item ${itemClass}" data-eid="${e.id}">
           <span class="edot ${dotClass}"></span>
@@ -4596,6 +4961,118 @@ function toast(msg){
 }
 
 // init() ahora se llama después de la autenticación
+
+/* ══════════════════════════════════════
+   NOTA DEL DÍA
+══════════════════════════════════════ */
+var dayNotes = {}; // { 'YYYY-MM-DD': 'texto' }
+var noteTimer = null;
+
+function loadDayNoteLocal(){
+  try { dayNotes = JSON.parse(localStorage.getItem('kajita_day_notes')||'{}'); } catch(e){ dayNotes={}; }
+}
+function saveDayNoteLocal(){
+  try { localStorage.setItem('kajita_day_notes', JSON.stringify(dayNotes)); } catch(e){}
+}
+
+function renderDayNote(){
+  const area = document.getElementById('dayNoteArea');
+  if(!area || !activeDay) return;
+  area.value = dayNotes[activeDay] || '';
+}
+
+function onDayNoteInput(){
+  const area = document.getElementById('dayNoteArea');
+  const saved = document.getElementById('noteSavedLbl');
+  if(!area || !activeDay) return;
+  dayNotes[activeDay] = area.value;
+  // Guardar en Supabase con debounce 1.5s
+  clearTimeout(noteTimer);
+  if(saved) saved.classList.remove('show');
+  noteTimer = setTimeout(async () => {
+    saveDayNoteLocal();
+    await saveDayNoteRemote(activeDay, area.value);
+    if(saved){ saved.classList.add('show'); setTimeout(()=>saved.classList.remove('show'),2000); }
+  }, 1500);
+}
+
+async function saveDayNoteRemote(date, text){
+  if(!currentUser || currentUser.id?.includes('demo-user')) return;
+  try {
+    // Usamos la tabla profiles para notas: columna day_notes jsonb
+    // Si no existe, guardamos en localStorage solamente por ahora
+    // (se puede crear tabla separada si es necesario)
+    await sb.from('day_notes').upsert({
+      user_id: currentUser.id,
+      date: date,
+      note: text
+    }, { onConflict: 'user_id,date' });
+  } catch(e){ /* silencioso — guardado local ya hecho */ }
+}
+
+async function loadDayNotesRemote(){
+  if(!currentUser || currentUser.id?.includes('demo-user')) return;
+  try {
+    const {data} = await sb.from('day_notes')
+      .select('date,note')
+      .eq('user_id', currentUser.id);
+    if(data) data.forEach(r => { dayNotes[r.date] = r.note; });
+  } catch(e){ /* tabla puede no existir aún */ }
+}
+
+/* ══════════════════════════════════════
+   RECORDATORIOS DE COBRO
+══════════════════════════════════════ */
+function renderReminders(){
+  const bar = document.getElementById('remindersBar');
+  const list = document.getElementById('remindersList');
+  const countEl = document.getElementById('remindersCount');
+  if(!bar || !list) return;
+
+  // Créditos pendientes (no pagados) de todos los días
+  const today = getToday();
+  const pending = entries.filter(e => e.credit && !e.paid);
+
+  if(pending.length === 0){ bar.style.display='none'; return; }
+  bar.style.display = 'block';
+  if(countEl) countEl.textContent = pending.length;
+
+  // Ordenar por más antiguo primero
+  pending.sort((a,b) => a.date.localeCompare(b.date));
+
+  list.innerHTML = pending.map(e => {
+    const diffMs = new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00');
+    const days = Math.round(diffMs / 86400000);
+    const cls = days >= 7 ? 'urgent' : days >= 3 ? 'warning' : 'normal';
+    const clientName = e.client || 'Sin nombre';
+    const fechaStr = new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short'});
+    const montoPendiente = (e.pendiente > 0 ? e.pendiente : e.amount);
+    const acuentaTag = e.acuenta > 0
+      ? `<span style="font-size:9px;color:var(--k-accent);font-weight:600;"> · S/${e.acuenta.toFixed(2)} a cuenta</span>`
+      : '';
+    return `<div class="reminder-item">
+      <div class="reminder-days ${cls}">
+        <span class="reminder-days-num">${days === 0 ? '!' : days}</span>
+        <span class="reminder-days-lbl">${days===0?'hoy':days===1?'día':'días'}</span>
+      </div>
+      <div class="reminder-info">
+        <div class="reminder-client">${clientName}</div>
+        <div class="reminder-desc">${e.desc} · ${fechaStr}${acuentaTag}</div>
+      </div>
+      <div class="reminder-amt">S/ ${montoPendiente.toFixed(2)}</div>
+      <button class="reminder-cobrar" onclick="cobrarEntry('${e.id}');renderReminders();">✓ Cobrar</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleRemindersBar(){
+  const list = document.getElementById('remindersList');
+  const icon = document.getElementById('remindersToggleIcon');
+  if(!list) return;
+  const isOpen = list.classList.contains('open');
+  list.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
+}
 </script>
 
 <!-- ══════════════════════════════════════════════════════════════ -->
@@ -4650,7 +5127,9 @@ async function startApp(){
   document.getElementById('app').style.display='block';
   activeDay=getToday();
   console.log('startApp, activeDay=',activeDay);
+  loadDayNoteLocal();
   await loadDB();
+  await loadDayNotesRemote();
   buildDayBar();
   render();
   applyBizProfile();
@@ -4674,6 +5153,7 @@ async function handleDemoLogin(){
   document.getElementById('app').style.display='block';
   activeDay=getToday();
   entries=[];products=[];clients=[];
+  loadDayNoteLocal();
   buildDayBar();render();applyBizProfile();
   toast('🚀 Modo Demo activo');
 }
@@ -4985,13 +5465,33 @@ async function submitEntry(){
   if(editId !== null){
     const idx = entries.findIndex(e=>String(e.id)===String(editId));
     if(idx!==-1){
-      entries[idx]={...entries[idx], type:cType, desc, amount, qty, unitPrice, pay:payment, date:activeDay, credit:isCredit, client, paid:isCredit?entries[idx].paid:false};
+      // Si pagó todo a cuenta → cobrar automáticamente
+      const autoPaid = isCredit && acuenta >= amount && amount > 0;
+      const finalCredit = isCredit && !autoPaid;
+      const finalPaid   = autoPaid ? true : (isCredit ? entries[idx].paid : false);
+      entries[idx]={...entries[idx],
+        type:cType, desc, amount, qty, unitPrice,
+        pay: autoPaid ? (cPay||'cash') : payment,
+        date:activeDay, credit:finalCredit, client,
+        paid:finalPaid, acuenta, pendiente: finalCredit ? pendiente : 0
+      };
       if(currentUser && !currentUser.id?.includes('demo-user')){
-        try{ await sb.from('entries').update({type:cType,description:desc,amount,payment_type:payment,date:activeDay,is_credit:isCredit,client_name:client||null,is_paid:entries[idx].paid||false}).eq('id',editId).eq('user_id',currentUser.id); }
-        catch(e){ console.error('edit entry:',e); }
+        try{
+          await sb.from('entries').update({
+            type:cType, description:desc, amount,
+            payment_type: autoPaid ? (cPay||'cash') : payment,
+            date:activeDay,
+            is_credit:finalCredit,
+            client_name:client||null,
+            is_paid:finalPaid,
+            acuenta: acuenta||null,
+            pendiente: finalCredit ? (pendiente||null) : null
+          }).eq('id',editId).eq('user_id',currentUser.id);
+        }catch(e){ console.error('edit entry:',e); }
       }
+      if(autoPaid) toast('✓ Cobrado completo — ya suma al balance');
+      else toast('✓ Movimiento actualizado');
     }
-    toast('✓ Movimiento actualizado');
     cancelEdit();
 
   } else {
