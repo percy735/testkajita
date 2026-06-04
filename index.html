@@ -5011,10 +5011,11 @@ function showPDFPreview() {
                line:'#E5E7EB', muted:'#6B7280', light:'#F8FAFC',
                head:'#F0F4F0', headT:'#1F2937', headM:'#6B7280' };
 
-  // Tabla de movimientos — filas compactas
+  // Tabla de movimientos — filas compactas (sin deudas a fiado)
   const incomes  = day.filter(e => e.type==='income' && !e.credit);
-  const expenses = day.filter(e => e.type==='expense');
+  const expenses = day.filter(e => e.type==='expense' && !e.debt);
   const credits  = day.filter(e => e.credit);
+  const debts    = day.filter(e => e.debt);
 
   const rowStyle = (type) => {
     if(type==='income')  return `background:#F0FDF4;`;
@@ -5050,28 +5051,70 @@ function showPDFPreview() {
   const allRows = makeRows([...incomes, ...expenses, ...credits]);
   const emptyRow = `<tr><td colspan="5" style="padding:24px;text-align:center;color:${C.muted};font-style:italic;font-family:'Fraunces',serif;font-size:13px;">Sin movimientos en esta fecha.</td></tr>`;
 
-  // Bloque créditos pendientes (solo del día seleccionado)
-  const pending = entries.filter(e => e.credit && e.date === activeDay);
-  const pendingHtml = pending.length === 0 ? '' : `
-    <div style="margin-top:18px; border:1.5px solid #FCD34D; background:#FFFBEB; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
+  // ── Sección créditos pendientes (todos los activos, no solo del día) ──
+  const allCredits = entries.filter(e => e.credit).sort((a,b) => a.date.localeCompare(b.date));
+  const creditsHtml = allCredits.length === 0 ? '' : `
+    <div style="margin-top:16px; border:1.5px solid #FCD34D; background:#FFFBEB; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
       <div style="background:#FEF3C7; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#92400E;">⏳ Créditos pendientes de cobro</div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#92400E;">${fmt(pending.reduce((s,e)=>s+(e.pendiente||e.amount),0))} total</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#92400E;">${fmt(allCredits.reduce((s,e)=>s+(e.pendiente||e.amount),0))} total</div>
       </div>
       <table style="width:100%; border-collapse:collapse;">
         <thead><tr style="background:#FEF9C3;">
           <th style="padding:5px 10px; text-align:left; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Cliente</th>
           <th style="padding:5px 6px; text-align:left; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Descripción</th>
           <th style="padding:5px 6px; text-align:left; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Fecha</th>
-          <th style="padding:5px 10px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Monto</th>
+          <th style="padding:5px 6px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Pend.</th>
+          <th style="padding:5px 10px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Total</th>
         </tr></thead>
         <tbody>
-          ${pending.map((c,i) => `<tr style="border-top:1px solid #FDE68A; ${i%2===1?'background:#FFFEF5':''}">
-            <td style="padding:6px 10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#78350F;">${c.client||'—'}</td>
-            <td style="padding:6px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:10.5px; color:#92400E;">${c.desc}</td>
-            <td style="padding:6px 6px; font-family:'JetBrains Mono',monospace; font-size:9px; color:${C.muted}; white-space:nowrap;">${new Date(c.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit'})}</td>
-            <td style="padding:6px 10px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; color:#92400E;">${fmt(c.amount)}</td>
-          </tr>`).join('')}
+          ${allCredits.map((c,i) => {
+            const pend = c.pendiente > 0 ? c.pendiente : c.amount;
+            const today2 = new Date().toISOString().slice(0,10);
+            const days = Math.round((new Date(today2+'T12:00:00') - new Date(c.date+'T12:00:00')) / 86400000);
+            const daysLbl = days === 0 ? 'hoy' : days === 1 ? '1 día' : days+'d';
+            return `<tr style="border-top:1px solid #FDE68A; ${i%2===1?'background:#FFFEF5':''}">
+              <td style="padding:6px 10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#78350F;">${c.client||'—'}</td>
+              <td style="padding:6px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:10.5px; color:#92400E;">${c.desc}</td>
+              <td style="padding:6px 6px; font-family:'JetBrains Mono',monospace; font-size:9px; color:${C.muted}; white-space:nowrap;">${new Date(c.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit'})} <span style="color:${days>=7?C.exp:C.muted};">(${daysLbl})</span></td>
+              <td style="padding:6px 6px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:#D97706;">${fmt(pend)}</td>
+              <td style="padding:6px 10px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:10px; color:${C.muted};">${c.acuenta>0?fmt(c.amount):''}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  // ── Sección deudas pendientes de pago (todos los activos) ──
+  const allDebts = entries.filter(e => e.debt).sort((a,b) => a.date.localeCompare(b.date));
+  const debtsHtml = allDebts.length === 0 ? '' : `
+    <div style="margin-top:12px; border:1.5px solid #FCA5A5; background:#FFF1F2; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
+      <div style="background:#FEE2E2; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#991B1B;">🧾 Deudas pendientes de pago</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#991B1B;">${fmt(allDebts.reduce((s,e)=>s+(e.pendiente||e.amount),0))} total</div>
+      </div>
+      <table style="width:100%; border-collapse:collapse;">
+        <thead><tr style="background:#FECACA;">
+          <th style="padding:5px 10px; text-align:left; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Proveedor</th>
+          <th style="padding:5px 6px; text-align:left; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Descripción</th>
+          <th style="padding:5px 6px; text-align:left; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Fecha</th>
+          <th style="padding:5px 6px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Pend.</th>
+          <th style="padding:5px 10px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; font-weight:500;">Total</th>
+        </tr></thead>
+        <tbody>
+          ${allDebts.map((d,i) => {
+            const pend = d.pendiente > 0 ? d.pendiente : d.amount;
+            const today2 = new Date().toISOString().slice(0,10);
+            const days = Math.round((new Date(today2+'T12:00:00') - new Date(d.date+'T12:00:00')) / 86400000);
+            const daysLbl = days === 0 ? 'hoy' : days === 1 ? '1 día' : days+'d';
+            return `<tr style="border-top:1px solid #FCA5A5; ${i%2===1?'background:#FFF5F5':''}">
+              <td style="padding:6px 10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#991B1B;">${d.client||'—'}</td>
+              <td style="padding:6px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:10.5px; color:#B91C1C;">${d.desc}</td>
+              <td style="padding:6px 6px; font-family:'JetBrains Mono',monospace; font-size:9px; color:${C.muted}; white-space:nowrap;">${new Date(d.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit'})} <span style="color:${days>=7?C.exp:C.muted};">(${daysLbl})</span></td>
+              <td style="padding:6px 6px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:#DC2626;">${fmt(pend)}</td>
+              <td style="padding:6px 10px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:10px; color:${C.muted};">${d.acuenta>0?fmt(d.amount):''}</td>
+            </tr>`;
+          }).join('')}
         </tbody>
       </table>
     </div>`;
@@ -5113,6 +5156,7 @@ function showPDFPreview() {
             {lbl:'Ingresos',      val:fmt(inc),             color:C.inc,  bg:'#F0FDF4'},
             {lbl:'Egresos',       val:fmt(exp),             color:C.exp,  bg:'#FFF1F2'},
             {lbl:'Por cobrar',    val:fmt(cred),            color:C.cred, bg:'#FFFBEB'},
+            {lbl:'Por pagar',     val:fmt(allDebts.reduce((s,e)=>s+(e.pendiente||e.amount),0)), color:'#DC2626', bg:'#FFF1F2'},
             {lbl:'Caja física',   val:(cNet<0?'−':'')+fmt(Math.abs(cNet)), color:C.cash, bg:'#FEFCE8'},
             {lbl:'Banca digital', val:(dNet<0?'−':'')+fmt(Math.abs(dNet)), color:C.dig,  bg:'#EFF6FF'},
           ].map(m=>`
@@ -5158,7 +5202,8 @@ function showPDFPreview() {
         </tfoot>` : ''}
       </table>
 
-      ${pendingHtml}
+      ${creditsHtml}
+      ${debtsHtml}
 
       <!-- ▌PIE DE PÁGINA ▌ -->
       <div style="margin-top:20px;padding-top:10px;border-top:1px solid ${C.line};display:flex;justify-content:space-between;align-items:center;">
