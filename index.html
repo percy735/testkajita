@@ -2609,7 +2609,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <div class="stat-value" id="totalBalance">S/ 0.00</div>
       <div class="balance-pending" id="balancePending" style="display:none;font-size:10px;margin-top:2px;"></div>
     </div>
-    <div class="stat-card s-exp"><div class="stat-label">Egresos</div><div class="stat-value" id="statExp">S/ 0.00</div></div>
+    <div class="stat-card s-exp"><div class="stat-label">Egresos</div><div class="stat-value" id="statExp">S/ 0.00</div><div class="balance-pending" id="statExpDebt" style="display:none;font-size:10px;margin-top:2px;color:var(--k-expense);opacity:0.8;"></div></div>
     <div class="stat-card s-cred"><div class="stat-label">Por cobrar</div><div class="stat-value" id="statCred">S/ 0.00</div></div>
   </div>
   <div class="sub-row">
@@ -3652,7 +3652,7 @@ function renderSalesCalendar() {
   const monthStr = `${scYear}-${String(scMonth+1).padStart(2,'0')}`;
   const monthEntries = entries.filter(e => e.date && e.date.startsWith(monthStr));
   const monthInc  = monthEntries.filter(e=>e.type==='income'&&!e.credit).reduce((s,e)=>s+e.amount,0);
-  const monthExp  = monthEntries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const monthExp  = monthEntries.filter(e=>e.type==='expense'&&!e.debt).reduce((s,e)=>s+e.amount,0);
   const monthDays = new Set(monthEntries.map(e=>e.date)).size;
 
   document.getElementById('salesCalSubtitle').textContent =
@@ -4888,14 +4888,14 @@ async function downloadReport(){
   // Generar HTML del reporte en memoria (sin mostrarlo)
   const dayEntries = entries.filter(e=>e.date===activeDay).sort((a,b)=>(b.time||'').localeCompare(a.time||''));
   const inc  = dayEntries.filter(e=>e.type==='income'&&!e.credit).reduce((s,e)=>s+e.amount,0);
-  const exp  = dayEntries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const exp  = dayEntries.filter(e=>e.type==='expense'&&!e.debt).reduce((s,e)=>s+e.amount,0);
   const cred = dayEntries.filter(e=>e.credit).reduce((s,e)=>s+e.amount,0);
   const bal  = inc - exp;
   const cashInc = dayEntries.filter(e=>e.type==='income'&&!e.credit&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
-  const cashExp = dayEntries.filter(e=>e.type==='expense'&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
+  const cashExp = dayEntries.filter(e=>e.type==='expense'&&!e.debt&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
   const DIG=['yape','plin','transfer','card'];
   const digInc  = dayEntries.filter(e=>e.type==='income'&&!e.credit&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
-  const digExp  = dayEntries.filter(e=>e.type==='expense'&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
+  const digExp  = dayEntries.filter(e=>e.type==='expense'&&!e.debt&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
 
   const f = n => 'S/ '+n.toFixed(2);
   const dateObj = new Date(activeDay+'T12:00:00');
@@ -4995,13 +4995,13 @@ function showPDFPreview() {
 
   const day = entries.filter(e => e.date === activeDay);
   const inc  = day.filter(e => e.type==='income' && !e.credit).reduce((s,e)=>s+e.amount, 0);
-  const exp  = day.filter(e => e.type==='expense').reduce((s,e)=>s+e.amount, 0);
+  const exp  = day.filter(e => e.type==='expense' && !e.debt).reduce((s,e)=>s+e.amount, 0);
   const cred = day.filter(e => e.credit).reduce((s,e)=>s+e.amount, 0);
   const cInc = day.filter(e => e.type==='income' && !e.credit && e.pay==='cash').reduce((s,e)=>s+e.amount,0);
-  const cExp = day.filter(e => e.type==='expense' && e.pay==='cash').reduce((s,e)=>s+e.amount,0);
+  const cExp = day.filter(e => e.type==='expense' && !e.debt && e.pay==='cash').reduce((s,e)=>s+e.amount,0);
   const DIG2 = ['yape','plin','transfer','card'];
   const dInc = day.filter(e => e.type==='income' && !e.credit && DIG2.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
-  const dExp = day.filter(e => e.type==='expense' && DIG2.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
+  const dExp = day.filter(e => e.type==='expense' && !e.debt && DIG2.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
   const bal = inc - exp, cNet = cInc - cExp, dNet = dInc - dExp;
 
   // Colores Kajita para impresión — sin negros intensos, ahorra tinta
@@ -5226,13 +5226,14 @@ function renderHeader(){
 function renderStats(){
   const day=entries.filter(e=>e.date===activeDay);
   const inc =day.filter(e=>e.type==='income'&&!e.credit).reduce((s,e)=>s+e.amount,0);
-  const exp =day.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const exp =day.filter(e=>e.type==='expense'&&!e.debt).reduce((s,e)=>s+e.amount,0);
   const cred=day.filter(e=>e.credit).reduce((s,e)=>s+(e.pendiente||e.amount),0);
+  const debt=day.filter(e=>e.debt).reduce((s,e)=>s+(e.pendiente||e.amount),0);
   const cInc=day.filter(e=>e.type==='income'&&!e.credit&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
-  const cExp=day.filter(e=>e.type==='expense'&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
+  const cExp=day.filter(e=>e.type==='expense'&&!e.debt&&e.pay==='cash').reduce((s,e)=>s+e.amount,0);
   const DIG=['yape','plin','transfer','card'];
   const dInc=day.filter(e=>e.type==='income'&&!e.credit&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
-  const dExp=day.filter(e=>e.type==='expense'&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
+  const dExp=day.filter(e=>e.type==='expense'&&!e.debt&&DIG.includes(e.pay)).reduce((s,e)=>s+e.amount,0);
   const bal=inc-exp, cNet=cInc-cExp, dNet=dInc-dExp;
 
   // Actualizar solo elementos que existen
@@ -5242,6 +5243,13 @@ function renderStats(){
   set('statCred', fmt(cred));
   set('cashNet', (cNet<0?'−':'')+fmt(Math.abs(cNet)));
   set('digNet',  (dNet<0?'−':'')+fmt(Math.abs(dNet)));
+
+  // Mostrar deuda pendiente bajo stat de Egresos
+  const debtEl = document.getElementById('statExpDebt');
+  if(debtEl){
+    if(debt>0){ debtEl.style.display='block'; debtEl.textContent='+ '+fmt(debt)+' por pagar'; }
+    else { debtEl.style.display='none'; }
+  }
 
   const balEl = document.getElementById('totalBalance');
   if(balEl){
@@ -5282,7 +5290,7 @@ function renderEntries(){
   day.forEach(e=>{if(!groups[e.date])groups[e.date]=[];groups[e.date].push(e);});
   list.innerHTML=Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(date=>{
     const dInc=groups[date].filter(e=>e.type==='income'&&!e.credit).reduce((s,e)=>s+e.amount,0);
-    const dExp=groups[date].filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+    const dExp=groups[date].filter(e=>e.type==='expense'&&!e.debt).reduce((s,e)=>s+e.amount,0);
     const dn=dInc-dExp;
     const nc=dn>=0?'var(--k-accent)':'var(--k-expense)';
     const ns=(dn>=0?'+':'−')+fmt(Math.abs(dn));
