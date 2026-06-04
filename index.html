@@ -5423,63 +5423,173 @@ function startVoiceRecording(){
 }
 
 async function processVoiceTranscript(text){
-  // UI → pensando
   document.getElementById('voiceWaves').className = 'voice-waves thinking';
   document.getElementById('voiceStatus').innerHTML =
     '<span style="color:var(--k-accent);">✦ Interpretando…</span>';
 
+  // Llamar via Edge Function de Supabase — sin CORS en iOS
+  let parsed = null;
   try{
-    const prompt = `Eres el asistente de Kajita, una app de caja diaria para negocios peruanos.
-El usuario habló: "${text}"
+    const session = await sb.auth.getSession();
+    const jwt = session?.data?.session?.access_token;
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 7000);
 
-Interpreta esto como un movimiento de caja y responde SOLO con JSON válido, sin texto extra:
-{
-  "type": "income" | "expense",
-  "desc": "descripción corta del producto/servicio (máx 4 palabras, sin monto, en minúsculas)",
-  "amount": número positivo,
-  "credit": true | false,  // true si mencionó "al fiado", "crédito", "me debe", "fío"
-  "debt": true | false,    // true si mencionó "debo", "a fiado (egreso)", "fiado proveedor"
-  "client": "nombre si mencionó un cliente/proveedor, si no: null",
-  "pay": "cash" | "yape" | "plin" | "transfer" | "card",  // default: cash
-  "confidence": 0.0-1.0,
-  "human_summary": "frase corta en español confirmando lo que entendió"
-}
-
-Reglas:
-- "venta", "vendí", "cobré" → income
-- "gasto", "compré", "pagué", "egreso" → expense
-- Si no hay verbo claro y hay monto → asumir income
-- El monto puede estar en palabras: "cincuenta"=50, "cien"=100, "doscientos"=200
-- desc = solo el producto/servicio, sin el verbo ni el monto
-- Si no entiendes, pon confidence < 0.5`;
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await res.json();
-    const raw = data.content?.[0]?.text || '';
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-
-    voiceParsed = parsed;
-    showVoiceResult(parsed, text);
-
+    const res = await fetch(
+      'https://xdjqawfikdlxxelabetg.supabase.co/functions/v1/voice-parse',
+      {
+        method: 'POST',
+        signal: ctrl.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt || 'anon'}`,
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanFhd2Zpa2RseHhlbGFiZXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDYwMTAsImV4cCI6MjA5NDUyMjAxMH0.h_-97MAKlbrCaFJQbLzQgRa9X33GgbpxuXEuqHhOGOo'
+        },
+        body: JSON.stringify({ text })
+      }
+    );
+    clearTimeout(timeout);
+    if(res.ok){
+      const data = await res.json();
+      if(data && data.amount) parsed = data;
+    }
   } catch(err){
-    console.error('voice parse error:', err);
+    console.log('Edge function no disponible, usando parser local:', err.message);
+  }
+
+  // Parser local como fallback — funciona offline
+  if(!parsed || !parsed.amount){
+    parsed = parseVoiceLocal(text);
+  }
+
+  if(!parsed || !parsed.amount || parsed.amount <= 0){
     document.getElementById('voiceWaves').className = 'voice-waves';
     document.getElementById('voiceStatus').innerHTML =
-      '⚠️ No pude interpretar lo que dijiste.<br><span style="font-size:12px;">Intenta ser más claro: "venta arroz veinte soles"</span>';
+      '⚠️ No detecté un monto.<br><span style="font-size:12px;">Di algo como: <em>"venta arroz cincuenta"</em></span>';
     document.getElementById('voiceBtnRecord').style.display = 'block';
     document.getElementById('voiceRecordBtn').textContent = '🎤 Reintentar';
+    return;
   }
+
+  voiceParsed = parsed;
+  showVoiceResult(parsed, text);
 }
+
+/* ── PARSER LOCAL DE VOZ ── funciona sin internet ── */
+function parseVoiceLocal(text){
+  const t = text.toLowerCase().trim();
+
+  // ── MONTO ── palabras numéricas peruanas comunes
+  const numWords = {
+    'un':1,'uno':1,'una':1,'dos':2,'tres':3,'cuatro':4,'cinco':5,
+    'seis':6,'siete':7,'ocho':8,'nueve':9,'diez':10,'once':11,
+    'doce':12,'trece':13,'catorce':14,'quince':15,'dieciséis':16,
+    'diecisiete':17,'dieciocho':18,'diecinueve':19,'veinte':20,
+    'veintiuno':21,'veintidós':22,'veintitrés':23,'veinticuatro':24,
+    'veinticinco':25,'veintiséis':26,'veintisiete':27,'veintiocho':28,
+    'veintinueve':29,'treinta':30,'cuarenta':40,'cincuenta':50,
+    'sesenta':60,'setenta':70,'ochenta':80,'noventa':90,
+    'cien':100,'ciento':100,'ciento':100,'doscientos':200,'doscientas':200,
+    'trescientos':300,'trescientas':300,'cuatrocientos':400,'cuatrocientas':400,
+    'quinientos':500,'quinientas':500,'seiscientos':600,'setecientos':700,
+    'ochocientos':800,'novecientos':900,'mil':1000,'medio':0.5,'media':0.5
+  };
+
+  // Extraer número: buscar dígitos primero, luego palabras
+  let amount = 0;
+  const digitMatch = t.match(/\b(\d+(?:[.,]\d{1,2})?)\b/);
+  if(digitMatch){
+    amount = parseFloat(digitMatch[1].replace(',','.'));
+  } else {
+    // Buscar palabras numéricas — sumar compuestos como "treinta y cinco"
+    let remaining = t;
+    let total = 0;
+    let lastNum = 0;
+    const words = t.split(/\s+/);
+    for(let i=0; i<words.length; i++){
+      const w = words[i];
+      if(numWords[w] !== undefined){
+        const n = numWords[w];
+        if(w === 'mil'){
+          total += (lastNum || 1) * 1000;
+          lastNum = 0;
+        } else if(n >= 100){
+          total += n;
+          lastNum = 0;
+        } else {
+          lastNum += n;
+        }
+      } else if(w === 'y' && lastNum > 0){
+        // "treinta y cinco" → acumular
+      } else if(lastNum > 0){
+        total += lastNum;
+        lastNum = 0;
+      }
+    }
+    total += lastNum;
+    amount = total;
+  }
+
+  // ── TIPO ──
+  const incomeWords = ['venta','vendí','vendi','vendio','vendió','cobré','cobré','cobrei','cobro','ingreso','recibí','recibi','me pagó','me pago','me dió','me dio'];
+  const expenseWords = ['gasto','compré','compre','compro','pagué','pague','pago','egreso','gasté','gaste','salida'];
+  const creditWords = ['fiado','crédito','credito','me debe','al fío','al fio','fiar','fíe','fie'];
+  const debtWords = ['debo','debo a','proveed','proveedor','a fiado compra'];
+  const yapeWords = ['yape','yapé'];
+  const plinWords = ['plin'];
+  const transferWords = ['transfer','transferencia','banco'];
+  const cardWords = ['tarjeta','card','visa','mastercard'];
+
+  const isIncome = incomeWords.some(w => t.includes(w));
+  const isExpense = expenseWords.some(w => t.includes(w));
+  const isCredit = creditWords.some(w => t.includes(w)) && !isExpense;
+  const isDebt   = debtWords.some(w => t.includes(w)) && isExpense;
+
+  let pay = 'cash';
+  if(yapeWords.some(w => t.includes(w)))    pay = 'yape';
+  if(plinWords.some(w => t.includes(w)))    pay = 'plin';
+  if(transferWords.some(w => t.includes(w))) pay = 'transfer';
+  if(cardWords.some(w => t.includes(w)))    pay = 'card';
+
+  // ── DESCRIPCIÓN ── quitar verbo, monto y palabras de pago
+  const stopWords = new Set([
+    'venta','venta','vendí','vendi','vendio','vendió','cobré','cobrei','cobro','cobré',
+    'gasto','compré','compre','compro','pagué','pague','egreso','gasté','gaste',
+    'ingreso','recibí','recibi','me','pagó','pago','dió','dio','de','al','por',
+    'soles','sol','nuevo','nuevos','s/','un','una','el','la','los','las','y',
+    'en','con','a','fiado','crédito','credito','yape','yapé','plin','transfer',
+    'transferencia','tarjeta','banco','visa','efectivo','cash',
+    ...Object.keys(numWords), 'mil','medio','media'
+  ]);
+
+  const words2 = t.split(/\s+/).filter(w => {
+    if(stopWords.has(w)) return false;
+    if(/^\d+([.,]\d+)?$/.test(w)) return false;
+    return w.length > 1;
+  });
+  const desc = words2.slice(0,4).join(' ') || (isExpense ? 'gasto' : 'venta');
+
+  // ── CLIENTE ── buscar nombre propio después de "a", "de", "para"
+  let client = null;
+  const clientMatch = t.match(/(?:cobré a|venta a|a|para|de|me debe|debo a)\s+([a-záéíóúñü][a-záéíóúñü]+(?:\s+[a-záéíóúñü][a-záéíóúñü]+)?)/i);
+  if(clientMatch){
+    const cand = clientMatch[1].trim();
+    // Excluir palabras comunes
+    if(!stopWords.has(cand.toLowerCase()) && !/^\d+$/.test(cand)){
+      client = cand.charAt(0).toUpperCase() + cand.slice(1);
+    }
+  }
+
+  const type = isExpense ? 'expense' : 'income';
+  const summary = `${type==='income'?'Ingreso':'Egreso'} · ${desc} · S/ ${amount.toFixed(2)}${client?' · '+client:''}`;
+
+  return {
+    type, desc, amount, credit: isCredit, debt: isDebt,
+    client, pay, confidence: amount>0 ? 0.75 : 0.2,
+    human_summary: summary, _local: true
+  };
+}
+
 
 function showVoiceResult(p, transcript){
   document.getElementById('voiceWaves').className = 'voice-waves';
