@@ -2280,7 +2280,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.5</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.8</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -2448,7 +2448,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- ACCIONES: lupa + tuerca + añadir + imprimir -->
     <div class="nav-actions">
       <!-- Número de versión visible -->
-      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.8.5</div>
+      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.8.8</div>
       <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar movimiento">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -3902,45 +3902,102 @@ function togglePersonCard(type, id) {
 function renderCliPanel() {
   const q=(document.getElementById('panelCliSearch').value||'').toLowerCase();
   const list=document.getElementById('panelCliList');
-  if(!clients.length){
-    list.innerHTML=`<div class="panel-empty"><p>Sin clientes aún.<br>Usa <strong>+ Agregar</strong> para añadir el primero.</p></div>`;
+
+  // Construir mapas desde entries
+  const debtMap={}, histMap={};
+  entries.filter(e=>e.credit&&e.client).forEach(e=>{ const k=e.client.toLowerCase(); if(!debtMap[k]) debtMap[k]=[]; debtMap[k].push(e); });
+  entries.filter(e=>e.type==='income'&&e.client&&!e.credit).forEach(e=>{ const k=e.client.toLowerCase(); if(!histMap[k]) histMap[k]=[]; histMap[k].push(e); });
+
+  // Unir clientes registrados + clientes que aparecen solo en entries
+  const allKeys = new Set([
+    ...clients.map(c=>c.name.toLowerCase()),
+    ...Object.keys(debtMap),
+    ...Object.keys(histMap)
+  ]);
+
+  // Construir lista unificada
+  const allClients = [...allKeys].map(key => {
+    const registered = clients.find(c=>c.name.toLowerCase()===key);
+    return {
+      id: registered ? registered.id : 'entry-'+key,
+      name: registered ? registered.name : (debtMap[key]||histMap[key]||[{}])[0].client || key,
+      phone: registered ? registered.phone : null,
+      _registered: !!registered
+    };
+  });
+
+  const filtered = allClients
+    .filter(c => !q || c.name.toLowerCase().includes(q))
+    .sort((a,b) => {
+      const da=(debtMap[a.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
+      const db=(debtMap[b.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
+      return db-da||a.name.localeCompare(b.name,'es');
+    });
+
+  if(!filtered.length){
+    list.innerHTML=`<div class="panel-empty"><p>Sin clientes aún.<br>Registra ventas con nombre de cliente<br>o usa <strong>+ Agregar</strong>.</p></div>`;
     document.getElementById('panelCliSub').textContent='0 clientes';
     document.getElementById('panelCliTotalDebt').textContent='S/ 0.00';
     document.getElementById('panelCliDebtCount').textContent='0';
     return;
   }
-  const debtMap={};
-  entries.filter(e=>e.credit&&e.client).forEach(e=>{ const k=e.client.toLowerCase(); if(!debtMap[k]) debtMap[k]=[]; debtMap[k].push(e); });
-  const histMap={};
-  entries.filter(e=>e.type==='income'&&e.client&&!e.credit).forEach(e=>{ const k=e.client.toLowerCase(); if(!histMap[k]) histMap[k]=[]; histMap[k].push(e); });
-
-  const filtered=clients.filter(c=>!q||c.name.toLowerCase().includes(q)).sort((a,b)=>{
-    const da=(debtMap[a.name.toLowerCase()]||[]).reduce((s,e)=>s+e.amount,0);
-    const db=(debtMap[b.name.toLowerCase()]||[]).reduce((s,e)=>s+e.amount,0);
-    return db-da||a.name.localeCompare(b.name,'es');
-  });
 
   let totalDebt=0, debtCount=0;
   list.innerHTML=filtered.map(c=>{
     const key=c.name.toLowerCase();
-    const debts=debtMap[key]||[];
-    const hist=histMap[key]||[];
-    const debtAmt=debts.reduce((s,e)=>s+e.amount,0);
+    const debts=(debtMap[key]||[]).sort((a,b)=>b.date.localeCompare(a.date));
+    const hist=(histMap[key]||[]).sort((a,b)=>b.date.localeCompare(a.date));
+    const debtAmt=debts.reduce((s,e)=>s+(e.pendiente||e.amount),0);
     const histAmt=hist.reduce((s,e)=>s+e.amount,0);
     totalDebt+=debtAmt; if(debtAmt>0) debtCount++;
     const isOpen=_expanded.cli.has(c.id);
     const badgeCls=debtAmt>0?'debt':(histAmt>0?'paid':'zero');
-    const badgeTxt=debtAmt>0?fmt(debtAmt)+' debe':(histAmt>0?fmt(histAmt)+' hist.':' — ');
-    const allTx=[...debts.map(e=>({...e,_pend:true})),...hist].sort((a,b)=>b.date.localeCompare(a.date)||(b.time||'').localeCompare(a.time||''));
-    const debtSummary=debtAmt>0?`<div class="debt-summary"><span class="debt-summary-lbl">Deuda total acumulada</span><span class="debt-summary-val">${fmt(debtAmt)}</span></div>`:'';
-    const rows=allTx.length?allTx.map(e=>{
-      const isPend=e._pend||e.credit;
-      const amtClr=isPend?'var(--k-credit)':' var(--k-accent)';
-      const d=new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
-      return `<div class="person-detail-row"><div class="pdr-left"><div class="pdr-desc">${e.desc}</div><div class="pdr-date">${d}${e.time?' · '+e.time:''}</div></div><div class="pdr-right"><div class="pdr-amt" style="color:${amtClr};">${fmt(e.amount)}</div><div class="pdr-status" style="color:${amtClr};">${isPend?'Pendiente':'Cobrado'}</div></div></div>`;
-    }).join(''): `<div style="padding:14px;font-family:var(--sans);font-size:12px;color:var(--k-text-3);text-align:center;">Sin movimientos registrados</div>`;
-    return `<div class="person-card${isOpen?' expanded':''}"><div class="person-card-head" onclick="togglePersonCard('cli','${c.id}')"><div class="person-card-info"><div class="person-card-name">${c.name}</div><div class="person-card-meta">${c.phone||'Sin teléfono'} · ${debts.length} pendiente${debts.length!==1?'s':''}</div></div><div class="person-card-right"><span class="person-badge ${badgeCls}">${badgeTxt}</span><div class="person-card-actions" onclick="event.stopPropagation()"><button class="pca-btn" onclick="editPanelItem('cli','${c.id}')" title="Editar">✎</button><button class="pca-btn del" onclick=\"deletePanelItem('cli','${c.id}')\" title="Eliminar">×</button></div><span class="person-chevron">▾</span></div></div><div class="person-detail">${debtSummary}${rows}</div></div>`;
+    const badgeTxt=debtAmt>0?fmt(debtAmt)+' debe':(histAmt>0?fmt(histAmt)+' cobrado':' — ');
+    const totalTx=debts.length+hist.length;
+
+    const debtRows=debts.length
+      ? (debts.length>0?`<div style="padding:6px 14px 2px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-credit);opacity:0.7;">Pendiente de cobro</div>`:'')
+        + debts.map(e=>{
+          const pend=e.pendiente>0?e.pendiente:e.amount;
+          const d=new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+          const today2=new Date().toISOString().slice(0,10);
+          const days=Math.round((new Date(today2+'T12:00:00')-new Date(e.date+'T12:00:00'))/86400000);
+          return `<div class="person-detail-row" style="background:rgba(251,191,36,0.06);"><div class="pdr-left"><div class="pdr-desc">${e.desc}</div><div class="pdr-date">${d} · <span style="color:${days>=7?'var(--k-expense)':'var(--k-text-3)'};">${days===0?'hoy':days+'d'}</span>${e.acuenta>0?` · <span style="color:var(--k-accent);">S/${e.acuenta.toFixed(2)} a cuenta</span>`:''}</div></div><div class="pdr-right"><div class="pdr-amt" style="color:var(--k-credit);">${fmt(pend)}</div><div class="pdr-status" style="color:var(--k-credit);">Pendiente</div></div></div>`;
+        }).join('')
+      : '';
+
+    const histRows=hist.length
+      ? (hist.length>0&&debts.length>0?`<div style="padding:6px 14px 2px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-text-3);opacity:0.7;">Cobrado</div>`:'')
+        + hist.map(e=>{
+          const d=new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+          return `<div class="person-detail-row"><div class="pdr-left"><div class="pdr-desc">${e.desc}</div><div class="pdr-date">${d}${e.time?' · '+e.time:''} · ${PAY_LBL[e.pay]||'Efectivo'}</div></div><div class="pdr-right"><div class="pdr-amt" style="color:var(--k-accent);">+${fmt(e.amount)}</div><div class="pdr-status" style="color:var(--k-accent);">Cobrado</div></div></div>`;
+        }).join('')
+      : '';
+
+    const emptyMsg=(!debts.length&&!hist.length)?`<div style="padding:14px;font-family:var(--sans);font-size:12px;color:var(--k-text-3);text-align:center;">Sin movimientos registrados</div>`:'';
+    const debtSummary=debtAmt>0?`<div class="debt-summary"><span class="debt-summary-lbl">Por cobrar</span><span class="debt-summary-val">${fmt(debtAmt)}</span></div>`:'';
+    const editBtn=c._registered?`<button class="pca-btn" onclick="editPanelItem('cli','${c.id}')" title="Editar">✎</button><button class="pca-btn del" onclick=\"deletePanelItem('cli','${c.id}')\" title="Eliminar">×</button>`:'';
+    const waCliBtn = debtAmt > 0
+      ? `<button class="pca-btn" onclick="shareCliWhatsapp('${c.name.replace(/'/g,'')}',${debtAmt},'${key}')" title="Enviar por WhatsApp" style="color:#25D366;">&#128241;</button>`
+      : '';
+
+    return `<div class="person-card${isOpen?' expanded':''}">
+      <div class="person-card-head" onclick="togglePersonCard('cli','${c.id}')">
+        <div class="person-card-info">
+          <div class="person-card-name">${c.name}${!c._registered?` <span style="font-size:9px;opacity:0.4;font-family:var(--mono);">sin registrar</span>`:''}
+          </div>
+          <div class="person-card-meta">${c.phone||'Sin teléfono'} · ${totalTx} movimiento${totalTx!==1?'s':''}</div>
+        </div>
+        <div class="person-card-right">
+          <span class="person-badge ${badgeCls}">${badgeTxt}</span>
+          <div class="person-card-actions" onclick="event.stopPropagation()">${waCliBtn}${editBtn}</div>
+          <span class="person-chevron">▾</span>
+        </div>
+      </div>
+      <div class="person-detail">${debtSummary}${debtRows}${histRows}${emptyMsg}</div>
+    </div>`;
   }).join('');
+
   document.getElementById('panelCliSub').textContent=filtered.length+' cliente'+(filtered.length!==1?'s':'');
   document.getElementById('panelCliTotalDebt').textContent=fmt(totalDebt);
   document.getElementById('panelCliDebtCount').textContent=debtCount+'';
@@ -3950,29 +4007,111 @@ function renderCliPanel() {
 function renderProvPanel() {
   const q=(document.getElementById('panelProvSearch').value||'').toLowerCase();
   const list=document.getElementById('panelProvList');
-  if(!suppliers.length){
-    list.innerHTML=`<div class="panel-empty"><p>Sin proveedores aún.<br>Usa <strong>+ Agregar</strong> para añadir el primero.</p></div>`;
+
+  // Separar pagos reales de deudas desde entries
+  const payMap={}, debtMap={};
+  entries.filter(e=>e.type==='expense'&&e.client).forEach(e=>{
+    const k=e.client.toLowerCase();
+    if(e.debt && !e.paid){ if(!debtMap[k]) debtMap[k]=[]; debtMap[k].push(e); }
+    else { if(!payMap[k]) payMap[k]=[]; payMap[k].push(e); }
+  });
+
+  // Unir proveedores registrados + los que solo aparecen en entries
+  const allKeys = new Set([
+    ...suppliers.map(s=>s.name.toLowerCase()),
+    ...Object.keys(payMap),
+    ...Object.keys(debtMap)
+  ]);
+
+  const allSuppliers = [...allKeys].map(key => {
+    const registered = suppliers.find(s=>s.name.toLowerCase()===key);
+    const firstEntry = (debtMap[key]||payMap[key]||[{}])[0];
+    return {
+      id: registered ? registered.id : 'entry-'+key.replace(/[^a-z0-9]/g,'-'),
+      name: registered ? registered.name : (firstEntry.client || key),
+      phone: registered ? registered.phone : null,
+      _registered: !!registered,
+      _key: key
+    };
+  });
+
+  const filtered = allSuppliers
+    .filter(s => !q || s.name.toLowerCase().includes(q))
+    .sort((a,b) => {
+      const da=(debtMap[a.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
+      const db=(debtMap[b.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
+      return db-da||a.name.localeCompare(b.name,'es');
+    });
+
+  if(!filtered.length){
+    list.innerHTML=`<div class="panel-empty"><p>Sin proveedores aún.<br>Registra egresos con nombre de proveedor<br>o usa <strong>+ Agregar</strong>.</p></div>`;
     document.getElementById('panelProvSub').textContent='0 proveedores';
     document.getElementById('panelProvTotal').textContent='S/ 0.00';
     document.getElementById('panelProvCount').textContent='0';
     return;
   }
-  const payMap={};
-  entries.filter(e=>e.type==='expense'&&e.client).forEach(e=>{ const k=e.client.toLowerCase(); if(!payMap[k]) payMap[k]=[]; payMap[k].push(e); });
-  const filtered=suppliers.filter(s=>!q||s.name.toLowerCase().includes(q)).sort((a,b)=>{
-    const ta=(payMap[a.name.toLowerCase()]||[]).reduce((s,e)=>s+e.amount,0);
-    const tb=(payMap[b.name.toLowerCase()]||[]).reduce((s,e)=>s+e.amount,0);
-    return tb-ta||a.name.localeCompare(b.name,'es');
-  });
+
   let grand=0;
   list.innerHTML=filtered.map(s=>{
     const key=s.name.toLowerCase();
     const pays=(payMap[key]||[]).sort((a,b)=>b.date.localeCompare(a.date));
-    const total=pays.reduce((sum,e)=>sum+e.amount,0); grand+=total;
+    const debts=(debtMap[key]||[]).sort((a,b)=>b.date.localeCompare(a.date));
+    const totalPaid=pays.reduce((sum,e)=>sum+e.amount,0);
+    const totalDebt=debts.reduce((sum,e)=>sum+(e.pendiente||e.amount),0);
+    grand+=totalPaid;
     const isOpen=_expanded.prov.has(s.id);
-    const rows=pays.length?pays.map(e=>{ const d=new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'}); return `<div class="person-detail-row"><div class="pdr-left"><div class="pdr-desc">${e.desc}</div><div class="pdr-date">${d}${e.time?' · '+e.time:''} · ${PAY_LBL[e.pay]||'Efectivo'}</div></div><div class="pdr-right"><div class="pdr-amt" style="color:var(--k-expense);">−${fmt(e.amount)}</div></div></div>`; }).join(''): `<div style="padding:14px;font-family:var(--sans);font-size:12px;color:var(--k-text-3);text-align:center;">Sin pagos registrados</div>`;
-    return `<div class="person-card${isOpen?' expanded':''}"><div class="person-card-head" onclick="togglePersonCard('prov','${s.id}')"><div class="person-card-info"><div class="person-card-name">${s.name}</div><div class="person-card-meta">${s.phone||'Sin teléfono'} · ${pays.length} pago${pays.length!==1?'s':''}</div></div><div class="person-card-right"><span class="person-badge ${total>0?'spent':'zero'}">${total>0?fmt(total)+' pagado':'Sin pagos'}</span><div class="person-card-actions" onclick="event.stopPropagation()"><button class="pca-btn" onclick="editPanelItem('prov','${s.id}')" title="Editar">✎</button><button class="pca-btn del" onclick=\"deletePanelItem('prov','${s.id}')\" title="Eliminar">×</button></div><span class="person-chevron">▾</span></div></div><div class="person-detail">${rows}</div></div>`;
+    const metaCount=pays.length+debts.length;
+
+    const debtRows=debts.length
+      ? `<div style="padding:6px 14px 2px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-expense);opacity:0.7;">Por pagar</div>`
+        + debts.map(e=>{
+          const pend=e.pendiente>0?e.pendiente:e.amount;
+          const d=new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+          const today2=new Date().toISOString().slice(0,10);
+          const days=Math.round((new Date(today2+'T12:00:00')-new Date(e.date+'T12:00:00'))/86400000);
+          return `<div class="person-detail-row" style="background:rgba(255,107,107,0.06);"><div class="pdr-left"><div class="pdr-desc">${e.desc}</div><div class="pdr-date">${d} · <span style="color:${days>=7?'var(--k-expense)':'var(--k-text-3)'};">${days===0?'hoy':days+'d'}</span>${e.acuenta>0?` · <span style="color:var(--k-accent);">S/${e.acuenta.toFixed(2)} abonado</span>`:''}</div></div><div class="pdr-right"><div class="pdr-amt" style="color:var(--k-expense);">−${fmt(pend)}</div><div class="pdr-status" style="color:var(--k-expense);">Por pagar</div></div></div>`;
+        }).join('')
+      : '';
+
+    const payRows=pays.length
+      ? (debts.length>0?`<div style="padding:6px 14px 2px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-text-3);opacity:0.7;">Pagado</div>`:'')
+        + pays.map(e=>{
+          const d=new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+          return `<div class="person-detail-row"><div class="pdr-left"><div class="pdr-desc">${e.desc}</div><div class="pdr-date">${d}${e.time?' · '+e.time:''} · ${PAY_LBL[e.pay]||'Efectivo'}</div></div><div class="pdr-right"><div class="pdr-amt" style="color:var(--k-expense);">−${fmt(e.amount)}</div><div class="pdr-status" style="color:var(--k-text-3);">Pagado</div></div></div>`;
+        }).join('')
+      : '';
+
+    const emptyMsg=(!pays.length&&!debts.length)?`<div style="padding:14px;font-family:var(--sans);font-size:12px;color:var(--k-text-3);text-align:center;">Sin movimientos registrados</div>`:'';
+
+    const badge = totalDebt>0
+      ? `<span class="person-badge" style="background:rgba(255,107,107,0.15);color:var(--k-expense);">−${fmt(totalDebt)} por pagar</span>`
+      : totalPaid>0
+        ? `<span class="person-badge spent">${fmt(totalPaid)} pagado</span>`
+        : `<span class="person-badge zero">Sin movimientos</span>`;
+
+    const editBtn=s._registered
+      ? `<button class="pca-btn" onclick="editPanelItem('prov','${s.id}')" title="Editar">✎</button><button class="pca-btn del" onclick=\"deletePanelItem('prov','${s.id}')\" title="Eliminar">×</button>`
+      : '';
+    const waBtn = totalDebt > 0
+      ? `<button class="pca-btn" onclick="shareProvWhatsapp('${s.name.replace(/'/g,'')}',${totalDebt},'${s._key||s.name.toLowerCase()}')" title="Enviar por WhatsApp" style="color:#25D366;">&#128241;</button>`
+      : '';
+
+    return `<div class="person-card${isOpen?' expanded':''}">
+      <div class="person-card-head" onclick="togglePersonCard('prov','${s.id}')">
+        <div class="person-card-info">
+          <div class="person-card-name">${s.name}${!s._registered?` <span style="font-size:9px;opacity:0.4;font-family:var(--mono);">sin registrar</span>`:''}</div>
+          <div class="person-card-meta">${s.phone||'Sin teléfono'} · ${metaCount} movimiento${metaCount!==1?'s':''}</div>
+        </div>
+        <div class="person-card-right">
+          ${badge}
+          <div class="person-card-actions" onclick="event.stopPropagation()">${waBtn}${editBtn}</div>
+          <span class="person-chevron">▾</span>
+        </div>
+      </div>
+      <div class="person-detail">${debtRows}${payRows}${emptyMsg}</div>
+    </div>`;
   }).join('');
+
   document.getElementById('panelProvSub').textContent=filtered.length+' proveedor'+(filtered.length!==1?'es':'');
   document.getElementById('panelProvTotal').textContent=fmt(grand);
   document.getElementById('panelProvCount').textContent=filtered.length+'';
@@ -5903,6 +6042,49 @@ function renderDebts(){
       </div>
     </div>`;
   }).join('');
+}
+
+/* ══════════════════════════════════════
+   COMPARTIR POR WHATSAPP
+══════════════════════════════════════ */
+function shareProvWhatsapp(name, totalDebt, key){
+  const debts = entries.filter(e => e.debt && !e.paid && e.client && e.client.toLowerCase() === key);
+  const biz = bizProfile?.name || 'Kajita';
+  const today = new Date().toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'});
+  let msg = `📋 *Estado de cuenta — ${biz}*\n`;
+  msg += `Fecha: ${today}\n\n`;
+  msg += `Estimado/a *${name}*,\n`;
+  msg += `Le informamos que tiene las siguientes deudas pendientes:\n\n`;
+  debts.forEach(d => {
+    const pend = d.pendiente > 0 ? d.pendiente : d.amount;
+    const fecha = new Date(d.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+    msg += `• ${d.desc} (${fecha}): *S/ ${pend.toFixed(2)}*`;
+    if(d.acuenta > 0) msg += ` (abonado S/ ${d.acuenta.toFixed(2)})`;
+    msg += '\n';
+  });
+  msg += `\n💰 *Total por pagar: S/ ${totalDebt.toFixed(2)}*\n`;
+  msg += `\nGracias por su preferencia. 🙏`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
+}
+
+function shareCliWhatsapp(name, totalDebt, key){
+  const debts = entries.filter(e => e.credit && e.client && e.client.toLowerCase() === key);
+  const biz = bizProfile?.name || 'Kajita';
+  const today = new Date().toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'});
+  let msg = `📋 *Estado de cuenta — ${biz}*\n`;
+  msg += `Fecha: ${today}\n\n`;
+  msg += `Estimado/a *${name}*,\n`;
+  msg += `Le recordamos que tiene los siguientes créditos pendientes:\n\n`;
+  debts.forEach(d => {
+    const pend = d.pendiente > 0 ? d.pendiente : d.amount;
+    const fecha = new Date(d.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+    msg += `• ${d.desc} (${fecha}): *S/ ${pend.toFixed(2)}*`;
+    if(d.acuenta > 0) msg += ` (abonado S/ ${d.acuenta.toFixed(2)})`;
+    msg += '\n';
+  });
+  msg += `\n💰 *Total pendiente: S/ ${totalDebt.toFixed(2)}*\n`;
+  msg += `\nAgradecemos su puntualidad. 🙏`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
 }
 
 function toggleDebtsBar(){
