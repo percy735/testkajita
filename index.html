@@ -2269,9 +2269,221 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   .inv-card-name { font-size: 12.5px; }
   .inv-price { font-size: 13px; }
 }
+
+
+/* ================================================================
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.9c
+================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
+
+.kj-note {
+  position: fixed; z-index: 500;
+  width: 172px; padding: 26px 16px 28px;
+  font-family: 'Caveat', cursive; font-size: 18px; line-height: 1.25; color: #5a4f2a;
+  box-shadow: 0 12px 26px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.18);
+  transform: rotate(var(--rot, -3deg));
+  cursor: grab; user-select: none; touch-action: none; transition: box-shadow .18s;
+  border-radius: 2px;
+  background: linear-gradient(150deg, #FCEFA6 0%, #F6E183 70%, #F0D86E 100%);
+}
+.kj-note::after {
+  content: ''; position: absolute; right: 0; bottom: 0;
+  border-width: 0 0 18px 18px; border-style: solid;
+  border-color: transparent transparent rgba(0,0,0,0.10) transparent;
+}
+.kj-note.green {
+  background: linear-gradient(150deg, #D6E6BE 0%, #C5DCA6 70%, #BAD498 100%);
+  color: #3c4a2c;
+}
+.kj-note.green .kj-note-tag { color: #6a7d52; }
+.kj-note.dragging {
+  cursor: grabbing; z-index: 9999 !important;
+  box-shadow: 0 22px 44px rgba(0,0,0,0.55), 0 6px 14px rgba(0,0,0,0.30);
+}
+.kj-note-tag {
+  display: block; font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; letter-spacing: .14em; text-transform: uppercase;
+  color: #998534; margin-bottom: 6px;
+}
+.kj-note.green .kj-note-tag { color: #6a7d52; }
+.kj-note-body { word-break: break-word; }
+.kj-note-body .amt {
+  font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  color: #7a5a0a; font-size: 13px; display: block; margin-top: 4px;
+}
+.kj-note-x {
+  position: absolute; top: 5px; right: 6px; width: 18px; height: 18px;
+  border-radius: 50%; border: none; background: rgba(0,0,0,0.12); color: #6a5a2a;
+  font-size: 14px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .15s, background .15s;
+}
+.kj-note:hover .kj-note-x { opacity: 1; }
+.kj-note-x:hover { background: rgba(160,91,73,0.85); color: #fff; }
+
+/* Alfiler */
+.kj-pin {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #ff7468 0%, #d23b2c 55%, #9c2519 100%);
+  box-shadow: 0 4px 7px rgba(0,0,0,0.5), inset 0 -2px 3px rgba(0,0,0,0.28);
+}
+.kj-pin::after {
+  content: ''; position: absolute; top: 4px; left: 5px;
+  width: 6px; height: 4.5px; border-radius: 50%; background: rgba(255,255,255,0.65);
+}
+.kj-pin::before {
+  content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 8px; background: linear-gradient(#b0b0b0,#7a7a7a);
+  border-radius: 0 0 1px 1px;
+}
+
+/* Posiciones predeterminadas */
+.kj-note.n1 { top: 150px; left: 20px;  --rot: -3deg; }
+.kj-note.n2 { top: 430px; left: 24px;  --rot:  2deg; }
+.kj-note.n3 { top: 180px; right: 20px; left: auto; --rot: 3deg; }
+.kj-note.n4 { top: 510px; right: 24px; left: auto; --rot: -2deg; }
+
+@keyframes kjNotePop {
+  0%   { opacity: 0; transform: scale(.82) rotate(var(--rot,-2deg)); }
+  60%  { transform: scale(1.05) rotate(var(--rot,-2deg)); }
+  100% { opacity: 1; transform: scale(1)   rotate(var(--rot,-2deg)); }
+}
+.kj-note-pop { animation: kjNotePop .28s cubic-bezier(.34,1.56,.64,1) both; }
+
+/* Toast de notas */
+.kj-toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(10px);
+  background: rgba(20,20,30,0.92); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.10); color: #F0F1F3;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600;
+  padding: 10px 20px; border-radius: 99px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  opacity: 0; pointer-events: none; transition: opacity .22s, transform .22s; z-index: 9999;
+}
+.kj-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Boton fijar nota */
+.btn-pin-note {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px;
+  border-radius: 99px; border: 1px solid rgba(255,255,255,0.10); background: transparent;
+  color: rgba(255,255,255,0.35); cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600;
+  transition: all .16s; margin-left: 8px; vertical-align: middle;
+}
+.btn-pin-note:hover {
+  border-color: rgba(196,240,66,0.5); color: #C4F042; background: rgba(196,240,66,0.06);
+}
+
+/* Mini-form fijar nota */
+.pin-form {
+  margin-top: 8px; padding: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; display: flex; flex-direction: column; gap: 8px;
+}
+.pin-title-inp {
+  width: 100%; height: 36px; padding: 0 10px;
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 8px; color: var(--k-text) !important;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+  text-transform: uppercase; outline: none;
+}
+.pin-title-inp:focus { border-color: rgba(196,240,66,0.4) !important; }
+.pin-title-inp::placeholder { color: var(--k-text-3); text-transform: none; letter-spacing: 0; }
+.pin-body-inp {
+  width: 100%; resize: none; padding: 8px 10px;
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 8px; color: var(--k-text) !important;
+  font-family: 'Caveat', cursive; font-size: 16px; line-height: 1.3; outline: none;
+}
+.pin-body-inp:focus { border-color: rgba(196,240,66,0.4) !important; }
+.pin-body-inp::placeholder { font-family: var(--sans); font-size: 12px; color: var(--k-text-3); }
+/* Selector de colores */
+.pin-colors {
+  display: flex; align-items: center; gap: 8px;
+}
+.pin-color-lbl {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--k-text-3);
+}
+.pin-col-btn {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: transform .15s, border-color .15s;
+  flex-shrink: 0;
+}
+.pin-col-btn:hover { transform: scale(1.18); }
+.pin-col-btn.active { border-color: rgba(255,255,255,0.7); transform: scale(1.15); }
+.pin-form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 2px; }
+.pin-cancel-btn {
+  height: 32px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08); background: transparent;
+  color: var(--k-text-3); font-family: var(--sans); font-size: 12px; cursor: pointer;
+}
+.pin-cancel-btn:hover { color: var(--k-text-2); }
+.pin-confirm-btn {
+  height: 32px; padding: 0 16px; border-radius: 8px; border: none;
+  background: rgba(196,240,66,0.15); color: #C4F042;
+  font-family: var(--sans); font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: background .15s;
+}
+.pin-confirm-btn:hover { background: rgba(196,240,66,0.28); }
+/* Colores de notas adicionales */
+.kj-note.pink   { background: linear-gradient(150deg,#F9C8D0 0%,#F4A7B3 70%,#EE8FA0 100%); color: #5a2a30; }
+.kj-note.pink   .kj-note-tag { color: #8a3540; }
+.kj-note.blue   { background: linear-gradient(150deg,#BDD9F2 0%,#9DC8EC 70%,#84BAEB 100%); color: #1a3a52; }
+.kj-note.blue   .kj-note-tag { color: #2a5070; }
+.kj-note.purple { background: linear-gradient(150deg,#D4C4F0 0%,#C1AEE8 70%,#AF9ADE 100%); color: #2e1a5a; }
+.kj-note.purple .kj-note-tag { color: #4a2a80; }
+.kj-note-edit-body { color: inherit; }
+
+/* Nota en modo edicion */
+.kj-note.editing { cursor: default; box-shadow: 0 0 0 2px #C4F042, 0 16px 32px rgba(0,0,0,0.45); }
+.kj-note-edit-wrap {
+  display: flex; flex-direction: column; gap: 6px; margin-top: 4px;
+}
+.kj-note-edit-title {
+  width: 100%; background: rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 5px; padding: 4px 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  letter-spacing: .12em; text-transform: uppercase; color: #998534;
+  outline: none;
+}
+.kj-note.green .kj-note-edit-title { color: #6a7d52; }
+.kj-note-edit-body {
+  width: 100%; min-height: 60px; resize: none;
+  background: rgba(0,0,0,0.10); border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 5px; padding: 5px 7px;
+  font-family: 'Caveat', cursive; font-size: 17px; line-height: 1.25;
+  color: inherit; outline: none;
+}
+.kj-note-edit-actions {
+  display: flex; gap: 5px; justify-content: flex-end; margin-top: 2px;
+}
+.kj-note-edit-save {
+  height: 26px; padding: 0 10px; border-radius: 5px; border: none;
+  background: rgba(0,0,0,0.20); color: #5a4f2a;
+  font-family: var(--sans); font-size: 11px; font-weight: 700; cursor: pointer;
+}
+.kj-note-edit-save:hover { background: rgba(0,0,0,0.30); }
+.kj-note-edit-cancel {
+  height: 26px; padding: 0 10px; border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.15); background: transparent;
+  color: #998534; font-family: var(--sans); font-size: 11px; cursor: pointer;
+}
+
+/* Notas ocultas en movil */
+@media (max-width: 900px) {
+  #kjNotesLayer { display: none !important; }
+}
 </style>
 </head>
 <body>
+<!-- notas post-it con alfiler -->
+<div id="kjNotesLayer" style="position:fixed;inset:0;pointer-events:none;z-index:500;overflow:hidden;"></div>
+<div class="kj-toast" id="kjToast"></div>
+
 
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!-- PANTALLA DE LOGIN -->
@@ -2280,7 +2492,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.8</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.9</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -2448,7 +2660,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- ACCIONES: lupa + tuerca + añadir + imprimir -->
     <div class="nav-actions">
       <!-- Número de versión visible -->
-      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.8.8</div>
+      <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);z-index:100;">v14.8.9</div>
       <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar movimiento">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -2713,6 +2925,24 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         Nota del día
       </div>
       <span class="day-note-saved" id="noteSavedLbl">✓ guardado</span>
+      <button class="btn-pin-note" id="btnPinNote" title="Fijar como nota">📌 Fijar nota</button>
+    </div>
+    <!-- mini-form para fijar nota -->
+    <div class="pin-form" id="pinForm" style="display:none;">
+      <input type="text" id="pinTitle" class="pin-title-inp" placeholder="Título..." maxlength="40">
+      <textarea id="pinBody" class="pin-body-inp" placeholder="Texto de la nota..." rows="3"></textarea>
+      <div class="pin-colors" id="pinColors">
+        <span class="pin-color-lbl">Color:</span>
+        <button class="pin-col-btn active" data-col="" style="background:linear-gradient(150deg,#FCEFA6,#F6E183);" title="Amarillo"></button>
+        <button class="pin-col-btn" data-col="green" style="background:linear-gradient(150deg,#D6E6BE,#C5DCA6);" title="Verde"></button>
+        <button class="pin-col-btn" data-col="pink" style="background:linear-gradient(150deg,#F9C8D0,#F4A7B3);" title="Rosa"></button>
+        <button class="pin-col-btn" data-col="blue" style="background:linear-gradient(150deg,#BDD9F2,#9DC8EC);" title="Celeste"></button>
+        <button class="pin-col-btn" data-col="purple" style="background:linear-gradient(150deg,#D4C4F0,#C1AEE8);" title="Lila"></button>
+      </div>
+      <div class="pin-form-actions">
+        <button class="pin-cancel-btn" id="pinCancelBtn">Cancelar</button>
+        <button class="pin-confirm-btn" id="pinConfirmBtn">📌 Fijar nota</button>
+      </div>
     </div>
     <textarea id="dayNoteArea" class="day-note-area"
       placeholder="Feriado, faltó luz, buen día… anota lo que quieras."
@@ -3894,8 +4124,13 @@ function savePanelSupplier() {
 function togglePersonCard(type, id) {
   const s=_expanded[type];
   if(s.has(id)) s.delete(id); else s.add(id);
-  if(type==='cli')  renderCliPanel();
-  if(type==='prov') renderProvPanel();
+  // Toggle directo en DOM sin re-renderizar — más rápido y sin bugs de ID
+  const list = document.getElementById(type==='cli'?'panelCliList':'panelProvList');
+  list.querySelectorAll('.person-card').forEach(card => {
+    if(card.dataset.pid === String(id)){
+      card.classList.toggle('expanded', s.has(id));
+    }
+  });
 }
 
 /* ── PANEL CLIENTES ── */
@@ -3981,7 +4216,7 @@ function renderCliPanel() {
       ? `<button class="pca-btn" onclick="shareCliWhatsapp('${c.name.replace(/'/g,'')}',${debtAmt},'${key}')" title="Enviar por WhatsApp" style="color:#25D366;">&#128241;</button>`
       : '';
 
-    return `<div class="person-card${isOpen?' expanded':''}">
+    return `<div class="person-card${isOpen?' expanded':''}" data-pid="${c.id}">
       <div class="person-card-head" onclick="togglePersonCard('cli','${c.id}')">
         <div class="person-card-info">
           <div class="person-card-name">${c.name}${!c._registered?` <span style="font-size:9px;opacity:0.4;font-family:var(--mono);">sin registrar</span>`:''}
@@ -4096,7 +4331,7 @@ function renderProvPanel() {
       ? `<button class="pca-btn" onclick="shareProvWhatsapp('${s.name.replace(/'/g,'')}',${totalDebt},'${s._key||s.name.toLowerCase()}')" title="Enviar por WhatsApp" style="color:#25D366;">&#128241;</button>`
       : '';
 
-    return `<div class="person-card${isOpen?' expanded':''}">
+    return `<div class="person-card${isOpen?' expanded':''}" data-pid="${s.id}">
       <div class="person-card-head" onclick="togglePersonCard('prov','${s.id}')">
         <div class="person-card-info">
           <div class="person-card-name">${s.name}${!s._registered?` <span style="font-size:9px;opacity:0.4;font-family:var(--mono);">sin registrar</span>`:''}</div>
@@ -6938,5 +7173,260 @@ function deletePanelItem(type,id){
 
 console.log('✓ Kajita v7.7');
 </script>
+
+<script>
+/* Notas Post-it Kajita - titulo + color + edicion doble clic */
+(function(){
+  var STORE='kj_notes_v3';
+
+  /* Paletas por color */
+  var PALETTES={
+    '':     {bg:'linear-gradient(150deg,#FCEFA6 0%,#F6E183 70%,#F0D86E 100%)',color:'#5a4f2a',tag:'#998534'},
+    green:  {bg:'linear-gradient(150deg,#D6E6BE 0%,#C5DCA6 70%,#BAD498 100%)',color:'#3c4a2c',tag:'#6a7d52'},
+    pink:   {bg:'linear-gradient(150deg,#F9C8D0 0%,#F4A7B3 70%,#EE8FA0 100%)',color:'#5a2a30',tag:'#8a3540'},
+    blue:   {bg:'linear-gradient(150deg,#BDD9F2 0%,#9DC8EC 70%,#84BAEB 100%)',color:'#1a3a52',tag:'#2a5070'},
+    purple: {bg:'linear-gradient(150deg,#D4C4F0 0%,#C1AEE8 70%,#AF9ADE 100%)',color:'#2e1a5a',tag:'#4a2a80'}
+  };
+
+  var DEFAULTS=[
+    {id:'n1',col:'green',title:'Frase del dia',body:'Anota cada venta,\npor chiquita que sea.\nLa caja cuadra sola.',isDefault:true},
+    {id:'n2',col:'',     title:'Nota del dia', body:'Llego el reparto de Gloria 7am.\nFalta que dejen la factura.',isDefault:true},
+    {id:'n3',col:'',     title:'Pendiente \u00b7 pagar',body:'Distribuidora Andina\nvence viernes\nS/ 480.00',isDefault:true},
+    {id:'n4',col:'',     title:'Pendiente \u00b7 cobrar',body:'Sra. Rosa \u2014 fiado del lunes\nS/ 35.00',isDefault:true}
+  ];
+
+  function load(){try{return JSON.parse(localStorage.getItem(STORE))||{};}catch(e){return{};}}
+  function save(s){localStorage.setItem(STORE,JSON.stringify(s));}
+  function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');}
+
+  function applyColor(el,col){
+    var p=PALETTES[col||'']||PALETTES[''];
+    el.style.background=p.bg;
+    el.style.color=p.color;
+    var tag=el.querySelector('.kj-note-tag');
+    if(tag)tag.style.color=p.tag;
+  }
+
+  function renderContent(el,d){
+    el.innerHTML=
+      '<span class="kj-pin"></span>'+
+      '<button class="kj-note-x" title="Quitar">\u00d7</button>'+
+      '<span class="kj-note-tag">'+(d.title?esc(d.title):'Nota')+'</span>'+
+      '<div class="kj-note-body">'+(d.body?esc(d.body):'')+'</div>';
+    applyColor(el,d.col);
+  }
+
+  function mk(d){
+    var el=document.createElement('div');
+    el.className='kj-note';
+    /* posicion CSS predeterminada via clase */
+    var posClass={n1:'n1',n2:'n2',n3:'n3',n4:'n4'}[d.id]||'';
+    if(posClass)el.classList.add(posClass);
+    el.setAttribute('data-id',d.id);
+    if(d.isDefault)el.setAttribute('data-default','1');
+    el.style.pointerEvents='all';
+    renderContent(el,d);
+    return el;
+  }
+
+  function enterEdit(el,d,s){
+    if(el.classList.contains('editing'))return;
+    el.classList.add('editing');
+    var savedRot=el.style.transform;
+    el.style.transform='rotate(0deg)';
+    var pal=PALETTES[d.col||'']||PALETTES[''];
+
+    /* Build color swatches */
+    var swatches=Object.keys(PALETTES).map(function(k){
+      var p=PALETTES[k];
+      var active=k===(d.col||'')?'active':'';
+      return '<button class="pin-col-btn '+active+'" data-col="'+k+'" style="background:'+p.bg+'" title="'+k+'"></button>';
+    }).join('');
+
+    el.innerHTML=
+      '<span class="kj-pin"></span>'+
+      '<div class="kj-note-edit-wrap">'+
+        '<input class="kj-note-edit-title" maxlength="40" placeholder="T\u00edtulo..." value="'+((d.title||'').replace(/"/g,'&quot;'))+'">'+
+        '<textarea class="kj-note-edit-body" rows="4">'+((d.body||''))+'</textarea>'+
+        '<div class="pin-colors" style="margin:4px 0;">'+
+          '<span class="pin-color-lbl">Color:</span>'+swatches+
+        '</div>'+
+        '<div class="kj-note-edit-actions">'+
+          '<button class="kj-note-edit-cancel">Cancelar</button>'+
+          '<button class="kj-note-edit-save">\u2713 Guardar</button>'+
+        '</div>'+
+      '</div>';
+
+    var ti=el.querySelector('.kj-note-edit-title');
+    var bi=el.querySelector('.kj-note-edit-body');
+    var currentCol=d.col||'';
+    ti.focus(); ti.select();
+
+    /* Color selector dentro del editor */
+    el.querySelectorAll('.pin-col-btn').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        el.querySelectorAll('.pin-col-btn').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active');
+        currentCol=btn.getAttribute('data-col');
+        var p=PALETTES[currentCol]||PALETTES[''];
+        el.style.background=p.bg;
+        el.style.color=p.color;
+        var tg=el.querySelector('.kj-note-edit-title');
+        if(tg)tg.style.color=p.tag;
+      });
+    });
+
+    el.querySelector('.kj-note-edit-save').onclick=function(e){
+      e.stopPropagation();
+      d.title=ti.value.trim()||'Nota';
+      d.body=bi.value;
+      d.col=currentCol;
+      if(d.isDefault){s._overrides=s._overrides||{};s._overrides[d.id]={title:d.title,body:d.body,col:d.col};}
+      else{var c=(s.custom||[]).find(function(n){return n.id===d.id;});if(c){c.title=d.title;c.body=d.body;c.col=d.col;}}
+      save(s);
+      el.classList.remove('editing');el.style.transform=savedRot;renderContent(el,d);
+    };
+    el.querySelector('.kj-note-edit-cancel').onclick=function(e){
+      e.stopPropagation();
+      el.classList.remove('editing');el.style.transform=savedRot;renderContent(el,d);
+    };
+    bi.addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))el.querySelector('.kj-note-edit-save').click();});
+  }
+
+  function setPos(el,p){if(!p)return;el.style.left=p.x+'px';el.style.top=p.y+'px';el.style.right='auto';}
+  function toast(msg){var t=document.getElementById('kjToast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2200);}
+
+  function init(){
+    var layer=document.getElementById('kjNotesLayer');if(!layer)return;
+    var s=load();s.pos=s.pos||{};s.removed=s.removed||[];s.custom=s.custom||[];s._overrides=s._overrides||{};
+    var dataMap={};
+
+    DEFAULTS.forEach(function(d){
+      if(s.removed.indexOf(d.id)>=0)return;
+      if(s._overrides[d.id]){d.title=s._overrides[d.id].title;d.body=s._overrides[d.id].body;if(s._overrides[d.id].col!==undefined)d.col=s._overrides[d.id].col;}
+      dataMap[d.id]=d;
+      var el=mk(d);setPos(el,s.pos[d.id]);layer.appendChild(el);
+    });
+    s.custom.forEach(function(d){dataMap[d.id]=d;var el=mk(d);setPos(el,s.pos[d.id]);layer.appendChild(el);});
+
+    /* Arrastre */
+    var drag=null;
+    layer.addEventListener('pointerdown',function(e){
+      var note=e.target.closest('.kj-note');
+      if(!note||e.target.closest('.kj-note-x')||e.target.closest('.kj-note-edit-wrap')||e.target.closest('.pin-col-btn'))return;
+      if(note.classList.contains('editing'))return;
+      var r=note.getBoundingClientRect();
+      drag={note:note,ox:e.clientX-r.left,oy:e.clientY-r.top,moved:false,started:false};
+      note.setPointerCapture(e.pointerId);e.preventDefault();
+    });
+    layer.addEventListener('pointermove',function(e){
+      if(!drag)return;
+      var dx=e.clientX-(drag.note.getBoundingClientRect().left+drag.ox);
+      if(!drag.started&&Math.abs(dx)>5){drag.started=true;drag.note.classList.add('dragging');}
+      if(!drag.started)return;
+      var x=Math.max(0,Math.min(e.clientX-drag.ox,window.innerWidth-180));
+      var y=Math.max(0,Math.min(e.clientY-drag.oy,window.innerHeight-220));
+      drag.note.style.left=x+'px';drag.note.style.top=y+'px';drag.note.style.right='auto';drag.moved=true;
+    });
+    function endDrag(){
+      if(!drag)return;drag.note.classList.remove('dragging');
+      if(drag.moved){var id=drag.note.getAttribute('data-id');s.pos[id]={x:parseFloat(drag.note.style.left),y:parseFloat(drag.note.style.top)};var c=(s.custom||[]).find(function(n){return n.id===id;});if(c){c.x=s.pos[id].x;c.y=s.pos[id].y;}save(s);}
+      drag=null;
+    }
+    layer.addEventListener('pointerup',endDrag);layer.addEventListener('pointercancel',endDrag);
+
+    /* Doble clic = editar */
+    layer.addEventListener('dblclick',function(e){
+      var note=e.target.closest('.kj-note');if(!note||e.target.closest('.kj-note-x'))return;
+      var id=note.getAttribute('data-id');var d=dataMap[id];if(d)enterEdit(note,d,s);
+    });
+
+    /* Quitar nota */
+    layer.addEventListener('click',function(e){
+      var btn=e.target.closest('.kj-note-x');if(!btn)return;
+      var note=btn.closest('.kj-note');var id=note.getAttribute('data-id');
+      if(note.hasAttribute('data-default')){if(s.removed.indexOf(id)<0)s.removed.push(id);delete s.pos[id];delete s._overrides[id];}
+      else{s.custom=(s.custom||[]).filter(function(n){return n.id!==id;});delete s.pos[id];}
+      save(s);
+      note.style.transition='opacity .15s,transform .15s';note.style.opacity='0';note.style.transform='scale(.82) rotate(var(--rot,-2deg))';
+      setTimeout(function(){note.remove();},160);
+    });
+
+    /* Mini-form: Fijar nota */
+    var btnPin   =document.getElementById('btnPinNote');
+    var pinForm  =document.getElementById('pinForm');
+    var pinTitle =document.getElementById('pinTitle');
+    var pinBody  =document.getElementById('pinBody');
+    var pinCancel=document.getElementById('pinCancelBtn');
+    var pinConfirm=document.getElementById('pinConfirmBtn');
+    var dayArea  =document.getElementById('dayNoteArea');
+    var selectedCol='';
+
+    if(pinForm){
+      /* Selector de color en el mini-form */
+      pinForm.querySelectorAll('.pin-col-btn').forEach(function(btn){
+        btn.addEventListener('click',function(e){
+          e.preventDefault();
+          pinForm.querySelectorAll('.pin-col-btn').forEach(function(b){b.classList.remove('active');});
+          btn.classList.add('active');
+          selectedCol=btn.getAttribute('data-col');
+        });
+      });
+    }
+
+    if(btnPin&&pinForm){
+      btnPin.addEventListener('click',function(){
+        /* Pre-llenar body con lo del textarea, titulo vacio */
+        var txt=dayArea?dayArea.value.trim():'';
+        pinTitle.value='';
+        pinBody.value=txt||'';
+        selectedCol='';
+        pinForm.querySelectorAll('.pin-col-btn').forEach(function(b){b.classList.remove('active');});
+        var firstBtn=pinForm.querySelector('.pin-col-btn');if(firstBtn)firstBtn.classList.add('active');
+        pinForm.style.display='flex';
+        pinTitle.focus();
+      });
+
+      pinCancel.addEventListener('click',function(){
+        pinForm.style.display='none';
+      });
+
+      pinConfirm.addEventListener('click',function(){
+        var body=pinBody?pinBody.value.trim():'';
+        var titulo=pinTitle.value.trim()||new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
+        if(!body&&!titulo){toast('Escribe algo primero');if(pinTitle)pinTitle.focus();return;}
+        var n=(s.custom||[]).length;
+        var d={id:'c'+Date.now(),col:selectedCol,title:titulo,body:body||titulo,isDefault:false};
+        var px=Math.round(window.innerWidth/2-86+(n%4)*22);var py=160+(n%5)*26;
+        s.pos[d.id]={x:px,y:py};s.custom.push(d);save(s);dataMap[d.id]=d;
+        var el=mk(d);el.style.left=px+'px';el.style.top=py+'px';el.style.right='auto';
+        layer.appendChild(el);el.classList.add('kj-note-pop');
+        /* Limpiar form y textarea */
+        if(dayArea)dayArea.value='';
+        pinForm.style.display='none';
+        pinTitle.value='';if(pinBody)pinBody.value='';
+        toast('Nota fijada \uD83D\uDCCC');
+      });
+
+      pinTitle.addEventListener('keydown',function(e){
+        if(e.key==='Enter'){e.preventDefault();if(pinBody)pinBody.focus();}
+        if(e.key==='Escape')pinCancel.click();
+      });
+      if(pinBody){
+        pinBody.addEventListener('keydown',function(e){
+          if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();pinConfirm.click();}
+          if(e.key==='Escape')pinCancel.click();
+        });
+      }
+    }
+  }
+
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
+})();
+</script>
+
+
+
 </body>
 </html>
