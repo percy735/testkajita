@@ -460,17 +460,9 @@ header {
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s; 
 }
 .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); background: var(--k-panel-2); }
-.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 24px 24px 0 0; }
-
-.stat-card.s-inc::before   { background: var(--k-accent); box-shadow: 0 2px 10px var(--k-accent-l); }
-.stat-card.s-exp::before   { background: var(--k-expense); box-shadow: 0 2px 10px var(--k-expense-l); }
-.stat-card.s-cred::before  { background: var(--k-credit); box-shadow: 0 2px 10px var(--k-credit-l); }
-.stat-card.s-bal::before   { background: #60A5FA; box-shadow: 0 2px 10px rgba(96,165,250,0.2); }
 .stat-card.s-bal  .stat-value { color: #60A5FA; }
 .stat-card.s-bal.positive .stat-value { color: var(--k-accent); }
-.stat-card.s-bal.positive::before { background: var(--k-accent); }
 .stat-card.s-bal.negative .stat-value { color: var(--k-expense); }
-.stat-card.s-bal.negative::before { background: var(--k-expense); }
 
 .stat-label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--k-text-3); margin-bottom: 6px; }
 .stat-value { font-family: var(--mono); font-size: 17px; font-weight: 500; }
