@@ -4154,7 +4154,12 @@ function renderCliPanel() {
   });
 
   const filtered = allClients
-    .filter(c => !q || c.name.toLowerCase().includes(q))
+    .filter(c => {
+      const key=c.name.toLowerCase();
+      const debtAmt=(debtMap[key]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
+      const matchQ=!q||c.name.toLowerCase().includes(q);
+      return matchQ && debtAmt>0; // solo pendientes de cobro
+    })
     .sort((a,b) => {
       const da=(debtMap[a.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
       const db=(debtMap[b.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
@@ -4162,8 +4167,8 @@ function renderCliPanel() {
     });
 
   if(!filtered.length){
-    list.innerHTML=`<div class="panel-empty"><p>Sin clientes aún.<br>Registra ventas con nombre de cliente<br>o usa <strong>+ Agregar</strong>.</p></div>`;
-    document.getElementById('panelCliSub').textContent='0 clientes';
+    list.innerHTML=`<div class="panel-empty"><p>Sin cobros pendientes.<br>Todo está al día ✓</p></div>`;
+    document.getElementById('panelCliSub').textContent='0 pendientes';
     document.getElementById('panelCliTotalDebt').textContent='S/ 0.00';
     document.getElementById('panelCliDebtCount').textContent='0';
     return;
@@ -4225,7 +4230,7 @@ function renderCliPanel() {
     </div>`;
   }).join('');
 
-  document.getElementById('panelCliSub').textContent=filtered.length+' cliente'+(filtered.length!==1?'s':'');
+  document.getElementById('panelCliSub').textContent=filtered.length+' pendiente'+(filtered.length!==1?'s':'');
   document.getElementById('panelCliTotalDebt').textContent=fmt(totalDebt);
   document.getElementById('panelCliDebtCount').textContent=debtCount+'';
 }
@@ -4263,7 +4268,12 @@ function renderProvPanel() {
   });
 
   const filtered = allSuppliers
-    .filter(s => !q || s.name.toLowerCase().includes(q))
+    .filter(s => {
+      const key=s.name.toLowerCase();
+      const debtAmt=(debtMap[key]||[]).reduce((e,d)=>e+(d.pendiente||d.amount),0);
+      const matchQ=!q||s.name.toLowerCase().includes(q);
+      return matchQ && debtAmt>0; // solo pendientes de pago
+    })
     .sort((a,b) => {
       const da=(debtMap[a.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
       const db=(debtMap[b.name.toLowerCase()]||[]).reduce((s,e)=>s+(e.pendiente||e.amount),0);
@@ -4271,8 +4281,8 @@ function renderProvPanel() {
     });
 
   if(!filtered.length){
-    list.innerHTML=`<div class="panel-empty"><p>Sin proveedores aún.<br>Registra egresos con nombre de proveedor<br>o usa <strong>+ Agregar</strong>.</p></div>`;
-    document.getElementById('panelProvSub').textContent='0 proveedores';
+    list.innerHTML=`<div class="panel-empty"><p>Sin pagos pendientes.<br>Todo está al día ✓</p></div>`;
+    document.getElementById('panelProvSub').textContent='0 pendientes';
     document.getElementById('panelProvTotal').textContent='S/ 0.00';
     document.getElementById('panelProvCount').textContent='0';
     return;
