@@ -6841,6 +6841,45 @@ window.addEventListener('DOMContentLoaded',async()=>{
 
 // ══ CRUD FUNCTIONS - defined here so sb/currentUser are in scope ══
 
+
+/* ── Auto-crear cliente o proveedor al registrar crédito/fiado ── */
+async function autoEnsureContact(name, type) {
+  // type: 'cli' | 'prov'
+  const list  = type === 'cli' ? clients : suppliers;
+  const table = type === 'cli' ? 'clients' : 'suppliers';
+  const key   = name.toLowerCase().trim();
+  const exists = list.find(x => x.name.toLowerCase().trim() === key);
+  if (exists) return exists.id; // ya existe, nada que hacer
+
+  // Generar código automático: CLI-001, CLI-002... / PRV-001...
+  const prefix = type === 'cli' ? 'CLI' : 'PRV';
+  const nums = list
+    .map(x => { const m=(x.code||'').match(/^(?:CLI|PRV)-?(\d+)$/i); return m?parseInt(m[1]):0; })
+    .filter(n => n > 0);
+  const nextNum = nums.length ? Math.max(...nums) + 1 : 1;
+  const code = prefix + '-' + String(nextNum).padStart(3, '0');
+
+  let newId = 'local-' + Date.now();
+  if (currentUser && !currentUser.id?.includes('demo-user')) {
+    try {
+      const { data, error } = await sb.from(table)
+        .insert([{ user_id: currentUser.id, name: name.trim(), phone: null, code }])
+        .select().single();
+      if (!error && data) newId = data.id;
+    } catch(e) { console.warn('autoEnsureContact:', e); }
+  }
+
+  const item = { id: newId, name: name.trim(), phone: null, code };
+  if (type === 'cli') {
+    clients.unshift(item);
+    try { saveClients(); renderClientDropdown(); } catch(e) {}
+  } else {
+    suppliers.unshift(item);
+    try { saveSuppliers(); renderSupplierDropdown(); } catch(e) {}
+  }
+  return newId;
+}
+
 async function submitEntry(){
   const desc      = document.getElementById('iDesc').value.trim();
   const amount    = parseFloat(document.getElementById('iAmt').value);
@@ -6859,6 +6898,12 @@ async function submitEntry(){
   }
 
   const isIncome = cType==='income';
+
+  // Auto-crear cliente o proveedor si hay crédito/fiado y el nombre no existe aún
+  if(credit && client){
+    const contactType = isIncome ? 'cli' : 'prov';
+    await autoEnsureContact(client, contactType);
+  }
   const isCredit = credit && isIncome;   // ingreso pendiente de cobro
   const isDebt   = credit && !isIncome;  // egreso pendiente de pago (fiado a proveedor)
   const payment  = (isCredit || isDebt) ? 'credit' : cPay;
