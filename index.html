@@ -114,7 +114,7 @@ body::before {
   #iDesc, #iClient { height: 46px; font-size: 15px; }
   
   /* Quick bar 4 cols */
-  .quick-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+  .quick-bar { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
   .qbtn      { text-align: center; justify-content: center; padding: 12px 0; }
 
   /* Stat cards bigger */
@@ -728,7 +728,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 .day-note-wrap {
-  margin-top: 20px; border-top: 1px solid var(--k-line); padding-top: 16px;
+  background: var(--k-panel);
+  border: 1px solid var(--k-line);
+  border-radius: 22px;
+  padding: 20px 24px 22px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
 }
 .day-note-header {
   display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
@@ -1234,6 +1239,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .qbtn.qprov:hover { color: var(--k-expense); border-color: var(--k-expense); background: var(--k-expense-l); }
 .qbtn.qinv:hover  { color: var(--k-accent);  border-color: var(--k-accent);  background: var(--k-accent-l); }
 .qbtn.qcred:hover { color: var(--k-credit);  border-color: var(--k-credit);  background: var(--k-credit-l); }
+.qbtn.qcal:hover  { color: var(--k-blue);   border-color: var(--k-blue);   background: var(--k-blue-l); }
 
 /* ══════════════════════════════════════════
    PANEL LATERAL
@@ -2184,7 +2190,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   .sub-row    { grid-template-columns: 1fr; gap: 8px; }
 
   /* ── QUICK BAR ── */
-  .quick-bar { gap: 6px; }
+  .quick-bar { grid-template-columns: repeat(5,1fr); gap: 6px; }
   .qbtn { font-size: 11.5px; padding: 9px 0; }
 
   /* ── FORM ── */
@@ -2366,11 +2372,20 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   border-color: rgba(196,240,66,0.5); color: #C4F042; background: rgba(196,240,66,0.06);
 }
 
-/* Mini-form fijar nota */
+/* Area de nota idle (reposo) */
+.note-idle {
+  padding: 12px 4px; cursor: pointer; border-radius: 10px;
+  transition: background .15s;
+}
+.note-idle:hover { background: rgba(255,255,255,0.04); }
+.note-idle-placeholder {
+  font-family: 'Caveat', cursive; font-size: 17px; line-height: 1.4;
+  color: var(--k-text-3); font-style: italic;
+}
+
+/* Form principal de nota */
 .pin-form {
-  margin-top: 8px; padding: 12px;
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px; display: flex; flex-direction: column; gap: 8px;
+  display: flex; flex-direction: column; gap: 10px;
 }
 .pin-title-inp {
   width: 100%; height: 36px; padding: 0 10px;
@@ -2391,6 +2406,23 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .pin-body-inp:focus { border-color: rgba(196,240,66,0.4) !important; }
 .pin-body-inp::placeholder { font-family: var(--sans); font-size: 12px; color: var(--k-text-3); }
+
+/* Wrapper body + emoji */
+.pin-body-wrap { position: relative; }
+.pin-emoji-trigger {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 7px; font-size: 16px; padding: 3px 7px; cursor: pointer;
+  line-height: 1; transition: background .15s; z-index: 2;
+}
+.pin-emoji-trigger:hover { background: rgba(255,255,255,0.13); }
+
+/* Row inferior: colores + acciones en una sola línea */
+.pin-form-bottom {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.pin-form-bottom .pin-colors { display: flex; align-items: center; gap: 6px; }
+.pin-form-bottom .pin-form-actions { display: flex; gap: 8px; flex-shrink: 0; }
 /* Selector de colores */
 .pin-colors {
   display: flex; align-items: center; gap: 8px;
@@ -2469,6 +2501,31 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 @media (max-width: 900px) {
   #kjNotesLayer { display: none !important; }
 }
+
+.emoji-picker {
+  position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 200;
+  background: #1a1c24; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 12px 14px; width: 260px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+}
+.emoji-section-lbl {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--k-text-3);
+  margin-bottom: 7px; margin-top: 10px;
+}
+.emoji-section-lbl:first-child { margin-top: 0; }
+.emoji-grid {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px;
+}
+.emoji-grid span {
+  font-size: 20px; line-height: 1; padding: 5px 3px; text-align: center;
+  border-radius: 7px; cursor: pointer; transition: background .12s;
+  display: block;
+}
+.emoji-grid span:hover { background: rgba(255,255,255,0.10); }
+
+/* Ocultar btnPinNote cuando el pin-form está abierto */
+.day-note-wrap.pin-open #btnPinNote { display: none; }
 </style>
 </head>
 <body>
@@ -2801,6 +2858,78 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <button class="btn-cancel" id="btnCan" style="display:none;" onclick="cancelEdit()">Cancelar edición</button>
   </div>
 
+  <!-- NOTA DEL DÍA — columna izquierda, siempre visible -->
+  <div class="day-note-wrap">
+    <div class="day-note-header">
+      <div class="day-note-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Nota del día
+      </div>
+      <span class="day-note-saved" id="noteSavedLbl">✓ guardado</span>
+      <!-- btnPinNote se oculta cuando el pin-form está abierto -->
+      <button class="btn-pin-note" id="btnPinNote" title="Crear nota">✏️ Crear nota</button>
+    </div>
+
+    <!-- Area de nota: modo reposo muestra titulo+texto, modo activo muestra el form completo -->
+    <div class="note-idle" id="noteIdle">
+      <div class="note-idle-placeholder">Feriado, faltó luz, buen día…<br>toca para escribir.</div>
+    </div>
+
+    <!-- Form completo: se muestra al tocar el área o "Crear nota" -->
+    <div class="pin-form" id="pinForm" style="display:none;">
+      <input type="text" id="pinTitle" class="pin-title-inp" placeholder="Título de la nota..." maxlength="40">
+      <!-- emoji picker anclado al textarea -->
+      <div class="pin-body-wrap">
+        <textarea id="pinBody" class="pin-body-inp" placeholder="Texto de la nota..." rows="4"></textarea>
+        <button class="pin-emoji-trigger" type="button" title="Emojis">😊</button>
+        <div class="emoji-picker" id="emojiPicker" style="display:none;">
+          <div class="emoji-section-lbl">Caritas</div>
+          <div class="emoji-grid">
+            <span data-emoji="😊">😊</span><span data-emoji="😄">😄</span>
+            <span data-emoji="😎">😎</span><span data-emoji="🤔">🤔</span>
+            <span data-emoji="😅">😅</span><span data-emoji="🥳">🥳</span>
+            <span data-emoji="🤑">🤑</span><span data-emoji="👍">👍</span>
+            <span data-emoji="✅">✅</span><span data-emoji="❌">❌</span>
+            <span data-emoji="⚠️">⚠️</span><span data-emoji="🔥">🔥</span>
+          </div>
+          <div class="emoji-section-lbl">Negocio</div>
+          <div class="emoji-grid">
+            <span data-emoji="💰">💰</span><span data-emoji="💵">💵</span>
+            <span data-emoji="📦">📦</span><span data-emoji="🛒">🛒</span>
+            <span data-emoji="🧾">🧾</span><span data-emoji="📊">📊</span>
+            <span data-emoji="🏪">🏪</span><span data-emoji="🚚">🚚</span>
+            <span data-emoji="⏰">⏰</span><span data-emoji="📋">📋</span>
+            <span data-emoji="🔑">🔑</span><span data-emoji="💡">💡</span>
+          </div>
+          <div class="emoji-section-lbl">Naturaleza</div>
+          <div class="emoji-grid">
+            <span data-emoji="🌱">🌱</span><span data-emoji="🌿">🌿</span>
+            <span data-emoji="🌸">🌸</span><span data-emoji="🌻">🌻</span>
+            <span data-emoji="🍃">🍃</span><span data-emoji="☀️">☀️</span>
+            <span data-emoji="🌧️">🌧️</span><span data-emoji="⭐">⭐</span>
+            <span data-emoji="🌙">🌙</span><span data-emoji="🌈">🌈</span>
+            <span data-emoji="🐝">🐝</span><span data-emoji="🌺">🌺</span>
+          </div>
+        </div>
+      </div>
+      <div class="pin-form-bottom">
+        <div class="pin-colors">
+          <button class="pin-col-btn active" data-col="" style="background:linear-gradient(150deg,#FCEFA6,#F6E183);" title="Amarillo"></button>
+          <button class="pin-col-btn" data-col="green" style="background:linear-gradient(150deg,#D6E6BE,#C5DCA6);" title="Verde"></button>
+          <button class="pin-col-btn" data-col="pink" style="background:linear-gradient(150deg,#F9C8D0,#F4A7B3);" title="Rosa"></button>
+          <button class="pin-col-btn" data-col="blue" style="background:linear-gradient(150deg,#BDD9F2,#9DC8EC);" title="Celeste"></button>
+          <button class="pin-col-btn" data-col="purple" style="background:linear-gradient(150deg,#D4C4F0,#C1AEE8);" title="Lila"></button>
+        </div>
+        <div class="pin-form-actions">
+          <button class="pin-cancel-btn" id="pinCancelBtn">Cancelar</button>
+          <button class="pin-confirm-btn" id="pinConfirmBtn">📌 Fijar nota</button>
+        </div>
+      </div>
+    </div>
+    <!-- textarea oculto para compatibilidad con guardado de nota del día -->
+    <textarea id="dayNoteArea" class="day-note-area" style="display:none;" oninput="onDayNoteInput()"></textarea>
+  </div>
+
 
 
     </div><!-- /app-left -->
@@ -2860,6 +2989,18 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       </svg>
       Créditos
     </button>
+    <button class="qbtn qcal" onclick="openSalesCalendar()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <line x1="8" y1="14" x2="8" y2="14"/>
+        <line x1="12" y1="14" x2="12" y2="14"/>
+        <line x1="16" y1="14" x2="16" y2="14"/>
+      </svg>
+      Calendario
+    </button>
   </div>
 
   <!-- ══ RECORDATORIOS DE COBRO ══ -->
@@ -2891,10 +3032,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="entries-hdr">
     <div class="entries-ttl">Movimientos del día</div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <button onclick="openSalesCalendar()" style="background:none;border:1px solid var(--k-line);border-radius:99px;padding:5px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--k-text-3);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;" onmouseover="this.style.borderColor='var(--k-accent)';this.style.color='var(--k-accent)'" onmouseout="this.style.borderColor='var(--k-line)';this.style.color='var(--k-text-3)'">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Calendario
-      </button>
       <div class="entries-cnt" id="entCnt"></div>
     </div>
   </div>
@@ -2909,38 +3046,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   </div>
   <div id="entList"></div>
 
-  <!-- ══ NOTA DEL DÍA ══ -->
-  <div class="day-note-wrap">
-    <div class="day-note-header">
-      <div class="day-note-label">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Nota del día
-      </div>
-      <span class="day-note-saved" id="noteSavedLbl">✓ guardado</span>
-      <button class="btn-pin-note" id="btnPinNote" title="Fijar como nota">📌 Fijar nota</button>
-    </div>
-    <!-- mini-form para fijar nota -->
-    <div class="pin-form" id="pinForm" style="display:none;">
-      <input type="text" id="pinTitle" class="pin-title-inp" placeholder="Título..." maxlength="40">
-      <textarea id="pinBody" class="pin-body-inp" placeholder="Texto de la nota..." rows="3"></textarea>
-      <div class="pin-colors" id="pinColors">
-        <span class="pin-color-lbl">Color:</span>
-        <button class="pin-col-btn active" data-col="" style="background:linear-gradient(150deg,#FCEFA6,#F6E183);" title="Amarillo"></button>
-        <button class="pin-col-btn" data-col="green" style="background:linear-gradient(150deg,#D6E6BE,#C5DCA6);" title="Verde"></button>
-        <button class="pin-col-btn" data-col="pink" style="background:linear-gradient(150deg,#F9C8D0,#F4A7B3);" title="Rosa"></button>
-        <button class="pin-col-btn" data-col="blue" style="background:linear-gradient(150deg,#BDD9F2,#9DC8EC);" title="Celeste"></button>
-        <button class="pin-col-btn" data-col="purple" style="background:linear-gradient(150deg,#D4C4F0,#C1AEE8);" title="Lila"></button>
-      </div>
-      <div class="pin-form-actions">
-        <button class="pin-cancel-btn" id="pinCancelBtn">Cancelar</button>
-        <button class="pin-confirm-btn" id="pinConfirmBtn">📌 Fijar nota</button>
-      </div>
-    </div>
-    <textarea id="dayNoteArea" class="day-note-area"
-      placeholder="Feriado, faltó luz, buen día… anota lo que quieras."
-      oninput="onDayNoteInput()"
-    ></textarea>
-  </div>
 
 </div>
 
@@ -7474,6 +7579,134 @@ console.log('✓ Kajita v7.7');
 </script>
 
 
+
+
+<script>
+/* ── Emojis y control btnPinNote ── */
+/* ── Sistema de emojis para nota del día ── */
+(function() {
+  var _lastPos = 0; // guarda la última posición del cursor en pinBody
+
+  function getTextarea() {
+    return document.getElementById('pinBody') || document.getElementById('dayNoteArea');
+  }
+
+  function insertEmoji(emoji) {
+    var ta = getTextarea();
+    if (!ta) return;
+    // Usar la posición guardada si el textarea perdió el foco
+    var pos = (document.activeElement === ta) ? ta.selectionStart : _lastPos;
+    var val = ta.value;
+    ta.value = val.slice(0, pos) + emoji + val.slice(pos);
+    var newPos = pos + emoji.length;
+    ta.focus();
+    ta.selectionStart = ta.selectionEnd = newPos;
+    _lastPos = newPos;
+    ta.dispatchEvent(new Event('input'));
+  }
+
+  // Guardar posición cada vez que el cursor se mueve en el textarea
+  document.addEventListener('DOMContentLoaded', function() {
+    var ta = getTextarea();
+    if (ta) {
+      ['keyup','click','focus'].forEach(function(ev) {
+        ta.addEventListener(ev, function() { _lastPos = ta.selectionStart; });
+      });
+    }
+
+    // Delegación de eventos en el picker — stopPropagation para no cerrar
+    var picker = document.getElementById('emojiPicker');
+    if (picker) {
+      picker.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var span = e.target.closest('[data-emoji]');
+        if (span) {
+          insertEmoji(span.getAttribute('data-emoji'));
+        }
+      });
+    }
+
+    // Botón trigger
+    var trigger = document.querySelector('.pin-emoji-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Guardar posición antes de abrir el picker
+        var ta2 = getTextarea();
+        if (ta2) _lastPos = ta2.selectionStart;
+        var p = document.getElementById('emojiPicker');
+        if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+  });
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.emoji-picker') && !e.target.closest('.pin-emoji-trigger')) {
+      var p = document.getElementById('emojiPicker');
+      if (p) p.style.display = 'none';
+    }
+  });
+
+  // Exponer toggleEmojiPicker por si se usa en onclick legacy
+  window.toggleEmojiPicker = function() {
+    var ta2 = getTextarea();
+    if (ta2) _lastPos = ta2.selectionStart;
+    var p = document.getElementById('emojiPicker');
+    if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  };
+  window.insertEmoji = insertEmoji;
+})();
+
+// Gestión del área de nota: idle ↔ form
+document.addEventListener('DOMContentLoaded', function() {
+  var wrap      = document.querySelector('.day-note-wrap');
+  var btnPin    = document.getElementById('btnPinNote');
+  var pinForm   = document.getElementById('pinForm');
+  var noteIdle  = document.getElementById('noteIdle');
+  var pinCancel = document.getElementById('pinCancelBtn');
+  var pinConfirm= document.getElementById('pinConfirmBtn');
+
+  function openNoteForm() {
+    if (!pinForm || !noteIdle) return;
+    noteIdle.style.display = 'none';
+    pinForm.style.display  = 'flex';
+    if (wrap) wrap.classList.add('pin-open');
+    var ti = document.getElementById('pinTitle');
+    if (ti) ti.focus();
+  }
+
+  function closeNoteForm() {
+    if (!pinForm || !noteIdle) return;
+    pinForm.style.display  = 'none';
+    noteIdle.style.display = '';
+    if (wrap) wrap.classList.remove('pin-open');
+    // Reset campos
+    var ti = document.getElementById('pinTitle');
+    var bi = document.getElementById('pinBody');
+    if (ti) ti.value = '';
+    if (bi) bi.value = '';
+    // Reset color al primero
+    pinForm.querySelectorAll('.pin-col-btn').forEach(function(b,i){
+      b.classList.toggle('active', i===0);
+    });
+  }
+
+  // Clic en "Crear nota" o en el área idle → abre form
+  if (btnPin)   btnPin.addEventListener('click', openNoteForm);
+  if (noteIdle) noteIdle.addEventListener('click', openNoteForm);
+
+  // Cancelar → cierra form
+  if (pinCancel) pinCancel.addEventListener('click', function() {
+    closeNoteForm();
+  });
+
+  // Confirmar → el JS de notas procesa y luego cerramos
+  if (pinConfirm) pinConfirm.addEventListener('click', function() {
+    setTimeout(closeNoteForm, 120);
+  });
+});
+</script>
 
 </body>
 </html>
