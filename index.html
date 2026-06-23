@@ -1574,6 +1574,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .picker-panel .cchip:last-child { border-bottom: none; }
 .picker-panel .pchip:hover,
 .picker-panel .cchip:hover { background: rgba(255,255,255,0.07); }
+.picker-panel .pchip.pchip-focus { background: rgba(196,240,66,0.12); color: var(--k-accent); }
 .chip-price { font-family: var(--mono); font-size: 11px; color: var(--k-text-3); flex-shrink: 0; }
 .picker-empty { padding: 16px; font-size: 13px; color: var(--k-text-3); font-style: italic; text-align: center; }
 
@@ -1956,26 +1957,28 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 /* Buscador — compacto, integrado en panel-head */
 .panel-search { padding: 0; flex-shrink: 0; }
 .panel-search-wrap {
-  position: relative; display: flex; align-items: center;
+  position: relative; display: inline-flex; align-items: center;
 }
 .panel-search-wrap svg {
   position: absolute; left: 10px; pointer-events: none;
-  color: var(--k-text-3);
+  color: var(--k-text-3); flex-shrink: 0; z-index: 1;
 }
-.panel-search-inp {
-  width: 200px; padding: 7px 12px 7px 32px;
+.panel-search-wrap .panel-search-inp {
+  width: 200px; padding: 7px 12px 7px 30px;
   background: rgba(255,255,255,0.06);
   border: 1px solid var(--k-line);
   border-radius: 20px; outline: none;
   font-family: var(--sans); font-size: 12px;
   color: var(--k-text); transition: all 0.2s;
+  display: block;
 }
-.panel-search-inp:focus {
+.panel-search-wrap .panel-search-inp:focus {
   border-color: var(--k-accent);
-  width: 240px;
+  width: 230px;
   background: rgba(255,255,255,0.09);
+  outline: none;
 }
-.panel-search-inp::placeholder { color: var(--k-text-3); }
+.panel-search-wrap .panel-search-inp::placeholder { color: var(--k-text-3); }
 
 /* Formulario de agregar/editar en panel */
 .panel-form {
@@ -2677,7 +2680,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px; margin-bottom: 20px;
+  gap: 8px; margin-bottom: 0;
 }
 @media (max-width: 700px) { .dash-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 420px) { .dash-grid { grid-template-columns: 1fr 1fr; } }
@@ -2685,21 +2688,20 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-card {
   background: var(--k-panel);
   border: 1px solid var(--k-line);
-  border-radius: 20px; padding: 18px 20px;
-  backdrop-filter: blur(20px);
+  border-radius: 14px; padding: 12px 14px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .dash-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .dash-card-lbl {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 8px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 4px;
 }
 .dash-card-val {
-  font-family: var(--mono); font-size: 22px; font-weight: 700;
-  line-height: 1.1;
+  font-family: var(--mono); font-size: 17px; font-weight: 700;
+  line-height: 1.15;
 }
 .dash-card-sub {
-  font-family: var(--sans); font-size: 11px; color: var(--k-text-3); margin-top: 4px;
+  font-family: var(--sans); font-size: 10px; color: var(--k-text-3); margin-top: 2px;
 }
 .dash-card.dc-inc .dash-card-val { color: var(--k-accent); }
 .dash-card.dc-exp .dash-card-val { color: var(--k-expense); }
@@ -2726,12 +2728,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 /* Bar chart diario */
 .dash-chart {
   background: var(--k-panel); border: 1px solid var(--k-line);
-  border-radius: 20px; padding: 20px;
-  margin-bottom: 20px;
+  border-radius: 14px; padding: 12px 14px;
+  margin-bottom: 0;
 }
 .dash-chart-bars {
-  display: flex; align-items: flex-end; gap: 4px;
-  height: 80px; margin-bottom: 8px;
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 60px; margin-bottom: 4px;
 }
 .dcb-col {
   flex: 1; display: flex; flex-direction: column;
@@ -2757,11 +2759,11 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 /* Top listas */
 .dash-top-list {
   background: var(--k-panel); border: 1px solid var(--k-line);
-  border-radius: 20px; overflow: hidden;
+  border-radius: 12px; overflow: hidden;
 }
 .dash-top-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 18px; border-bottom: 1px solid var(--k-line);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-bottom: 1px solid var(--k-line);
   transition: background 0.15s;
 }
 .dash-top-row:last-child { border-bottom: none; }
@@ -2847,6 +2849,405 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: all .15s; flex-shrink: 0;
 }
 .dash-nav-today:hover { border-color: var(--k-accent); color: var(--k-accent); }
+
+/* ══ DASHBOARD TOP CARDS (2 tarjetas) ══ */
+.dash-top-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
+}
+@media (max-width: 700px) { .dash-top-cards { grid-template-columns: 1fr; } }
+
+.dash-hero {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 16px; padding: 16px 20px;
+  gap: 12px;
+}
+.dash-hero-greeting {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 3px;
+}
+.dash-hero-biz {
+  font-family: var(--serif); font-size: 20px; font-weight: 600;
+  color: var(--k-text); line-height: 1.2;
+}
+.dash-hero-rubro {
+  font-family: var(--sans); font-size: 11px; color: var(--k-text-3); margin-top: 2px;
+}
+.dash-streak-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(196,240,66,0.08); border: 1px solid rgba(196,240,66,0.18);
+  border-radius: 12px; padding: 10px 14px; flex-shrink: 0;
+}
+.dash-streak-num {
+  font-family: var(--mono); font-size: 24px; font-weight: 700;
+  color: var(--k-accent); line-height: 1;
+}
+.dash-streak-label {
+  font-family: var(--sans); font-size: 10px; color: var(--k-text-3); line-height: 1.3;
+}
+
+/* ══ GOAL CARD ══ */
+.dash-goal-card {
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 16px; padding: 16px 20px;
+}
+
+/* ══ GOAL WIDGET ══ */
+.dash-goal-bar {
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 20px; padding: 18px 22px; margin-bottom: 16px;
+}
+.dash-goal-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.dash-goal-title {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--k-text-3);
+}
+.dash-goal-tabs {
+  display: flex; gap: 6px;
+}
+.dash-goal-tab {
+  padding: 4px 12px; border-radius: 8px; border: 1px solid var(--k-line);
+  font-family: var(--mono); font-size: 9px; letter-spacing: .06em;
+  text-transform: uppercase; cursor: pointer; background: transparent;
+  color: var(--k-text-3); transition: all .15s;
+}
+.dash-goal-tab.active { background: var(--k-accent); color: var(--k-bg); border-color: var(--k-accent); }
+.dash-goal-body { display: flex; align-items: center; gap: 16px; }
+.dash-goal-ring-wrap { position: relative; flex-shrink: 0; }
+.dash-goal-ring-wrap svg { display: block; }
+.dash-goal-ring-pct {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; pointer-events: none;
+}
+.dash-goal-ring-pct-num {
+  font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--k-accent); line-height: 1;
+}
+.dash-goal-ring-pct-label {
+  font-family: var(--sans); font-size: 8px; color: var(--k-text-3); margin-top: 2px;
+}
+.dash-goal-info { flex: 1; }
+.dash-goal-nums {
+  display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px;
+}
+.dash-goal-current {
+  font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--k-accent);
+}
+.dash-goal-slash { font-family: var(--mono); font-size: 14px; color: var(--k-text-3); }
+.dash-goal-target {
+  font-family: var(--mono); font-size: 14px; color: var(--k-text-2);
+}
+.dash-goal-progress-wrap {
+  background: rgba(255,255,255,0.06); border-radius: 99px; height: 6px;
+  margin-bottom: 6px; overflow: hidden;
+}
+.dash-goal-progress-fill {
+  height: 100%; border-radius: 99px; background: var(--k-accent);
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+}
+.dash-goal-msg { font-family: var(--sans); font-size: 11px; color: var(--k-text-3); }
+.dash-goal-edit-btn {
+  background: none; border: 1px solid var(--k-line); border-radius: 8px;
+  color: var(--k-text-3); font-family: var(--mono); font-size: 9px;
+  letter-spacing: .06em; padding: 4px 10px; cursor: pointer;
+  transition: all .15s; flex-shrink: 0;
+}
+.dash-goal-edit-btn:hover { border-color: var(--k-accent); color: var(--k-accent); }
+.dash-goal-set-wrap {
+  display: none; align-items: center; gap: 8px; margin-top: 10px;
+}
+.dash-goal-set-wrap.open { display: flex; }
+.dash-goal-set-inp {
+  flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.06);
+  border: 1.5px solid var(--k-line); border-radius: 10px;
+  font-family: var(--mono); font-size: 14px; color: var(--k-text);
+  outline: none; transition: border-color .15s;
+}
+.dash-goal-set-inp:focus { border-color: var(--k-accent); }
+.dash-goal-save-btn {
+  padding: 8px 16px; background: var(--k-accent); color: var(--k-bg);
+  border: none; border-radius: 10px; font-family: var(--mono); font-size: 11px;
+  font-weight: 700; letter-spacing: .04em; cursor: pointer;
+}
+
+/* ══ ROW 3: KPIs pequeños (izq) + Heatmap grande (der) ══ */
+.dash-kpi-hm-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; align-items: start;
+}
+@media (max-width: 800px) { .dash-kpi-hm-row { grid-template-columns: 1fr; } }
+
+.dash-kpi-small {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+
+/* Heatmap grande */
+.dash-heatmap-big { padding: 16px 18px !important; }
+.dash-heatmap-big .dash-hm-cell { font-size: 10px !important; border-radius: 5px !important; }
+.dash-heatmap-big .dash-hm-dow-lbl { font-size: 10px !important; }
+.dash-heatmap-big .dash-hm-grid { gap: 4px !important; }
+.dash-heatmap-big .dash-hm-dow { gap: 4px !important; margin-bottom: 6px !important; }
+.dash-heatmap-big .dash-hm-legend-dot { width: 12px !important; height: 12px !important; }
+
+/* ══ ROW 4: Bottom 3 cols ══ */
+.dash-bottom-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;
+}
+@media (max-width: 700px) { .dash-bottom-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .dash-bottom-row { grid-template-columns: 1fr; } }
+.dash-bottom-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dash-mini-title {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--k-text-3);
+  padding: 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dash-mini-title span { color: var(--k-text-3); }
+
+/* ══ ROW 5: Chart + Credits ══ */
+.dash-chart-cred-row {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+@media (max-width: 700px) { .dash-chart-cred-row { flex-direction: column; } }
+
+/* ══ HEATMAP CALENDAR ══ */
+.dash-heatmap {
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 14px; padding: 12px 12px;
+}
+.dash-hm-title {
+  font-family: var(--mono); font-size: 8px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-hm-month-lbl { color: var(--k-text-2); font-size: 9px; }
+.dash-hm-dow {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 2px;
+}
+.dash-hm-dow-lbl {
+  font-family: var(--mono); font-size: 7px; color: var(--k-text-3);
+  text-align: center; padding-bottom: 1px;
+}
+.dash-hm-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+}
+.dash-hm-cell {
+  aspect-ratio: 1; border-radius: 3px; cursor: default;
+  transition: transform 0.1s; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 7px;
+}
+.dash-hm-cell:not(.hm-empty):hover { transform: scale(1.3); z-index: 2; }
+.dash-hm-cell.hm-empty { background: transparent; color: transparent; }
+.dash-hm-cell.hm-0 { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.18); }
+.dash-hm-cell.hm-1 { background: rgba(196,240,66,0.15); color: rgba(255,255,255,0.4); }
+.dash-hm-cell.hm-2 { background: rgba(196,240,66,0.32); color: rgba(255,255,255,0.6); }
+.dash-hm-cell.hm-3 { background: rgba(196,240,66,0.55); color: rgba(0,0,0,0.7); }
+.dash-hm-cell.hm-4 { background: var(--k-accent); color: #000; font-weight: 700; }
+.dash-hm-cell.hm-today { outline: 1.5px solid var(--k-accent); outline-offset: 1px; }
+.dash-hm-legend {
+  display: flex; align-items: center; gap: 3px; margin-top: 6px; justify-content: flex-end;
+}
+.dash-hm-legend-lbl { font-family: var(--mono); font-size: 7px; color: var(--k-text-3); }
+.dash-hm-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* ══ RECENT FEED ══ */
+.dash-feed {
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 20px; overflow: hidden; margin-bottom: 16px;
+}
+.dash-feed-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--k-line);
+}
+.dash-feed-title {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--k-text-3);
+}
+.dash-feed-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px; border-bottom: 1px solid var(--k-line);
+  transition: background .15s;
+}
+.dash-feed-row:last-child { border-bottom: none; }
+.dash-feed-row:hover { background: var(--k-panel-2); }
+.dash-feed-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.dash-feed-dot.income { background: var(--k-accent); box-shadow: 0 0 6px rgba(196,240,66,0.5); }
+.dash-feed-dot.expense { background: var(--k-expense); }
+.dash-feed-desc {
+  flex: 1; font-family: var(--sans); font-size: 12px; color: var(--k-text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dash-feed-client { font-family: var(--sans); font-size: 10px; color: var(--k-text-3); }
+.dash-feed-time {
+  font-family: var(--mono); font-size: 9px; color: var(--k-text-3); flex-shrink: 0;
+}
+.dash-feed-amt {
+  font-family: var(--mono); font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.dash-feed-amt.income { color: var(--k-accent); }
+.dash-feed-amt.expense { color: var(--k-expense); }
+.dash-feed-empty {
+  padding: 28px 18px; text-align: center;
+  font-family: var(--sans); font-size: 12px; color: var(--k-text-3);
+}
+
+/* ══════════════════════════════════════════
+   DASHBOARD DESIGN POLISH
+══════════════════════════════════════════ */
+
+/* — Contenedor principal: sin padding extra — */
+#view-dashboard { padding-bottom: 20px; }
+
+/* — Top 2 tarjetas: misma altura — */
+.dash-top-cards { align-items: stretch; }
+.dash-hero, .dash-goal-card { height: 100%; box-sizing: border-box; }
+
+/* — Hero: gradiente sutil y mejor tipografía — */
+.dash-hero {
+  background: linear-gradient(135deg, rgba(196,240,66,0.06) 0%, var(--k-panel) 55%);
+  border-color: rgba(196,240,66,0.15);
+  padding: 18px 22px;
+}
+.dash-hero-greeting {
+  font-size: 10px; letter-spacing: .15em; color: var(--k-accent);
+  opacity: 0.7; margin-bottom: 4px;
+}
+.dash-hero-biz { font-size: 22px; letter-spacing: -.3px; }
+.dash-hero-rubro { font-size: 12px; margin-top: 3px; opacity: .6; }
+.dash-streak-badge {
+  background: rgba(196,240,66,0.1);
+  border: 1px solid rgba(196,240,66,0.25);
+  border-radius: 14px; padding: 12px 16px;
+  text-align: center; min-width: 72px;
+  flex-direction: column; gap: 4px;
+}
+.dash-streak-num { font-size: 28px; display: block; }
+.dash-streak-label { font-size: 10px; letter-spacing: .05em; text-transform: uppercase; display: block; line-height: 1.2; }
+
+/* — Goal card: acento sutil — */
+.dash-goal-card {
+  background: var(--k-panel);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 18px 22px;
+  position: relative; overflow: hidden;
+}
+.dash-goal-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--k-accent), transparent);
+  opacity: 0.6;
+}
+.dash-goal-current { font-size: 22px !important; }
+.dash-goal-msg { color: var(--k-text-3); line-height: 1.4; }
+
+/* — Period nav: más integrado — */
+.dash-period-bar {
+  background: var(--k-panel); border: 1px solid var(--k-line);
+  border-radius: 12px; padding: 8px 14px;
+  margin-bottom: 10px;
+}
+.dash-period-tabs { border-radius: 8px; }
+.dash-period-tab { padding: 5px 14px; font-size: 10px; }
+.dash-nav-lbl { font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+
+/* — KPI cards: borde de color superior + valor más grande — */
+.dash-kpi-small .dash-card {
+  border-radius: 14px; padding: 14px 16px;
+  position: relative; overflow: hidden;
+  border-top: 2px solid transparent;
+}
+.dash-kpi-small .dash-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(to top, rgba(255,255,255,0.02), transparent);
+  pointer-events: none;
+}
+.dash-kpi-small .dc-inc { border-top-color: var(--k-accent); }
+.dash-kpi-small .dc-exp { border-top-color: var(--k-expense); }
+.dash-kpi-small .dc-net.positive { border-top-color: var(--k-accent); }
+.dash-kpi-small .dc-net.negative { border-top-color: var(--k-expense); }
+.dash-kpi-small .dc-cred { border-top-color: var(--k-credit); }
+.dash-kpi-small .dc-days { border-top-color: var(--k-purple); }
+.dash-kpi-small .dc-tick { border-top-color: var(--k-order); }
+.dash-kpi-small .dash-card-lbl { margin-bottom: 6px; font-size: 8.5px; }
+.dash-kpi-small .dash-card-val { font-size: 18px; }
+.dash-kpi-small .dash-card-sub { font-size: 10px; margin-top: 3px; }
+
+/* — Heatmap: celdas más grandes, sin números, más visual — */
+.dash-heatmap-big {
+  border-radius: 14px !important;
+  padding: 14px 14px !important;
+  background: var(--k-panel);
+  border: 1px solid var(--k-line);
+}
+.dash-hm-title {
+  font-size: 9px !important; letter-spacing: .12em;
+  margin-bottom: 8px !important;
+}
+.dash-hm-month-lbl { font-size: 10px !important; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.dash-heatmap-big .dash-hm-dow { gap: 3px !important; margin-bottom: 3px !important; }
+.dash-heatmap-big .dash-hm-dow-lbl { font-size: 9px !important; color: var(--k-text-3); letter-spacing: .03em; }
+.dash-heatmap-big .dash-hm-grid { gap: 3px !important; }
+.dash-heatmap-big .dash-hm-cell {
+  font-size: 0 !important;
+  border-radius: 4px !important;
+  transition: transform .12s, opacity .12s !important;
+}
+.dash-heatmap-big .dash-hm-cell:not(.hm-empty):hover { transform: scale(1.3) !important; }
+.dash-heatmap-big .dash-hm-cell.hm-today { outline: 2px solid var(--k-accent) !important; outline-offset: 1px !important; }
+.dash-hm-legend { margin-top: 7px !important; }
+.dash-hm-legend-lbl { font-size: 8px !important; letter-spacing: .03em; }
+.dash-heatmap-big .dash-hm-legend-dot { width: 11px !important; height: 11px !important; border-radius: 3px !important; }
+
+/* — Mini titles: con línea de color — */
+.dash-mini-title {
+  font-size: 9px !important; letter-spacing: .12em;
+  padding: 0 4px 6px !important;
+  border-bottom: 1px solid var(--k-line);
+  margin-bottom: 2px;
+}
+
+/* — Top list más compacto y limpio — */
+.dash-bottom-col .dash-top-list {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.dash-bottom-col .dash-top-row {
+  padding: 9px 12px !important; gap: 8px !important;
+}
+.dash-bottom-col .dash-top-name { font-size: 12px !important; }
+.dash-bottom-col .dash-top-amt { font-size: 12px !important; }
+.dash-bottom-col .dash-top-sub { font-size: 9px !important; }
+.dash-bottom-col .dash-top-rank { font-size: 10px !important; min-width: 16px !important; }
+.dash-bottom-col .dash-top-bar-wrap { height: 2px !important; margin-top: 3px !important; }
+
+/* — Feed dot glow — */
+.dash-feed-dot.income { width: 8px; height: 8px; box-shadow: 0 0 8px rgba(196,240,66,0.6); }
+
+/* — Chart row: mejor integración — */
+.dash-chart-cred-row { margin-top: 0; }
+.dash-chart-cred-row .dash-chart {
+  border-radius: 14px !important;
+  padding: 14px 16px !important;
+}
+#dashChartTitle {
+  font-size: 9px !important; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--k-text-3) !important;
+}
+#dashChartMonth { font-size: 11px !important; font-weight: 600; color: var(--k-text-2) !important; }
+.dash-chart-cred-row .dash-mini-title { margin-bottom: 8px; }
+
+/* — Bar chart bars: bordes redondeados en ambos extremos — */
+.dcb-bar { border-radius: 3px !important; }
+.dcb-bar.has-data { opacity: .75; }
+.dcb-bar.has-data:hover { opacity: 1; }
+.dcb-bar.today-bar { opacity: 1 !important; }
+.dcb-lbl { font-size: 8px !important; }
+
+/* — Empty states unificados — */
+.dash-empty { padding: 18px 12px !important; font-size: 11px !important; }
+.dash-empty-icon { font-size: 20px !important; margin-bottom: 4px !important; }
 
 @media print {
   /* Forzamos que se impriman los colores y fondos exactos */
@@ -3680,8 +4081,71 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <!-- ══ DASHBOARD VIEW ══ -->
   <div id="view-dashboard">
 
-    <!-- Period navigator -->
-    <div class="dash-period-bar">
+    <!-- ROW 1: 2 tarjetas — Negocio | Meta -->
+    <div class="dash-top-cards">
+      <!-- Tarjeta 1: Negocio + streak -->
+      <div class="dash-hero">
+        <div>
+          <div class="dash-hero-greeting" id="dashGreeting">Buenas tardes,</div>
+          <div class="dash-hero-biz" id="dashHeroBiz">Tu negocio</div>
+          <div class="dash-hero-rubro" id="dashHeroRubro"></div>
+        </div>
+        <div class="dash-streak-badge" title="Días consecutivos con ventas">
+          <div style="font-size:26px;line-height:1;">🔥</div>
+          <div>
+            <div class="dash-streak-num" id="dashStreakNum">0</div>
+            <div class="dash-streak-label">días<br>activos</div>
+          </div>
+        </div>
+      </div>
+      <!-- Tarjeta 2: Meta -->
+      <div class="dash-goal-card" id="dashGoalInlineWrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--k-text-3);">🎯 Meta de ventas</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="dash-goal-tabs">
+              <button class="dash-goal-tab active" id="dgTabMes" onclick="dashGoalSetPeriod('mes')">Mes</button>
+              <button class="dash-goal-tab" id="dgTabSem" onclick="dashGoalSetPeriod('sem')">Semana</button>
+            </div>
+            <button class="dash-goal-edit-btn" onclick="dashGoalToggleEdit()">✏ editar</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="dash-goal-ring-wrap" style="width:64px;height:64px;flex-shrink:0;">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+              <circle id="dashGoalRingFill" cx="32" cy="32" r="24" fill="none"
+                stroke="var(--k-accent)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="150.8" stroke-dashoffset="150.8"
+                transform="rotate(-90 32 32)" style="transition:stroke-dashoffset 0.7s cubic-bezier(.4,0,.2,1)"/>
+            </svg>
+            <div class="dash-goal-ring-pct">
+              <div class="dash-goal-ring-pct-num" id="dashGoalPct" style="font-size:12px;">—</div>
+              <div class="dash-goal-ring-pct-label">logrado</div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:baseline;gap:5px;margin-bottom:6px;">
+              <span class="dash-goal-current" id="dashGoalCurrent">S/ 0</span>
+              <span class="dash-goal-slash">/</span>
+              <span class="dash-goal-target" id="dashGoalTarget">sin meta</span>
+            </div>
+            <div class="dash-goal-progress-wrap">
+              <div class="dash-goal-progress-fill" id="dashGoalFill" style="width:0%"></div>
+            </div>
+            <div class="dash-goal-msg" id="dashGoalMsg" style="margin-top:5px;"></div>
+          </div>
+        </div>
+        <div class="dash-goal-set-wrap" id="dashGoalSetWrap">
+          <span style="font-family:var(--mono);font-size:12px;color:var(--k-text-3);">S/</span>
+          <input class="dash-goal-set-inp" id="dashGoalInp" type="number" min="1" placeholder="Ej: 5000" onkeydown="if(event.key==='Enter')dashGoalSave()">
+          <button class="dash-goal-save-btn" onclick="dashGoalSave()">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Period nav -->
+    <div class="dash-period-bar" style="margin-bottom:10px;">
       <div class="dash-period-tabs">
         <button class="dash-period-tab active" id="dashTabMes" onclick="dashSetPeriod('mes')">Mes</button>
         <button class="dash-period-tab" id="dashTabDia" onclick="dashSetPeriod('dia')">Día</button>
@@ -3694,34 +4158,65 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <button class="dash-nav-today" onclick="dashGoToday()">Hoy</button>
     </div>
 
-    <!-- KPIs -->
-    <div class="dash-grid" id="dashKpis"></div>
-
-    <!-- Gráfica -->
-    <div class="dash-chart">
-      <div class="dash-section-ttl" style="font-size:15px;margin-bottom:12px;">
-        <span id="dashChartTitle">Ventas diarias</span> <span id="dashChartMonth" style="color:var(--k-text-3);font-size:12px;"></span>
+    <!-- ROW 3: KPIs parciales (izq) + Heatmap grande (der) -->
+    <div class="dash-kpi-hm-row">
+      <!-- KPIs: solo Ingresos, Egresos, Por cobrar, Días activos (2×2) -->
+      <div class="dash-kpi-small" id="dashKpisSmall"></div>
+      <!-- Heatmap grande -->
+      <div class="dash-heatmap dash-heatmap-big" id="dashHeatmapWrap">
+        <div class="dash-hm-title">
+          <span>Actividad del mes</span>
+          <span class="dash-hm-month-lbl" id="dashHmMonthLbl"></span>
+        </div>
+        <div class="dash-hm-dow" id="dashHmDow"></div>
+        <div class="dash-hm-grid" id="dashHmGrid"></div>
+        <div class="dash-hm-legend">
+          <span class="dash-hm-legend-lbl">Menos</span>
+          <div class="dash-hm-legend-dot" style="background:rgba(255,255,255,0.05)"></div>
+          <div class="dash-hm-legend-dot" style="background:rgba(196,240,66,0.2)"></div>
+          <div class="dash-hm-legend-dot" style="background:rgba(196,240,66,0.45)"></div>
+          <div class="dash-hm-legend-dot" style="background:var(--k-accent)"></div>
+          <span class="dash-hm-legend-lbl">Más</span>
+        </div>
       </div>
-      <div class="dash-chart-bars" id="dashChartBars"></div>
     </div>
 
-    <!-- Top clientes + Top productos -->
-    <div class="dash-two-col">
-      <div class="dash-section">
-        <div class="dash-section-ttl">🏆 Top Clientes <span id="dashTopCliLbl">este mes</span></div>
+    <!-- ROW 4: Top Clientes | Top Productos | Últimos movimientos -->
+    <div class="dash-bottom-row">
+      <div class="dash-bottom-col">
+        <div class="dash-mini-title">🏆 Top Clientes <span id="dashTopCliLbl"></span></div>
         <div class="dash-top-list" id="dashTopClients"></div>
       </div>
-      <div class="dash-section">
-        <div class="dash-section-ttl">📦 Top Productos <span id="dashTopProdLbl">este mes</span></div>
+      <div class="dash-bottom-col">
+        <div class="dash-mini-title">📦 Top Productos <span id="dashTopProdLbl"></span></div>
         <div class="dash-top-list" id="dashTopProducts"></div>
+      </div>
+      <div class="dash-bottom-col">
+        <div class="dash-mini-title">⚡ Últimos <span id="dashFeedPeriodLbl"></span></div>
+        <div class="dash-top-list" id="dashFeedRows"></div>
+      </div>
+    </div>
+    <div id="dashBalanceCard" style="display:none;"></div>
+    <div id="dashTxCard" style="display:none;"></div>
+
+    <!-- ROW 5: Gráfica + Créditos -->
+    <div class="dash-chart-cred-row">
+      <div class="dash-chart" style="margin-bottom:0;flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-text-3);" id="dashChartTitle">Ventas diarias</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--k-text-3);" id="dashChartMonth"></span>
+        </div>
+        <div class="dash-chart-bars" id="dashChartBars" style="height:60px;"></div>
+      </div>
+      <div style="flex:0 0 200px;">
+        <div class="dash-mini-title" style="margin-bottom:6px;">⏳ Créditos pendientes</div>
+        <div class="dash-top-list" id="dashCredits"></div>
       </div>
     </div>
 
-    <!-- Créditos pendientes -->
-    <div class="dash-section">
-      <div class="dash-section-ttl">⏳ Créditos pendientes <span>total acumulado</span></div>
-      <div class="dash-top-list" id="dashCredits"></div>
-    </div>
+    <!-- oculto: el dashKpis original sigue siendo llenado por el JS pero lo usamos internamente -->
+    <div id="dashKpis" style="display:none;"></div>
+
   </div>
 
   <!-- ══ REGISTRAR VIEW ══ -->
@@ -3760,7 +4255,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <label>Descripción / Producto</label>
         <div class="picker-wrap">
           <div class="input-with-toggle">
-            <input type="text" id="iDesc" placeholder="Escribe o elige producto..." maxlength="60" oninput="filterProducts()">
+            <input type="text" id="iDesc" placeholder="Escribe o elige producto..." maxlength="60" oninput="filterProducts()" onkeydown="iDescKeyNav(event)">
             <button type="button" class="field-toggle-btn" id="btnToggleProducts" onclick="toggleProductPicker()" title="Ver productos">
               <span class="ftb-icon" id="ftbProdIcon">⌄</span>
             </button>
@@ -4971,6 +5466,7 @@ function renderProductChips(filter='') {
 }
 
 function filterProducts() {
+  _iDescCursor = -1;
   const val = document.getElementById('iDesc').value;
   if(val.length >= 1 && products.length > 0){
     if(!productPickerOpen){
@@ -4988,6 +5484,43 @@ function filterProducts() {
   } else if(productPickerOpen){
     renderProductChips(val);
   }
+}
+
+let _iDescCursor = -1;
+function iDescKeyNav(e) {
+  const wrap = document.getElementById('productChips');
+  if (!wrap || wrap.style.display === 'none') {
+    // No dropdown open: open it on ArrowDown
+    if (e.key === 'ArrowDown') { filterProducts(); return; }
+    return;
+  }
+  const chips = Array.from(wrap.querySelectorAll('.pchip'));
+  if (!chips.length) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _iDescCursor = Math.min(_iDescCursor + 1, chips.length - 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _iDescCursor = Math.max(_iDescCursor - 1, 0);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_iDescCursor >= 0 && chips[_iDescCursor]) {
+      chips[_iDescCursor].click();
+    } else if (chips.length === 1) {
+      chips[0].click();
+    }
+    _iDescCursor = -1;
+    return;
+  } else if (e.key === 'Escape') {
+    _iDescCursor = -1;
+    productPickerOpen = false;
+    _portalClose('productChips');
+    return;
+  } else { _iDescCursor = -1; return; }
+
+  chips.forEach((c, i) => c.classList.toggle('pchip-focus', i === _iDescCursor));
+  if (chips[_iDescCursor]) chips[_iDescCursor].scrollIntoView({ block: 'nearest' });
 }
 
 function selectProduct(id) {
@@ -9689,6 +10222,36 @@ function fmt(n) {
 
 /* ── Dashboard period state ── */
 let _dashPeriod = 'mes'; // 'mes' | 'dia'
+let _dashGoalPeriod = 'mes'; // 'mes' | 'sem'
+const GOALS_KEY = 'kajita_goals';
+function getGoals() { return JSON.parse(localStorage.getItem(GOALS_KEY) || '{}'); }
+function saveGoals(g) { localStorage.setItem(GOALS_KEY, JSON.stringify(g)); }
+function dashGoalSetPeriod(p) {
+  _dashGoalPeriod = p;
+  document.getElementById('dgTabMes').classList.toggle('active', p === 'mes');
+  document.getElementById('dgTabSem').classList.toggle('active', p === 'sem');
+  renderDashboard();
+}
+function dashGoalToggleEdit() {
+  const wrap = document.getElementById('dashGoalSetWrap');
+  const isOpen = wrap.classList.toggle('open');
+  if (isOpen) {
+    const goals = getGoals();
+    const cur = goals[_dashGoalPeriod] || '';
+    document.getElementById('dashGoalInp').value = cur || '';
+    setTimeout(() => document.getElementById('dashGoalInp').focus(), 50);
+  }
+}
+function dashGoalSave() {
+  const val = parseFloat(document.getElementById('dashGoalInp').value);
+  if (!val || val <= 0) { toast('Ingresa un monto válido'); return; }
+  const goals = getGoals();
+  goals[_dashGoalPeriod] = val;
+  saveGoals(goals);
+  document.getElementById('dashGoalSetWrap').classList.remove('open');
+  renderDashboard();
+  toast('¡Meta guardada! 🎯');
+}
 let _dashYear   = new Date().getFullYear();
 let _dashMonth  = new Date().getMonth();  // 0-based
 let _dashDay    = new Date().getDate();
@@ -9728,6 +10291,28 @@ function renderDashboard() {
   const now = new Date();
   const isMonthMode = _dashPeriod === 'mes';
 
+  // ── Hero ──
+  const hr = now.getHours();
+  const greeting = hr < 12 ? 'Buenos días' : hr < 19 ? 'Buenas tardes' : 'Buenas noches';
+  document.getElementById('dashGreeting').textContent = greeting + (bizProfile ? ',' : '');
+  document.getElementById('dashHeroBiz').textContent = bizProfile?.name || 'Tu negocio';
+  document.getElementById('dashHeroRubro').textContent = bizProfile?.rubro || '';
+  const dateStr = now.toLocaleString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const dateEl = document.getElementById('dashHeroDate');
+  if (dateEl) dateEl.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+  // Streak: consecutive days with income up to today
+  const allIncome = (entries || []).filter(e => e.type === 'income' && !e.credit && e.date);
+  const incomeDates = new Set(allIncome.map(e => e.date));
+  let streak = 0;
+  const checkD = new Date(now); checkD.setHours(0,0,0,0);
+  while (true) {
+    const ds = `${checkD.getFullYear()}-${pad(checkD.getMonth()+1)}-${pad(checkD.getDate())}`;
+    if (incomeDates.has(ds)) { streak++; checkD.setDate(checkD.getDate() - 1); }
+    else break;
+  }
+  document.getElementById('dashStreakNum').textContent = streak;
+
   // ── Nav label ──
   if (isMonthMode) {
     const d = new Date(_dashYear, _dashMonth, 1);
@@ -9748,7 +10333,6 @@ function renderDashboard() {
     const dayStr = `${_dashYear}-${pad(_dashMonth + 1)}-${pad(_dashDay)}`;
     filteredEntries = (entries || []).filter(e => e.date === dayStr);
   }
-
   const periodLabel = isMonthMode ? 'este mes' : 'este día';
 
   // ── KPIs ──
@@ -9761,7 +10345,10 @@ function renderDashboard() {
   const kpiLabel  = isMonthMode ? 'del mes' : 'del día';
 
   const netClass = netMonth >= 0 ? 'positive' : 'negative';
-  document.getElementById('dashKpis').innerHTML = `
+
+  // KPIs 2×3 en la columna izquierda junto al heatmap
+  const kpiSmallEl = document.getElementById('dashKpisSmall');
+  if (kpiSmallEl) kpiSmallEl.innerHTML = `
     <div class="dash-card dc-inc">
       <div class="dash-card-lbl">Ingresos ${kpiLabel}</div>
       <div class="dash-card-val">${fmt(totalInc)}</div>
@@ -9793,6 +10380,100 @@ function renderDashboard() {
       <div class="dash-card-sub">registros ${kpiLabel}</div>
     </div>
   `;
+  document.getElementById('dashKpis').innerHTML = '';
+
+  // ── GOAL WIDGET ──
+  const goals = getGoals();
+  // Determine income for goal period
+  let goalIncome = 0;
+  if (_dashGoalPeriod === 'mes') {
+    const monthStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+    goalIncome = (entries || []).filter(e => e.type === 'income' && !e.credit && e.date && e.date.startsWith(monthStr))
+      .reduce((s, e) => s + (e.amount || 0), 0);
+  } else {
+    // current week (Mon–today)
+    const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7)); mon.setHours(0,0,0,0);
+    goalIncome = (entries || []).filter(e => {
+      if (e.type !== 'income' || e.credit || !e.date) return false;
+      const d = new Date(e.date); return d >= mon && d <= now;
+    }).reduce((s, e) => s + (e.amount || 0), 0);
+  }
+  const goalTarget = goals[_dashGoalPeriod] || 0;
+  const goalPct = goalTarget > 0 ? Math.min(100, Math.round((goalIncome / goalTarget) * 100)) : 0;
+  const circumference = 2 * Math.PI * 28; // r=28 → 175.9
+  const dashOffset = circumference * (1 - goalPct / 100);
+  document.getElementById('dashGoalRingFill').style.strokeDashoffset = dashOffset;
+  document.getElementById('dashGoalPct').textContent = goalTarget > 0 ? goalPct + '%' : '—';
+  document.getElementById('dashGoalCurrent').textContent = 'S/ ' + goalIncome.toLocaleString('es-PE', {minimumFractionDigits:0, maximumFractionDigits:0});
+  document.getElementById('dashGoalTarget').textContent = goalTarget > 0 ? 'S/ ' + goalTarget.toLocaleString('es-PE') : 'sin meta';
+  document.getElementById('dashGoalFill').style.width = goalPct + '%';
+  const periodName = _dashGoalPeriod === 'mes' ? 'del mes' : 'de la semana';
+  let msg = '';
+  if (!goalTarget) msg = 'Toca "✏ editar" para establecer tu meta ' + periodName;
+  else if (goalPct >= 100) msg = '🎉 ¡Meta alcanzada! Sigue vendiendo.';
+  else if (goalPct >= 75) msg = '¡Casi! Estás al ' + goalPct + '% de tu meta ' + periodName;
+  else if (goalPct >= 50) msg = '¡Vas bien! Mitad del camino recorrida';
+  else if (goalPct >= 25) msg = 'Buen inicio — ¡a seguir registrando ventas!';
+  else msg = goalIncome > 0 ? 'Cada venta suma — ¡sigue registrando!' : '¡Registra tu primera venta del período!';
+  document.getElementById('dashGoalMsg').textContent = msg;
+
+  // ── HEATMAP ──
+  const hmYear = _dashYear, hmMonth = _dashMonth;
+  const daysInMonth = new Date(hmYear, hmMonth + 1, 0).getDate();
+  const firstDow = (new Date(hmYear, hmMonth, 1).getDay() + 6) % 7; // Mon=0
+  const isCurrentMonth = hmYear === now.getFullYear() && hmMonth === now.getMonth();
+  const todayD = now.getDate();
+  // Build daily income map for this month
+  const hmMonthStr = `${hmYear}-${pad(hmMonth + 1)}`;
+  const hmDailyMap = {};
+  (entries || []).filter(e => e.type === 'income' && !e.credit && e.date && e.date.startsWith(hmMonthStr))
+    .forEach(e => {
+      const d = parseInt(e.date.split('-')[2], 10);
+      if (d) hmDailyMap[d] = (hmDailyMap[d] || 0) + (e.amount || 0);
+    });
+  const hmMax = Math.max(1, ...Object.values(hmDailyMap));
+  const hmMonthName = new Date(hmYear, hmMonth, 1).toLocaleString('es-PE', { month:'long', year:'numeric' });
+  document.getElementById('dashHmMonthLbl').textContent = hmMonthName.charAt(0).toUpperCase() + hmMonthName.slice(1);
+  const dowLabels = ['L','M','X','J','V','S','D'];
+  document.getElementById('dashHmDow').innerHTML = dowLabels.map(l => `<div class="dash-hm-dow-lbl">${l}</div>`).join('');
+  let hmHtml = '';
+  for (let i = 0; i < firstDow; i++) hmHtml += `<div class="dash-hm-cell hm-empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const val = hmDailyMap[d] || 0;
+    const isToday = isCurrentMonth && d === todayD;
+    const isFuture = isCurrentMonth && d > todayD;
+    let lvl = 0;
+    if (!isFuture && val > 0) {
+      const ratio = val / hmMax;
+      lvl = ratio > 0.75 ? 4 : ratio > 0.45 ? 3 : ratio > 0.2 ? 2 : 1;
+    }
+    const cls = isFuture ? 'hm-empty' : `hm-${lvl}${isToday ? ' hm-today' : ''}`;
+    const tip = isFuture ? '' : `title="${d}: ${val > 0 ? fmt(val) : 'sin ventas'}"`;
+    hmHtml += `<div class="dash-hm-cell ${cls}" ${tip}>${isFuture ? '' : d}</div>`;
+  }
+  document.getElementById('dashHmGrid').innerHTML = hmHtml;
+
+  // ── FEED: últimas transacciones ──
+  document.getElementById('dashFeedPeriodLbl').textContent = periodLabel;
+  const feedEntries = [...filteredEntries].sort((a, b) => {
+    const da = (a.date || '') + (a.time || ''); const db = (b.date || '') + (b.time || '');
+    return db.localeCompare(da);
+  }).slice(0, 4);
+  document.getElementById('dashFeedRows').innerHTML = feedEntries.length
+    ? feedEntries.map(e => {
+        const isInc = e.type === 'income';
+        const timeStr = e.time ? e.time.slice(0,5) : '';
+        return `<div class="dash-top-row">
+          <div class="dash-feed-dot ${isInc ? 'income' : 'expense'}" style="flex-shrink:0;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--sans);font-size:12px;color:var(--k-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${e.desc || (isInc ? 'Ingreso' : 'Egreso')}</div>
+            ${e.client ? `<div style="font-family:var(--sans);font-size:10px;color:var(--k-text-3);">${e.client}</div>` : ''}
+          </div>
+          ${timeStr ? `<div style="font-family:var(--mono);font-size:9px;color:var(--k-text-3);flex-shrink:0;">${timeStr}</div>` : ''}
+          <div class="dash-feed-amt ${isInc ? 'income' : 'expense'}">${isInc ? '+' : '−'}${fmt(e.amount||0)}</div>
+        </div>`;
+      }).join('')
+    : `<div class="dash-empty" style="padding:16px;font-size:11px;">Sin movimientos ${periodLabel}</div>`;
 
   // ── GRÁFICA ──
   document.getElementById('dashTopCliLbl').textContent = periodLabel;
@@ -9801,8 +10482,8 @@ function renderDashboard() {
   if (isMonthMode) {
     document.getElementById('dashChartTitle').textContent = 'Ventas diarias';
     document.getElementById('dashChartMonth').textContent = new Date(_dashYear, _dashMonth, 1).toLocaleString('es-PE', { month: 'long' });
-    const daysInMonth = new Date(_dashYear, _dashMonth + 1, 0).getDate();
-    const isCurrentMonth = _dashYear === now.getFullYear() && _dashMonth === now.getMonth();
+    const daysInMonthChart = new Date(_dashYear, _dashMonth + 1, 0).getDate();
+    const isCurrentMonthChart = _dashYear === now.getFullYear() && _dashMonth === now.getMonth();
     const todayDay = now.getDate();
     const dailyMap = {};
     filteredEntries.filter(e => e.type === 'income' && !e.credit).forEach(e => {
@@ -9811,10 +10492,10 @@ function renderDashboard() {
     });
     const maxDay = Math.max(1, ...Object.values(dailyMap));
     let barsHtml = '';
-    for (let d = 1; d <= daysInMonth; d++) {
+    for (let d = 1; d <= daysInMonthChart; d++) {
       const val = dailyMap[d] || 0;
       const pct = Math.round((val / maxDay) * 100);
-      const isToday = isCurrentMonth && d === todayDay;
+      const isToday = isCurrentMonthChart && d === todayDay;
       barsHtml += `<div class="dcb-col" title="${d}: ${fmt(val)}">
         <div class="dcb-bar ${val > 0 ? 'has-data' : ''} ${isToday ? 'today-bar' : ''}" style="height:${Math.max(3, pct)}%"></div>
         <div class="dcb-lbl ${isToday ? 'today-lbl' : ''}">${d % 5 === 0 || d === 1 || isToday ? d : ''}</div>
@@ -9853,21 +10534,20 @@ function renderDashboard() {
     clientMap[k].total += (e.amount || 0);
     clientMap[k].count++;
   });
-  const topClients = Object.entries(clientMap)
-    .sort((a, b) => b[1].total - a[1].total).slice(0, 5);
+  const topClients = Object.entries(clientMap).sort((a, b) => b[1].total - a[1].total).slice(0, 4);
   const maxCli = topClients[0]?.[1].total || 1;
   document.getElementById('dashTopClients').innerHTML = topClients.length ? topClients.map(([name, d], i) => `
     <div class="dash-top-row">
-      <div class="dash-top-rank ${i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : ''}">${i + 1}</div>
+      <div class="dash-top-rank ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</div>
       <div style="flex:1;min-width:0;">
         <div class="dash-top-name">${name}</div>
         <div class="dash-top-bar-wrap"><div class="dash-top-bar-fill" style="width:${Math.round(d.total/maxCli*100)}%"></div></div>
       </div>
       <div style="text-align:right;">
         <div class="dash-top-amt">${fmt(d.total)}</div>
-        <div class="dash-top-sub">${d.count} compra${d.count !== 1 ? 's' : ''}</div>
+        <div class="dash-top-sub">${d.count}x</div>
       </div>
-    </div>`).join('') : `<div class="dash-empty"><div class="dash-empty-icon">👤</div>Sin ventas a clientes ${periodLabel}</div>`;
+    </div>`).join('') : `<div class="dash-empty" style="padding:14px;font-size:11px;">Sin clientes ${periodLabel}</div>`;
 
   // ── TOP PRODUCTOS ──
   const prodMap = {};
@@ -9877,23 +10557,22 @@ function renderDashboard() {
     prodMap[k].total += (e.amount || 0);
     prodMap[k].qty   += (e.qty || 1);
   });
-  const topProds = Object.entries(prodMap)
-    .sort((a, b) => b[1].total - a[1].total).slice(0, 5);
+  const topProds = Object.entries(prodMap).sort((a, b) => b[1].total - a[1].total).slice(0, 4);
   const maxProd = topProds[0]?.[1].total || 1;
   document.getElementById('dashTopProducts').innerHTML = topProds.length ? topProds.map(([name, d], i) => `
     <div class="dash-top-row">
-      <div class="dash-top-rank ${i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : ''}">${i + 1}</div>
+      <div class="dash-top-rank ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</div>
       <div style="flex:1;min-width:0;">
         <div class="dash-top-name">${name}</div>
         <div class="dash-top-bar-wrap"><div class="dash-top-bar-fill" style="width:${Math.round(d.total/maxProd*100)}%"></div></div>
       </div>
       <div style="text-align:right;">
         <div class="dash-top-amt">${fmt(d.total)}</div>
-        <div class="dash-top-sub">${d.qty} und.</div>
+        <div class="dash-top-sub">${d.qty}u</div>
       </div>
-    </div>`).join('') : `<div class="dash-empty"><div class="dash-empty-icon">📦</div>Sin productos vendidos este mes</div>`;
+    </div>`).join('') : `<div class="dash-empty" style="padding:14px;font-size:11px;">Sin productos ${periodLabel}</div>`;
 
-  // ── CRÉDITOS PENDIENTES (todos, no solo mes) ──
+  // ── CRÉDITOS PENDIENTES ──
   const credMap = {};
   (entries || []).filter(e => e.credit && e.client).forEach(e => {
     const k = e.client.trim();
@@ -9904,8 +10583,7 @@ function renderDashboard() {
       credMap[k].count++;
     }
   });
-  const topCreds = Object.entries(credMap)
-    .sort((a, b) => b[1].total - a[1].total).slice(0, 6);
+  const topCreds = Object.entries(credMap).sort((a, b) => b[1].total - a[1].total).slice(0, 4);
   const maxCred = topCreds[0]?.[1].total || 1;
   document.getElementById('dashCredits').innerHTML = topCreds.length ? topCreds.map(([name, d]) => `
     <div class="dash-top-row">
@@ -9916,9 +10594,9 @@ function renderDashboard() {
       </div>
       <div style="text-align:right;">
         <div class="dash-top-amt" style="color:var(--k-credit);">${fmt(d.total)}</div>
-        <div class="dash-top-sub">${d.count} pendiente${d.count !== 1 ? 's' : ''}</div>
+        <div class="dash-top-sub">${d.count}p</div>
       </div>
-    </div>`).join('') : `<div class="dash-empty"><div class="dash-empty-icon">✅</div>Sin créditos pendientes</div>`;
+    </div>`).join('') : `<div class="dash-empty" style="padding:14px;font-size:11px;">✅ Sin pendientes</div>`;
 }
 </script>
 
