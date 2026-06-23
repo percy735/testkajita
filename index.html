@@ -2213,7 +2213,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   align-items: center;
   transition: background 0.15s;
 }
-.pl-row:hover { background: rgba(255,255,255,0.03); }
+.pl-row:nth-child(even) { background: rgba(255,255,255,0.025); }
+.pl-row:hover { background: rgba(255,255,255,0.06) !important; }
 .pl-name { font-size: 13px; font-weight: 500; color: var(--k-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pl-phone { font-size: 12px; color: var(--k-text-3); }
 .pl-price { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--k-accent); }
@@ -2336,6 +2337,33 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .cred-cobrar-btn:hover { background: var(--k-accent); color: #0A0B0E; }
 
+/* debt card (yo debo) */
+.cred-card.debt-card { border-color: rgba(255,107,107,0.2); background: rgba(255,107,107,0.05); }
+.cred-card.debt-card .cred-card-amt { color: var(--k-expense); }
+.cred-pagar-btn {
+  font-size: 10px; font-family: var(--mono); font-weight: 600;
+  padding: 4px 10px; border-radius: 99px; border: 1px solid var(--k-expense);
+  background: rgba(255,107,107,0.08); color: var(--k-expense); cursor: pointer;
+  transition: all 0.15s;
+}
+.cred-pagar-btn:hover { background: var(--k-expense); color: #fff; }
+
+/* tabs */
+.cred-tabs { display: flex; gap: 6px; padding: 10px 14px 0; }
+.cred-tab {
+  flex: 1; padding: 9px 12px; border-radius: 10px;
+  border: 1px solid var(--k-line); background: transparent;
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  color: var(--k-text-3); cursor: pointer; transition: all .15s;
+}
+.cred-tab.active {
+  background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.35);
+  color: var(--k-credit);
+}
+.cred-tab:last-child.active {
+  background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.35);
+  color: var(--k-expense);
+}
 
 @media (max-width: 600px) {
   .panel-sheet { width: 100%; border-left: none; top: auto; height: 92vh; border-radius: 20px 20px 0 0; }
@@ -4845,21 +4873,26 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="panel-sheet" id="panelCredSheet">
     <div class="panel-head">
       <div>
-        <div class="panel-ttl">⏳ Créditos por cobrar</div>
+        <div class="panel-ttl">💳 Créditos</div>
         <div class="panel-sub" id="panelCredSub">—</div>
       </div>
       <div class="panel-head-right">
         <button class="panel-close" onclick="closePanel('cred')">×</button>
       </div>
     </div>
+    <!-- Tabs -->
+    <div class="cred-tabs">
+      <button class="cred-tab active" id="credTabCobrar" onclick="setCredTab('cobrar')">📥 Me deben</button>
+      <button class="cred-tab" id="credTabPagar" onclick="setCredTab('pagar')">📤 Yo debo</button>
+    </div>
     <div class="panel-list" id="panelCredList"></div>
     <div class="panel-totals">
       <div class="panel-total-box">
-        <div class="panel-total-lbl">Total pendiente</div>
+        <div class="panel-total-lbl" id="panelCredTotalLbl">Por cobrar</div>
         <div class="panel-total-val" id="panelCredTotal" style="color:var(--k-credit);">S/ 0.00</div>
       </div>
       <div class="panel-total-box">
-        <div class="panel-total-lbl">Ventas a crédito</div>
+        <div class="panel-total-lbl">Registros</div>
         <div class="panel-total-val" id="panelCredCount" style="color:var(--k-text-2);">0</div>
       </div>
     </div>
@@ -6238,38 +6271,87 @@ function renderInvPanel() {
 /* ══════════════════════════════════════════
    PANEL: CRÉDITOS POR COBRAR
 ══════════════════════════════════════════ */
+let _credTab = 'cobrar';
+
+function setCredTab(tab) {
+  _credTab = tab;
+  document.getElementById('credTabCobrar').classList.toggle('active', tab === 'cobrar');
+  document.getElementById('credTabPagar').classList.toggle('active', tab === 'pagar');
+  renderCredPanel();
+}
+
 function renderCredPanel() {
-  const list = document.getElementById('panelCredList');
-  const pending = entries.filter(e => e.credit).sort((a,b) => b.date.localeCompare(a.date));
-  const total = pending.reduce((s,e) => s+(e.pendiente||e.amount), 0);
+  const list    = document.getElementById('panelCredList');
+  const totalEl = document.getElementById('panelCredTotal');
+  const countEl = document.getElementById('panelCredCount');
+  const subEl   = document.getElementById('panelCredSub');
+  const lblEl   = document.getElementById('panelCredTotalLbl');
 
-  document.getElementById('panelCredTotal').textContent = fmt(total);
-  document.getElementById('panelCredCount').textContent = pending.length + '';
-  document.getElementById('panelCredSub').textContent =
-    pending.length === 0 ? 'Sin créditos pendientes' :
-    pending.length + ' crédito' + (pending.length !== 1 ? 's' : '') + ' pendiente' + (pending.length !== 1 ? 's' : '');
+  const fmtDate = d => new Date(d+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});
 
-  if(!pending.length) {
-    list.innerHTML = `<div class="panel-empty"><p>✅ Sin créditos pendientes.<br>Todo cobrado.</p></div>`;
-    return;
-  }
+  if (_credTab === 'cobrar') {
+    const pending = entries.filter(e => e.credit && !e.paid).sort((a,b) => b.date.localeCompare(a.date));
+    const total   = pending.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
+    totalEl.textContent = fmt(total);
+    totalEl.style.color = 'var(--k-credit)';
+    countEl.textContent = pending.length + '';
+    if (lblEl) lblEl.textContent = 'Por cobrar';
+    subEl.textContent = pending.length === 0 ? 'Sin créditos pendientes'
+      : pending.length + ' crédito' + (pending.length !== 1 ? 's' : '') + ' por cobrar';
 
-  list.innerHTML = pending.map(e => {
-    const fechaLbl = new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});
-    const montoPendiente = e.pendiente > 0 ? e.pendiente : e.amount;
-    const tieneAcuenta = e.acuenta > 0;
-    return `
-      <div class="cred-card">
+    if (!pending.length) {
+      list.innerHTML = `<div class="panel-empty"><span style="font-size:28px">✅</span><span>Todo cobrado.<br>Sin créditos pendientes.</span></div>`;
+      return;
+    }
+    list.innerHTML = pending.map(e => {
+      const monto = e.pendiente > 0 ? e.pendiente : e.amount;
+      const acuenta = e.acuenta > 0 ? ` · <span style="color:var(--k-accent);font-weight:600;">S/${e.acuenta.toFixed(2)} a cuenta</span>` : '';
+      return `<div class="cred-card">
         <div class="cred-card-left">
           <div class="cred-card-client">${e.client || 'Sin cliente'}</div>
-          <div class="cred-card-meta">${e.desc} · ${fechaLbl}${tieneAcuenta ? ` · <span style="color:var(--k-accent);font-weight:600;">S/${e.acuenta.toFixed(2)} a cuenta</span>` : ''}</div>
+          <div class="cred-card-meta">${e.desc} · ${fmtDate(e.date)}${acuenta}</div>
         </div>
         <div class="cred-card-right">
-          <div class="cred-card-amt">S/ ${montoPendiente.toFixed(2)}</div>
-          <button class="cred-cobrar-btn" onclick="cobrarEntry('${e.id}');closePanel('cred');">✓ Pagó</button>
+          <div class="cred-card-amt">+S/ ${monto.toFixed(2)}</div>
+          <button class="cred-cobrar-btn" onclick="cobrarEntry('${e.id}');renderCredPanel();">✓ Pagó</button>
         </div>
       </div>`;
-  }).join('');
+    }).join('');
+
+  } else {
+    const pending = entries.filter(e => e.debt && !e.paid).sort((a,b) => a.date.localeCompare(b.date));
+    const total   = pending.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
+    totalEl.textContent = fmt(total);
+    totalEl.style.color = 'var(--k-expense)';
+    countEl.textContent = pending.length + '';
+    if (lblEl) lblEl.textContent = 'Por pagar';
+    subEl.textContent = pending.length === 0 ? 'Sin deudas pendientes'
+      : pending.length + ' deuda' + (pending.length !== 1 ? 's' : '') + ' por pagar';
+
+    if (!pending.length) {
+      list.innerHTML = `<div class="panel-empty"><span style="font-size:28px">🎉</span><span>Sin deudas pendientes.</span></div>`;
+      return;
+    }
+    list.innerHTML = pending.map(e => {
+      const monto   = e.pendiente > 0 ? e.pendiente : e.amount;
+      const acuenta = e.acuenta > 0 ? ` · <span style="color:var(--k-accent);font-weight:600;">S/${e.acuenta.toFixed(2)} abonado</span>` : '';
+      const today   = getToday();
+      const days    = Math.round((new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000);
+      const ageBadge = days > 0
+        ? `<span style="font-size:9px;background:rgba(255,107,107,0.15);color:var(--k-expense);padding:2px 6px;border-radius:99px;margin-left:6px;">${days}d</span>`
+        : '';
+      return `<div class="cred-card debt-card">
+        <div class="cred-card-left">
+          <div class="cred-card-client">${e.client || 'Sin proveedor'}${ageBadge}</div>
+          <div class="cred-card-meta">${e.desc} · ${fmtDate(e.date)}${acuenta}</div>
+        </div>
+        <div class="cred-card-right">
+          <div class="cred-card-amt">−S/ ${monto.toFixed(2)}</div>
+          <button class="cred-pagar-btn" onclick="pagarDebt('${e.id}');renderCredPanel();">✓ Pagué</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 /* ══════════════════════════════════════════
