@@ -1827,6 +1827,104 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .order-action-btn.done   { border-color: var(--k-accent); color: var(--k-accent); background: var(--k-accent-l); }
 .order-action-btn.del    { border-color: var(--k-expense); color: var(--k-expense); }
 .order-action-btn.del:hover { background: var(--k-expense-l); }
+
+/* ══ ORDER DETAIL MODAL ══ */
+.ord-modal-backdrop {
+  position: fixed; inset: 0; z-index: 9600;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.ord-modal-backdrop.open { display: flex; }
+.ord-modal {
+  background: #1a1c22; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 22px; width: 100%; max-width: 420px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  overflow: hidden; animation: ordModalIn .2s cubic-bezier(.34,1.36,.64,1);
+}
+@keyframes ordModalIn {
+  from { opacity:0; transform: scale(.93) translateY(12px); }
+  to   { opacity:1; transform: scale(1)  translateY(0); }
+}
+.ord-modal-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 20px 22px 14px; border-bottom: 1px solid rgba(255,255,255,0.07);
+  gap: 12px;
+}
+.ord-modal-client {
+  font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--k-text);
+  line-height: 1.2;
+}
+.ord-modal-meta {
+  display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap;
+}
+.ord-modal-close {
+  background: rgba(255,255,255,0.07); border: none; border-radius: 50%;
+  width: 30px; height: 30px; font-size: 16px; color: var(--k-text-3);
+  cursor: pointer; flex-shrink: 0; transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.ord-modal-close:hover { background: rgba(255,255,255,0.14); color: var(--k-text); }
+.ord-modal-body { padding: 16px 22px; }
+.ord-modal-items-title {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 10px;
+}
+.ord-modal-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 12px;
+}
+.ord-modal-item:last-child { border-bottom: none; }
+.ord-modal-item-desc {
+  font-family: var(--sans); font-size: 13px; color: var(--k-text); flex: 1;
+}
+.ord-modal-item-price {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  color: var(--k-accent); flex-shrink: 0;
+}
+.ord-modal-total {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 22px; background: rgba(196,240,66,0.06);
+  border-top: 1px solid rgba(196,240,66,0.15);
+}
+.ord-modal-total-lbl {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--k-text-3);
+}
+.ord-modal-total-val {
+  font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--k-accent);
+}
+.ord-modal-note {
+  margin: 10px 0 0; padding: 10px 12px;
+  background: rgba(255,255,255,0.04); border-radius: 10px;
+  font-family: var(--sans); font-size: 12px; color: var(--k-text-2); line-height: 1.5;
+}
+.ord-modal-actions {
+  padding: 14px 22px 20px; display: flex; flex-direction: column; gap: 8px;
+}
+.ord-modal-actions-row { display: flex; gap: 8px; }
+.ord-btn {
+  flex: 1; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
+  font-weight: 600; color: var(--k-text-2); cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.ord-btn:hover { background: rgba(255,255,255,0.09); color: var(--k-text); }
+.ord-btn.ord-btn-wa { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.3); color: #25d166; }
+.ord-btn.ord-btn-wa:hover { background: rgba(37,211,102,0.18); }
+.ord-btn.ord-btn-print { }
+.ord-btn.ord-btn-del { background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.25); color: var(--k-expense); }
+.ord-btn.ord-btn-del:hover { background: rgba(255,107,107,0.16); }
+.ord-status-row { display: flex; gap: 6px; }
+.ord-status-btn {
+  flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--k-line);
+  background: transparent; font-family: var(--sans); font-size: 11px; font-weight: 600;
+  color: var(--k-text-3); cursor: pointer; transition: all .15s; text-align: center;
+}
+.ord-status-btn:hover { background: rgba(255,255,255,0.06); color: var(--k-text); }
+.ord-status-btn.active-pending { background: var(--k-credit-l); border-color: var(--k-credit); color: var(--k-credit); }
+.ord-status-btn.active-ready   { background: var(--k-order-l);  border-color: var(--k-order);  color: var(--k-order); }
+.ord-status-btn.active-done    { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: var(--k-text); }
 /* Filtros de estado */
 .order-filters {
   display: flex; gap: 6px; padding: 10px 24px 4px; flex-shrink: 0; flex-wrap: wrap;
@@ -4255,7 +4353,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <label>Descripción / Producto</label>
         <div class="picker-wrap">
           <div class="input-with-toggle">
-            <input type="text" id="iDesc" placeholder="Escribe o elige producto..." maxlength="60" oninput="filterProducts()" onkeydown="iDescKeyNav(event)">
+            <input type="text" id="iDesc" placeholder="Escribe o elige producto..." maxlength="60" oninput="filterProducts()" onkeydown="iDescKeyNav(event)" onblur="setTimeout(()=>{ productPickerOpen=false; _portalClose('productChips'); _iDescCursor=-1; },150)">
             <button type="button" class="field-toggle-btn" id="btnToggleProducts" onclick="toggleProductPicker()" title="Ver productos">
               <span class="ftb-icon" id="ftbProdIcon">⌄</span>
             </button>
@@ -4779,28 +4877,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <div class="panel-head-right">
         <button class="panel-add-btn" onclick="toggleOrderForm()">+ Nuevo</button>
         <button class="panel-close" onclick="closePanel('ord')">×</button>
-      </div>
-    </div>
-    <!-- Formulario nuevo pedido -->
-    <div class="order-form" id="pfOrd">
-      <div class="order-form-title">Nuevo pedido</div>
-      <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Cliente..." maxlength="60" autocomplete="off">
-      <div id="pfOrdItemsList">
-        <div class="order-item-row" data-idx="0">
-          <input class="panel-form-inp" type="text" placeholder="Producto / descripción..." maxlength="80" oninput="syncOrderItem(this)">
-          <input class="panel-form-inp w-sm" type="number" placeholder="S/ precio" min="0" step="0.01" oninput="calcOrderTotal()">
-          <button class="order-item-remove" onclick="removeOrderItem(this)" title="Quitar">×</button>
-        </div>
-      </div>
-      <button class="order-add-item-btn" onclick="addOrderItem()">+ agregar ítem</button>
-      <div class="panel-form-row">
-        <input class="panel-form-inp" id="pfOrdDate" type="date" title="Fecha de entrega">
-        <input class="panel-form-inp" id="pfOrdNote" type="text" placeholder="Nota (opcional)..." maxlength="100">
-      </div>
-      <div style="font-family:var(--mono);font-size:12px;color:var(--k-text-2);text-align:right;" id="pfOrdTotal">Total: S/ 0.00</div>
-      <div class="panel-form-actions">
-        <button class="pf-cancel" onclick="toggleOrderForm()">Cancelar</button>
-        <button class="pf-save" onclick="saveOrder()">Guardar pedido</button>
       </div>
     </div>
     <!-- Filtros -->
@@ -9928,20 +10004,20 @@ loadOrders();
 
 // ── Formulario ──
 function toggleOrderForm() {
-  const el = document.getElementById('pfOrd');
-  const isOpen = el.classList.contains('open');
-  el.classList.toggle('open');
-  if (!isOpen) {
-    // reset
-    document.getElementById('pfOrdClient').value = '';
-    document.getElementById('pfOrdDate').value = '';
-    document.getElementById('pfOrdNote').value = '';
-    document.getElementById('pfOrdTotal').textContent = 'Total: S/ 0.00';
-    const list = document.getElementById('pfOrdItemsList');
-    list.innerHTML = '';
-    addOrderItem(); // al menos 1 ítem
-    document.getElementById('pfOrdClient').focus();
-  }
+  // reset form
+  document.getElementById('pfOrdClient').value = '';
+  document.getElementById('pfOrdDate').value = '';
+  document.getElementById('pfOrdNote').value = '';
+  document.getElementById('pfOrdTotal').textContent = 'S/ 0.00';
+  const list = document.getElementById('pfOrdItemsList');
+  list.innerHTML = '';
+  addOrderItem();
+  document.getElementById('newOrdBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('pfOrdClient').focus(), 80);
+}
+
+function closeNewOrderModal() {
+  document.getElementById('newOrdBackdrop').classList.remove('open');
 }
 
 function addOrderItem() {
@@ -9972,7 +10048,7 @@ function calcOrderTotal() {
     const v = parseFloat(r.querySelectorAll('input')[1].value) || 0;
     total += v;
   });
-  document.getElementById('pfOrdTotal').textContent = 'Total: S/ ' + total.toFixed(2);
+  document.getElementById('pfOrdTotal').textContent = 'S/ ' + total.toFixed(2);
 }
 
 function getOrderItems() {
@@ -10004,8 +10080,9 @@ function saveOrder() {
   };
   _orders.unshift(order);
   saveOrders();
-  toggleOrderForm();
+  closeNewOrderModal();
   renderOrdPanel();
+  toast('¡Pedido guardado! 📋');
 }
 
 // ── Filtros ──
@@ -10077,7 +10154,7 @@ function renderOrdPanel() {
          <button class="order-action-btn del" onclick="deleteOrder(${o.id})">Eliminar</button>`
       : `<button class="order-action-btn" onclick="setOrderStatus(${o.id},'pending')">↩ Reabrir</button>
          <button class="order-action-btn del" onclick="deleteOrder(${o.id})">Eliminar</button>`;
-    return `<div class="order-card">
+    return `<div class="order-card" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
       <div class="order-card-head">
         <div class="order-card-dot ${o.status}"></div>
         <div class="order-card-info">
@@ -10091,9 +10168,9 @@ function renderOrdPanel() {
         </div>
         <div class="order-card-right">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--k-text-3);margin-top:4px;text-align:right;">Ver detalle ›</div>
         </div>
       </div>
-      <div class="order-card-actions">${actions}</div>
     </div>`;
   }).join('');
 }
@@ -10861,6 +10938,162 @@ document.addEventListener('DOMContentLoaded', function() {
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   setTimeout(renderNotesCol, 500);
 }
+
+/* ══ ORDER DETAIL MODAL ══ */
+function openOrderModal(id) {
+  const orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+
+  const statusLabel = { pending:'⏳ Pendiente', ready:'✅ Listo', done:'📦 Entregado' };
+  const statusClass = { pending:'pending', ready:'ready', done:'done' };
+
+  // Date display
+  let dateLine = '';
+  if (o.date) {
+    const [y,m,d] = o.date.split('-');
+    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    dateLine = `<span style="font-size:11px;color:var(--k-text-3)">📅 ${d} ${months[parseInt(m)-1]} ${y}</span>`;
+  }
+
+  // Items rows
+  const itemsHtml = (o.items||[]).map(it =>
+    `<div class="ord-modal-item">
+      <div class="ord-modal-item-desc">${it.desc}</div>
+      <div class="ord-modal-item-price">S/ ${parseFloat(it.price||0).toFixed(2)}</div>
+    </div>`
+  ).join('');
+
+  // Status buttons
+  const statuses = [
+    {key:'pending', label:'⏳ Pendiente'},
+    {key:'ready',   label:'✅ Listo'},
+    {key:'done',    label:'📦 Entregado'},
+  ];
+  const statusBtnsHtml = statuses.map(s =>
+    `<button class="ord-status-btn ${o.status===s.key?'active-'+s.key:''}"
+      onclick="ordModalSetStatus(${o.id},'${s.key}')">${s.label}</button>`
+  ).join('');
+
+  document.getElementById('ordModalBody').innerHTML = `
+    <div class="ord-modal-header">
+      <div>
+        <div class="ord-modal-client">${o.client||'Sin nombre'}</div>
+        <div class="ord-modal-meta">
+          <span class="order-badge ${statusClass[o.status]||'pending'}">${statusLabel[o.status]||'Pendiente'}</span>
+          ${dateLine}
+          ${o.note ? `<span style="font-size:11px;color:var(--k-text-3)">📝 ${o.note}</span>` : ''}
+        </div>
+      </div>
+      <button class="ord-modal-close" onclick="closeOrderModal()">✕</button>
+    </div>
+    <div style="padding:14px 22px 0;">
+      <div class="ord-modal-items-title">Productos / Servicios</div>
+      ${itemsHtml || '<div style="color:var(--k-text-3);font-size:13px;padding:8px 0;">Sin items registrados</div>'}
+    </div>
+    <div class="ord-modal-total">
+      <span class="ord-modal-total-lbl">Total</span>
+      <span class="ord-modal-total-val">S/ ${(o.total||0).toFixed(2)}</span>
+    </div>
+    <div class="ord-modal-actions">
+      <div class="ord-status-row">${statusBtnsHtml}</div>
+      <div class="ord-modal-actions-row">
+        <button class="ord-btn ord-btn-print" onclick="ordPrint(${o.id})">🖨️ Imprimir</button>
+        <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">💬 WhatsApp</button>
+      </div>
+      <button class="ord-btn ord-btn-del" onclick="ordModalDelete(${o.id})">🗑️ Eliminar pedido</button>
+    </div>
+  `;
+
+  const backdrop = document.getElementById('ordModalBackdrop');
+  backdrop.classList.add('open');
+}
+
+function closeOrderModal() {
+  document.getElementById('ordModalBackdrop').classList.remove('open');
+}
+
+function ordModalSetStatus(id, newStatus) {
+  let orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  const idx = orders.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  orders[idx].status = newStatus;
+  localStorage.setItem('kajita_orders', JSON.stringify(orders));
+  openOrderModal(id); // re-render modal
+  if (typeof renderOrdPanel === 'function') renderOrdPanel();
+  toast('Estado actualizado ✓');
+}
+
+function ordModalDelete(id) {
+  if (!confirm('¿Eliminar este pedido?')) return;
+  let orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  orders = orders.filter(x => x.id !== id);
+  localStorage.setItem('kajita_orders', JSON.stringify(orders));
+  closeOrderModal();
+  if (typeof renderOrdPanel === 'function') renderOrdPanel();
+  toast('Pedido eliminado');
+}
+
+function ordWhatsApp(id) {
+  const orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  const biz = JSON.parse(localStorage.getItem('kajita_biz') || '{}');
+  const bizName = biz.name || 'Kajita';
+
+  let lines = [`*Pedido - ${bizName}*`];
+  if (o.date) lines.push(`📅 Fecha: ${o.date}`);
+  lines.push(`👤 Cliente: ${o.client||'Sin nombre'}`);
+  lines.push('');
+  lines.push('*Detalle:*');
+  (o.items||[]).forEach(it => {
+    lines.push(`• ${it.desc} — S/ ${parseFloat(it.price||0).toFixed(2)}`);
+  });
+  lines.push('');
+  lines.push(`*Total: S/ ${(o.total||0).toFixed(2)}*`);
+  if (o.note) lines.push(`\n📝 Nota: ${o.note}`);
+
+  const text = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+function ordPrint(id) {
+  const orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  const biz = JSON.parse(localStorage.getItem('kajita_biz') || '{}');
+  const bizName = biz.name || 'Mi Negocio';
+
+  const itemRows = (o.items||[]).map(it =>
+    `<tr><td>${it.desc}</td><td style="text-align:right">S/ ${parseFloat(it.price||0).toFixed(2)}</td></tr>`
+  ).join('');
+
+  const win = window.open('', '_blank', 'width=400,height=600');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>Pedido #${o.id}</title>
+    <style>
+      body{font-family:monospace;font-size:13px;padding:20px;max-width:320px;margin:auto}
+      h2{text-align:center;font-size:16px;margin:0 0 4px}
+      .sub{text-align:center;color:#666;margin:0 0 14px;font-size:11px}
+      table{width:100%;border-collapse:collapse}
+      td{padding:4px 2px}
+      hr{border:none;border-top:1px dashed #999;margin:10px 0}
+      .total{font-weight:bold;font-size:15px}
+    </style>
+  </head><body>
+    <h2>${bizName}</h2>
+    <p class="sub">Pedido #${o.id} · ${o.date||''}</p>
+    <p>Cliente: <strong>${o.client||'—'}</strong></p>
+    <hr>
+    <table>${itemRows}</table>
+    <hr>
+    <table><tr><td class="total">TOTAL</td><td class="total" style="text-align:right">S/ ${(o.total||0).toFixed(2)}</td></tr></table>
+    ${o.note?`<p style="margin-top:10px;font-size:11px">Nota: ${o.note}</p>`:''}
+    <p style="text-align:center;margin-top:16px;font-size:10px;color:#aaa">Generado con Kajita</p>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
 </script>
 
 <!-- ══ MODAL: CREAR / EDITAR REGISTRO ══ -->
@@ -10942,6 +11175,54 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
       <button class="kj-modal-btn-cancel" onclick="closeKjModal()">Cancelar</button>
       <button class="kj-modal-btn-save" id="kjModalSave" onclick="kjModalSave()">Guardar</button>
     </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: NUEVO PEDIDO ══ -->
+<div class="ord-modal-backdrop" id="newOrdBackdrop" onclick="if(event.target===this)closeNewOrderModal()">
+  <div class="ord-modal" id="newOrdModal" style="max-width:460px;">
+    <div class="ord-modal-header">
+      <div>
+        <div class="ord-modal-client" style="font-size:16px;">📋 Nuevo Pedido</div>
+        <div style="font-size:11px;color:var(--k-text-3);margin-top:3px;">Completa los datos del pedido</div>
+      </div>
+      <button class="ord-modal-close" onclick="closeNewOrderModal()">✕</button>
+    </div>
+    <div style="padding:16px 22px;display:flex;flex-direction:column;gap:10px;">
+      <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Nombre del cliente..." maxlength="60" autocomplete="off"
+        style="width:100%;box-sizing:border-box;">
+      <div class="ord-modal-items-title" style="margin-bottom:0;">Productos / Servicios</div>
+      <div id="pfOrdItemsList">
+        <div class="order-item-row">
+          <input class="panel-form-inp" type="text" placeholder="Producto / descripción..." maxlength="80" oninput="syncOrderItem(this)">
+          <input class="panel-form-inp w-sm" type="number" placeholder="S/ precio" min="0" step="0.01" oninput="calcOrderTotal()">
+          <button class="order-item-remove" onclick="removeOrderItem(this)" title="Quitar">×</button>
+        </div>
+      </div>
+      <button class="order-add-item-btn" onclick="addOrderItem()">+ agregar ítem</button>
+      <div style="display:flex;gap:8px;">
+        <input class="panel-form-inp" id="pfOrdDate" type="date" title="Fecha de entrega" style="flex:1;">
+        <input class="panel-form-inp" id="pfOrdNote" type="text" placeholder="Nota (opcional)..." maxlength="100" style="flex:2;">
+      </div>
+    </div>
+    <div class="ord-modal-total" style="padding:10px 22px;">
+      <span class="ord-modal-total-lbl">Total</span>
+      <span class="ord-modal-total-val" id="pfOrdTotal" style="font-size:18px;">S/ 0.00</span>
+    </div>
+    <div style="padding:14px 22px 20px;display:flex;gap:8px;">
+      <button class="ord-btn" onclick="closeNewOrderModal()" style="flex:0 0 auto;padding:11px 18px;">Cancelar</button>
+      <button class="ord-btn" onclick="saveOrder()"
+        style="flex:1;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;">
+        Guardar pedido
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: DETALLE DE PEDIDO ══ -->
+<div class="ord-modal-backdrop" id="ordModalBackdrop" onclick="if(event.target===this)closeOrderModal()">
+  <div class="ord-modal" id="ordModal">
+    <div id="ordModalBody"></div>
   </div>
 </div>
 
