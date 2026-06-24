@@ -3218,13 +3218,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 /* ══ ROW 3: KPIs pequeños (izq) + Heatmap grande (der) ══ */
 .dash-kpi-hm-row {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; align-items: start;
+  display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; align-items: start;
 }
-@media (max-width: 800px) { .dash-kpi-hm-row { grid-template-columns: 1fr; } }
 
 .dash-kpi-small {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
 }
+@media (max-width: 700px) { .dash-kpi-small { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 440px) { .dash-kpi-small { grid-template-columns: 1fr; } }
 
 /* Heatmap grande */
 .dash-heatmap-big { padding: 16px 18px !important; }
@@ -3793,7 +3794,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.17c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.19c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4062,7 +4063,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.17</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.19</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4258,10 +4259,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
         <span>Pedidos</span>
       </button>
-      <button class="sb-item" id="sbi-cal" onclick="sbPanel('cal')">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span>Calendario</span>
-      </button>
     </nav>
 
     <!-- Footer del sidebar -->
@@ -4307,7 +4304,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.17</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.19</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -4395,27 +4392,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <button class="dash-nav-today" onclick="dashGoToday()">Hoy</button>
     </div>
 
-    <!-- ROW 3: KPIs parciales (izq) + Heatmap grande (der) -->
+    <!-- ROW 3: KPIs a todo el ancho (panel de calendario eliminado) -->
     <div class="dash-kpi-hm-row">
-      <!-- KPIs: solo Ingresos, Egresos, Por cobrar, Días activos (2×2) -->
       <div class="dash-kpi-small" id="dashKpisSmall"></div>
-      <!-- Heatmap grande -->
-      <div class="dash-heatmap dash-heatmap-big" id="dashHeatmapWrap">
-        <div class="dash-hm-title">
-          <span>Actividad del mes</span>
-          <span class="dash-hm-month-lbl" id="dashHmMonthLbl"></span>
-        </div>
-        <div class="dash-hm-dow" id="dashHmDow"></div>
-        <div class="dash-hm-grid" id="dashHmGrid"></div>
-        <div class="dash-hm-legend">
-          <span class="dash-hm-legend-lbl">Menos</span>
-          <div class="dash-hm-legend-dot" style="background:rgba(255,255,255,0.05)"></div>
-          <div class="dash-hm-legend-dot" style="background:rgba(196,240,66,0.2)"></div>
-          <div class="dash-hm-legend-dot" style="background:rgba(196,240,66,0.45)"></div>
-          <div class="dash-hm-legend-dot" style="background:var(--k-accent)"></div>
-          <span class="dash-hm-legend-lbl">Más</span>
-        </div>
-      </div>
     </div>
 
     <!-- ROW 4: Top Clientes | Top Productos | Últimos movimientos -->
@@ -5292,7 +5271,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 <!-- BOTÓN FLOTANTE AÑADIR -->
 <!-- ══ BOTÓN VOZ ══ -->
-<button class="fab-voice" id="fabVoice" onclick="openVoiceModal()" title="Registrar por voz">
+<!-- Botón de voz (micrófono) eliminado -->
+<button class="fab-voice" id="fabVoice" onclick="openVoiceModal()" title="Registrar por voz" style="display:none !important;">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
     <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -11171,7 +11151,8 @@ function renderDashboard() {
   else msg = goalIncome > 0 ? 'Cada venta suma — ¡sigue registrando!' : '¡Registra tu primera venta del período!';
   document.getElementById('dashGoalMsg').textContent = msg;
 
-  // ── HEATMAP ──
+  // ── HEATMAP ── (panel de calendario eliminado del dashboard)
+  if (document.getElementById('dashHmGrid')) {
   const hmYear = _dashYear, hmMonth = _dashMonth;
   const daysInMonth = new Date(hmYear, hmMonth + 1, 0).getDate();
   const firstDow = (new Date(hmYear, hmMonth, 1).getDay() + 6) % 7; // Mon=0
@@ -11206,6 +11187,7 @@ function renderDashboard() {
     hmHtml += `<div class="dash-hm-cell ${cls}" ${tip}>${isFuture ? '' : d}</div>`;
   }
   document.getElementById('dashHmGrid').innerHTML = hmHtml;
+  }
 
   // ── FEED: últimas transacciones ──
   document.getElementById('dashFeedPeriodLbl').textContent = periodLabel;
