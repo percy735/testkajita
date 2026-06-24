@@ -10819,7 +10819,8 @@ const ORD_SVG = {
 
 // ── Render ──
 function renderOrdPanel() {
-  loadOrders();
+  // No releer localStorage aquí — _orders en memoria ya es autoritativo.
+  // loadOrders() se llama solo al inicio y en switchView para sincronizar.
   const list   = document.getElementById('panelOrdList');
   const subEl  = document.getElementById('panelOrdSub');
   const totEl  = document.getElementById('panelOrdTotal');
@@ -10994,7 +10995,7 @@ function switchView(view) {
     if (view === 'prov') { document.getElementById('panelProvSearch').value=''; renderProvPanel(); }
     if (view === 'inv')  { document.getElementById('panelInvSearch').value='';  renderInvPanel(); }
     if (view === 'cred') renderCredPanel();
-    if (view === 'ord')  renderOrdPanel();
+    if (view === 'ord')  { loadOrders(); renderOrdPanel(); }
 
   } else if (view === 'cal') {
     openSalesCalendar();
