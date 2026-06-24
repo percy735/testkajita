@@ -1793,7 +1793,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .ord-modal-backdrop.open { display: flex; }
 .ord-modal {
-  background: var(--k-panel); border: 1px solid var(--k-line);
+  background: #14161B; border: 1px solid var(--k-line);
   border-radius: 22px; width: 100%; max-width: 420px;
   box-shadow: 0 24px 80px rgba(0,0,0,0.6);
   overflow-y: auto; max-height: 92vh;
@@ -3559,14 +3559,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.29
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.30
    FIX v14.8.27: saveOrder() persistía con saveOrders() DESPUÉS de render(),
    pero render()->renderDayOrders()->loadOrders() recargaba localStorage (aún vacío)
    y vaciaba _orders antes de guardarlo. Ahora saveOrders() corre ANTES de render().
    v14.8.28: edición de pedidos unificada en un solo modal (openEditOrderModal);
    eliminado overlay viejo editOrdOverlay + funciones Eo*, y código muerto
    (person-card/_expanded, inv-card, cred-card, refreshData, resetBizProfile, no-ops).
-   v14.8.29: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
+   v14.8.30: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
    SpeechRecognition, parseVoiceLocal, ~571 líneas) — estaba oculto y sin uso.
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
@@ -3836,7 +3836,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.29</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.30</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4077,7 +4077,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.29</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.30</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -9330,6 +9330,8 @@ function _ordReset() {
   _ordDeliveryType = 'delivery';
   _ordDateMode = '';
   document.getElementById('pfOrdClient').value  = '';
+  document.getElementById('pfOrdPhone').value   = '';
+  document.getElementById('pfOrdTime').value    = '';
   document.getElementById('pfOrdDesc').value    = '';
   document.getElementById('pfOrdQty').value     = '1';
   document.getElementById('pfOrdUnit').value    = '';
@@ -9510,6 +9512,8 @@ function openEditOrderModal(id) {
   }));
 
   document.getElementById('pfOrdClient').value = o.client || '';
+  document.getElementById('pfOrdPhone').value  = o.phone  || '';
+  document.getElementById('pfOrdTime').value   = o.time   || '';
   document.getElementById('pfOrdNote').value   = o.note   || '';
 
   // delivery
@@ -9607,6 +9611,7 @@ function ordSelectClient(id) {
   const c = (typeof clients !== 'undefined' ? clients : []).find(x => String(x.id) === String(id));
   if (!c) return;
   document.getElementById('pfOrdClient').value = c.name;
+  if (c.phone) document.getElementById('pfOrdPhone').value = c.phone;
   ordHideDrop('ordClientDrop');
 }
 
@@ -9696,11 +9701,13 @@ function saveOrder() {
   const address  = delivery === 'delivery' ? (document.getElementById('pfOrdAddress').value.trim() || '') : '';
   const orderData = {
     client,
+    phone:  document.getElementById('pfOrdPhone').value.trim(),
     items,
     total,
     delivery,
     address,
     date:   document.getElementById('pfOrdDate').value || '',
+    time:   document.getElementById('pfOrdTime').value || '',
     note:   document.getElementById('pfOrdNote').value.trim(),
   };
 
@@ -9959,10 +9966,11 @@ function renderOrdPanel() {
   }
 
   const statusLabel = { pending: '⏳ Pendiente', ready: '✅ Listo', done: '📦 Entregado' };
-  const fmtDate = d => {
-    if (!d) return '';
+  const fmtDate = (d, t) => {
+    if (!d && !t) return '';
+    if (!d) return `Entrega: ${t}`;
     const [y,m,day] = d.split('-');
-    return `Entrega: ${day}/${m}/${y}`;
+    return `Entrega: ${day}/${m}/${y}${t ? ' · ' + t : ''}`;
   };
 
   const nextStatusMap = {
@@ -9976,7 +9984,8 @@ function renderOrdPanel() {
 
   list.innerHTML = filtered.map(o => {
     const itemsText = o.items.map(i => i.desc + (i.price ? ` (S/ ${i.price.toFixed(2)})` : '')).join(' · ');
-    const dateStr   = fmtDate(o.date);
+    const dateStr   = fmtDate(o.date, o.time);
+    const phoneStr  = o.phone ? `📞 ${o.phone}` : '';
     const ns = nextStatusMap[o.status] || nextStatusMap.pending;
     const tmlIdx = tmlSteps.indexOf(o.status);
     const timelineHtml = tmlSteps.map((s, i) => {
@@ -9998,7 +10007,7 @@ function renderOrdPanel() {
         <div class="order-card-info">
           <div class="order-card-client">${o.client}</div>
           <div class="order-card-items">${itemsText}</div>
-          ${dateStr || o.note ? `<div class="order-card-meta">${dateStr ? `<span>${dateStr}</span>` : ''}${o.note ? `<span>📝 ${o.note}</span>` : ''}</div>` : ''}
+          ${dateStr || phoneStr || o.note ? `<div class="order-card-meta">${dateStr ? `<span>${dateStr}</span>` : ''}${phoneStr ? `<span>${phoneStr}</span>` : ''}${o.note ? `<span>📝 ${o.note}</span>` : ''}</div>` : ''}
         </div>
         <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
         <div class="order-card-right" onclick="event.stopPropagation()">
@@ -10827,8 +10836,13 @@ function openOrderModal(id) {
   if (o.date) {
     const [y,m,d] = o.date.split('-');
     const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    dateLine = `<span class="ord-modal-metachip">${ORD_SVG.calendar} ${d} ${months[parseInt(m)-1]} ${y}</span>`;
+    dateLine = `<span class="ord-modal-metachip">${ORD_SVG.calendar} ${d} ${months[parseInt(m)-1]} ${y}${o.time ? ' · ' + o.time : ''}</span>`;
+  } else if (o.time) {
+    dateLine = `<span class="ord-modal-metachip">${ORD_SVG.calendar} ${o.time}</span>`;
   }
+  const phoneLine = o.phone
+    ? `<span class="ord-modal-metachip">📞 ${o.phone}</span>`
+    : '';
 
   // Items rows
   const itemsHtml = (o.items||[]).map(it =>
@@ -10860,6 +10874,7 @@ function openOrderModal(id) {
         <div class="ord-modal-meta">
           <span class="order-badge ${statusClass[o.status]||'pending'}">${statusLabel[o.status]||'Pendiente'}</span>
           ${dateLine}
+          ${phoneLine}
           ${deliveryLine}
         </div>
         ${o.note ? `<div class="ord-modal-note">${ORD_SVG.note} ${o.note}</div>` : ''}
@@ -10924,8 +10939,9 @@ function ordWhatsApp(id) {
   const bizName = biz.name || 'Kajita';
 
   let lines = [`*Pedido - ${bizName}*`];
-  if (o.date) lines.push(`📅 Fecha: ${o.date}`);
+  if (o.date || o.time) lines.push(`📅 Entrega: ${[o.date, o.time].filter(Boolean).join(' ')}`);
   lines.push(`👤 Cliente: ${o.client||'Sin nombre'}`);
+  if (o.phone) lines.push(`📞 ${o.phone}`);
   lines.push('');
   lines.push('*Detalle:*');
   (o.items||[]).forEach(it => {
@@ -10936,7 +10952,9 @@ function ordWhatsApp(id) {
   if (o.note) lines.push(`\n📝 Nota: ${o.note}`);
 
   const text = encodeURIComponent(lines.join('\n'));
-  window.open(`https://wa.me/?text=${text}`, '_blank');
+  const phoneDigits = (o.phone || '').replace(/[^0-9]/g, '');
+  const waUrl = phoneDigits ? `https://wa.me/${phoneDigits}?text=${text}` : `https://wa.me/?text=${text}`;
+  window.open(waUrl, '_blank');
 }
 
 function ordPrint(id) {
@@ -11087,6 +11105,13 @@ function ordPrint(id) {
         <div class="picker-panel" id="ordClientDrop" style="display:none;position:fixed;z-index:99999;"></div>
       </div>
 
+      <!-- Teléfono del cliente -->
+      <div class="fld">
+        <label>Teléfono del cliente</label>
+        <input class="panel-form-inp" id="pfOrdPhone" type="tel" inputmode="tel" placeholder="Ej: 999 888 777" maxlength="20" autocomplete="off"
+          style="width:100%;box-sizing:border-box;">
+      </div>
+
       <!-- Descripción / Producto -->
       <div class="fld">
         <label>Descripción / Producto</label>
@@ -11146,10 +11171,16 @@ function ordPrint(id) {
           style="width:100%;box-sizing:border-box;margin-top:8px;">
       </div>
 
-      <!-- Fecha de entrega -->
+      <!-- Fecha y hora de entrega -->
       <div class="fld">
-        <label>Fecha de entrega</label>
-        <div class="ord-date-row">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <label style="margin:0;">Fecha de entrega</label>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">🕐 Hora</span>
+            <input type="time" id="pfOrdTime" class="panel-form-inp" style="width:auto;padding:6px 9px;box-sizing:border-box;color-scheme:dark;">
+          </div>
+        </div>
+        <div class="ord-date-row" style="margin-top:8px;">
           <button class="ord-date-btn" id="ordDateHoy"    onclick="setOrdDate('today')">Hoy</button>
           <button class="ord-date-btn" id="ordDateManana" onclick="setOrdDate('tomorrow')">Mañana</button>
           <button class="ord-date-btn" id="ordDateCustom" onclick="setOrdDate('pick')">📅 Otra fecha</button>
