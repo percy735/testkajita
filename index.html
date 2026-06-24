@@ -1828,6 +1828,71 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .order-action-btn.del    { border-color: var(--k-expense); color: var(--k-expense); }
 .order-action-btn.del:hover { background: var(--k-expense-l); }
 
+/* ══ NEW ORDER FORM — date & delivery ══ */
+.ord-date-row { display:flex; gap:6px; flex-wrap:wrap; }
+.ord-date-btn {
+  padding:7px 14px; border-radius:99px; border:1px solid var(--k-line);
+  background:rgba(255,255,255,0.04); font-family:var(--sans); font-size:12px;
+  font-weight:600; color:var(--k-text-3); cursor:pointer; transition:all .15s;
+}
+.ord-date-btn:hover  { background:rgba(255,255,255,0.08); color:var(--k-text); }
+.ord-date-btn.active { background:rgba(196,240,66,0.12); border-color:rgba(196,240,66,0.4); color:var(--k-accent); }
+
+.ord-delivery-row { display:flex; gap:6px; }
+.ord-delivery-btn {
+  flex:1; padding:9px 12px; border-radius:12px; border:1px solid var(--k-line);
+  background:rgba(255,255,255,0.04); font-family:var(--sans); font-size:12px;
+  font-weight:600; color:var(--k-text-3); cursor:pointer; transition:all .15s; text-align:center;
+}
+.ord-delivery-btn:hover  { background:rgba(255,255,255,0.08); color:var(--k-text); }
+.ord-delivery-btn.active { background:rgba(196,240,66,0.1); border-color:rgba(196,240,66,0.4); color:var(--k-accent); }
+
+/* ══ KAJITA CUSTOM CALENDAR ══ */
+.kj-cal {
+  display:inline-block; margin-top:6px;
+  width:236px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px; padding:10px 12px 12px; box-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.kj-cal-head {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px;
+}
+.kj-cal-month {
+  font-family:var(--sans); font-size:12px; font-weight:700;
+  color:var(--k-text); text-transform:capitalize; letter-spacing:.02em;
+}
+.kj-cal-nav {
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+  border-radius:7px; width:24px; height:24px; font-size:14px;
+  color:var(--k-text-2); cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center; line-height:1;
+}
+.kj-cal-nav:hover { background:rgba(255,255,255,0.12); color:var(--k-text); }
+.kj-cal-dow {
+  display:grid; grid-template-columns:repeat(7,1fr);
+  gap:1px; margin-bottom:4px;
+}
+.kj-cal-dow span {
+  text-align:center; font-family:var(--mono); font-size:8px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--k-text-3);
+  padding:3px 0;
+}
+.kj-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
+.kj-cal-day {
+  height:30px; display:flex; align-items:center; justify-content:center;
+  border-radius:7px; font-family:var(--sans); font-size:11px; font-weight:500;
+  color:var(--k-text-2); cursor:pointer; transition:all .12s; border:none;
+  background:transparent; position:relative;
+}
+.kj-cal-day:hover     { background:rgba(255,255,255,0.08); color:var(--k-text); }
+.kj-cal-day.today     { color:var(--k-accent); font-weight:700; }
+.kj-cal-day.today::after { content:''; display:block; width:3px; height:3px; border-radius:50%; background:var(--k-accent); position:absolute; bottom:3px; left:50%; transform:translateX(-50%); }
+.kj-cal-day.selected  { background:var(--k-accent); color:#000 !important; font-weight:700; }
+.kj-cal-day.selected:hover { background:#d0ff4d; }
+.kj-cal-day.other-month { color:rgba(255,255,255,0.15); }
+.kj-cal-day.disabled  { color:rgba(255,255,255,0.12); cursor:default; pointer-events:none; }
+
 /* ══ ORDER DETAIL MODAL ══ */
 .ord-modal-backdrop {
   position: fixed; inset: 0; z-index: 9600;
@@ -1839,7 +1904,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   background: #1a1c22; border: 1px solid rgba(255,255,255,0.1);
   border-radius: 22px; width: 100%; max-width: 420px;
   box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-  overflow: hidden; animation: ordModalIn .2s cubic-bezier(.34,1.36,.64,1);
+  overflow-y: auto; max-height: 92vh;
+  animation: ordModalIn .2s cubic-bezier(.34,1.36,.64,1);
 }
 @keyframes ordModalIn {
   from { opacity:0; transform: scale(.93) translateY(12px); }
@@ -2348,22 +2414,38 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .cred-pagar-btn:hover { background: var(--k-expense); color: #fff; }
 
-/* tabs */
-.cred-tabs { display: flex; gap: 6px; padding: 10px 14px 0; }
-.cred-tab {
-  flex: 1; padding: 9px 12px; border-radius: 10px;
-  border: 1px solid var(--k-line); background: transparent;
-  font-family: var(--sans); font-size: 12px; font-weight: 600;
+/* ── Panel type tabs (Créditos Por Cobrar/Pagar, Pedidos filters) ── */
+.panel-type-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--k-line);
+  padding: 0 18px;
+}
+.panel-type-tab {
+  padding: 10px 16px; border: none; background: transparent;
+  font-family: var(--mono); font-size: 9.5px; font-weight: 600;
+  letter-spacing: .09em; text-transform: uppercase;
   color: var(--k-text-3); cursor: pointer; transition: all .15s;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  white-space: nowrap;
 }
-.cred-tab.active {
-  background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.35);
-  color: var(--k-credit);
+.panel-type-tab:hover { color: var(--k-text-2); }
+.panel-type-tab.active { color: var(--k-text); border-bottom-color: var(--k-accent); }
+
+/* ── Créditos grid ── */
+.pl-cred { grid-template-columns: 1.2fr 1.6fr 90px 80px; }
+
+/* ── Pedidos grid ── */
+.pl-ord { grid-template-columns: 1fr 1.8fr 80px 80px; }
+
+/* ── Inline status badge for pedidos rows ── */
+.ord-row-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 99px; font-size: 10px; font-weight: 600;
+  font-family: var(--mono); white-space: nowrap;
 }
-.cred-tab:last-child.active {
-  background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.35);
-  color: var(--k-expense);
-}
+.ord-row-badge.pending { background: var(--k-credit-l);  color: var(--k-credit); }
+.ord-row-badge.ready   { background: var(--k-order-l);   color: var(--k-order); }
+.ord-row-badge.done    { background: rgba(255,255,255,0.06); color: var(--k-text-3); }
 
 @media (max-width: 600px) {
   .panel-sheet { width: 100%; border-left: none; top: auto; height: 92vh; border-radius: 20px 20px 0 0; }
@@ -4873,17 +4955,22 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="panel-sheet" id="panelCredSheet">
     <div class="panel-head">
       <div>
-        <div class="panel-ttl">💳 Créditos</div>
+        <div class="panel-ttl">Créditos</div>
         <div class="panel-sub" id="panelCredSub">—</div>
       </div>
       <div class="panel-head-right">
+        <div class="panel-search">
+          <div class="panel-search-wrap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="panel-search-inp" id="panelCredSearch" type="text" placeholder="Buscar..." oninput="renderCredPanel()">
+          </div>
+        </div>
         <button class="panel-close" onclick="closePanel('cred')">×</button>
       </div>
     </div>
-    <!-- Tabs -->
-    <div class="cred-tabs">
-      <button class="cred-tab active" id="credTabCobrar" onclick="setCredTab('cobrar')">📥 Me deben</button>
-      <button class="cred-tab" id="credTabPagar" onclick="setCredTab('pagar')">📤 Yo debo</button>
+    <div class="panel-type-tabs">
+      <button class="panel-type-tab active" id="credTabCobrar" onclick="setCredTab('cobrar')">Por Cobrar</button>
+      <button class="panel-type-tab" id="credTabPagar" onclick="setCredTab('pagar')">Por Pagar</button>
     </div>
     <div class="panel-list" id="panelCredList"></div>
     <div class="panel-totals">
@@ -4904,25 +4991,30 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="panel-sheet" id="panelOrdSheet">
     <div class="panel-head">
       <div>
-        <div class="panel-ttl">📋 Pedidos</div>
+        <div class="panel-ttl">Pedidos</div>
         <div class="panel-sub" id="panelOrdSub">—</div>
       </div>
       <div class="panel-head-right">
+        <div class="panel-search">
+          <div class="panel-search-wrap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="panel-search-inp" id="panelOrdSearch" type="text" placeholder="Buscar..." oninput="renderOrdPanel()">
+          </div>
+        </div>
         <button class="panel-add-btn" onclick="toggleOrderForm()">+ Nuevo</button>
         <button class="panel-close" onclick="closePanel('ord')">×</button>
       </div>
     </div>
-    <!-- Filtros -->
-    <div class="order-filters">
-      <button class="order-filter-btn active" id="ordF-all"     onclick="setOrderFilter('all',this)">Todos</button>
-      <button class="order-filter-btn"         id="ordF-pending" onclick="setOrderFilter('pending',this)">⏳ Pendientes</button>
-      <button class="order-filter-btn"         id="ordF-ready"   onclick="setOrderFilter('ready',this)">✅ Listos</button>
-      <button class="order-filter-btn"         id="ordF-done"    onclick="setOrderFilter('done',this)">📦 Entregados</button>
+    <div class="panel-type-tabs">
+      <button class="panel-type-tab active" id="ordF-all"     onclick="setOrderFilter('all')">Todos</button>
+      <button class="panel-type-tab"        id="ordF-pending" onclick="setOrderFilter('pending')">Pendientes</button>
+      <button class="panel-type-tab"        id="ordF-ready"   onclick="setOrderFilter('ready')">Listos</button>
+      <button class="panel-type-tab"        id="ordF-done"    onclick="setOrderFilter('done')">Entregados</button>
     </div>
     <div class="panel-list" id="panelOrdList"></div>
     <div class="panel-totals">
       <div class="panel-total-box">
-        <div class="panel-total-lbl">Pedidos pendientes</div>
+        <div class="panel-total-lbl">Pendientes</div>
         <div class="panel-total-val" id="panelOrdPending" style="color:var(--k-credit);">0</div>
       </div>
       <div class="panel-total-box">
@@ -6275,8 +6367,8 @@ let _credTab = 'cobrar';
 
 function setCredTab(tab) {
   _credTab = tab;
-  document.getElementById('credTabCobrar').classList.toggle('active', tab === 'cobrar');
-  document.getElementById('credTabPagar').classList.toggle('active', tab === 'pagar');
+  document.querySelectorAll('.panel-type-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('credTab' + (tab === 'cobrar' ? 'Cobrar' : 'Pagar')).classList.add('active');
   renderCredPanel();
 }
 
@@ -6286,72 +6378,84 @@ function renderCredPanel() {
   const countEl = document.getElementById('panelCredCount');
   const subEl   = document.getElementById('panelCredSub');
   const lblEl   = document.getElementById('panelCredTotalLbl');
+  const q = (document.getElementById('panelCredSearch')?.value || '').toLowerCase();
 
-  const fmtDate = d => new Date(d+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});
+  const fmtDate = d => {
+    if (!d) return '—';
+    const [y,m,day] = d.split('-');
+    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+  };
 
-  if (_credTab === 'cobrar') {
-    const pending = entries.filter(e => e.credit && !e.paid).sort((a,b) => b.date.localeCompare(a.date));
-    const total   = pending.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
-    totalEl.textContent = fmt(total);
-    totalEl.style.color = 'var(--k-credit)';
-    countEl.textContent = pending.length + '';
-    if (lblEl) lblEl.textContent = 'Por cobrar';
-    subEl.textContent = pending.length === 0 ? 'Sin créditos pendientes'
-      : pending.length + ' crédito' + (pending.length !== 1 ? 's' : '') + ' por cobrar';
+  const isCobrar = _credTab === 'cobrar';
+  let pending = isCobrar
+    ? entries.filter(e => e.credit && !e.paid)
+    : entries.filter(e => e.debt && !e.paid);
 
-    if (!pending.length) {
-      list.innerHTML = `<div class="panel-empty"><span style="font-size:28px">✅</span><span>Todo cobrado.<br>Sin créditos pendientes.</span></div>`;
-      return;
-    }
-    list.innerHTML = pending.map(e => {
-      const monto = e.pendiente > 0 ? e.pendiente : e.amount;
-      const acuenta = e.acuenta > 0 ? ` · <span style="color:var(--k-accent);font-weight:600;">S/${e.acuenta.toFixed(2)} a cuenta</span>` : '';
-      return `<div class="cred-card">
-        <div class="cred-card-left">
-          <div class="cred-card-client">${e.client || 'Sin cliente'}</div>
-          <div class="cred-card-meta">${e.desc} · ${fmtDate(e.date)}${acuenta}</div>
-        </div>
-        <div class="cred-card-right">
-          <div class="cred-card-amt">+S/ ${monto.toFixed(2)}</div>
-          <button class="cred-cobrar-btn" onclick="cobrarEntry('${e.id}');renderCredPanel();">✓ Pagó</button>
-        </div>
-      </div>`;
-    }).join('');
+  if (q) pending = pending.filter(e =>
+    (e.client||'').toLowerCase().includes(q) || (e.desc||'').toLowerCase().includes(q));
 
-  } else {
-    const pending = entries.filter(e => e.debt && !e.paid).sort((a,b) => a.date.localeCompare(b.date));
-    const total   = pending.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
-    totalEl.textContent = fmt(total);
-    totalEl.style.color = 'var(--k-expense)';
-    countEl.textContent = pending.length + '';
-    if (lblEl) lblEl.textContent = 'Por pagar';
-    subEl.textContent = pending.length === 0 ? 'Sin deudas pendientes'
-      : pending.length + ' deuda' + (pending.length !== 1 ? 's' : '') + ' por pagar';
+  pending.sort((a,b) => b.date.localeCompare(a.date));
 
-    if (!pending.length) {
-      list.innerHTML = `<div class="panel-empty"><span style="font-size:28px">🎉</span><span>Sin deudas pendientes.</span></div>`;
-      return;
-    }
-    list.innerHTML = pending.map(e => {
-      const monto   = e.pendiente > 0 ? e.pendiente : e.amount;
-      const acuenta = e.acuenta > 0 ? ` · <span style="color:var(--k-accent);font-weight:600;">S/${e.acuenta.toFixed(2)} abonado</span>` : '';
-      const today   = getToday();
-      const days    = Math.round((new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000);
-      const ageBadge = days > 0
-        ? `<span style="font-size:9px;background:rgba(255,107,107,0.15);color:var(--k-expense);padding:2px 6px;border-radius:99px;margin-left:6px;">${days}d</span>`
-        : '';
-      return `<div class="cred-card debt-card">
-        <div class="cred-card-left">
-          <div class="cred-card-client">${e.client || 'Sin proveedor'}${ageBadge}</div>
-          <div class="cred-card-meta">${e.desc} · ${fmtDate(e.date)}${acuenta}</div>
-        </div>
-        <div class="cred-card-right">
-          <div class="cred-card-amt">−S/ ${monto.toFixed(2)}</div>
-          <button class="cred-pagar-btn" onclick="pagarDebt('${e.id}');renderCredPanel();">✓ Pagué</button>
-        </div>
-      </div>`;
-    }).join('');
+  const total = pending.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
+  totalEl.textContent = fmt(total);
+  totalEl.style.color = isCobrar ? 'var(--k-credit)' : 'var(--k-expense)';
+  countEl.textContent = pending.length;
+  if (lblEl) lblEl.textContent = isCobrar ? 'Por cobrar' : 'Por pagar';
+
+  const noun = isCobrar ? 'crédito' : 'deuda';
+  subEl.textContent = pending.length === 0
+    ? (isCobrar ? 'Sin créditos pendientes' : 'Sin deudas pendientes')
+    : `${pending.length} ${noun}${pending.length !== 1 ? 's' : ''} ${isCobrar ? 'por cobrar' : 'por pagar'}`;
+
+  if (!pending.length) {
+    list.innerHTML = `<div class="panel-empty">
+      <span style="font-size:28px">${isCobrar ? '✅' : '🎉'}</span>
+      <span>${isCobrar ? 'Sin créditos pendientes.' : 'Sin deudas pendientes.'}</span>
+    </div>`;
+    return;
   }
+
+  const headerCols = isCobrar
+    ? `<div>Cliente</div><div>Descripción</div><div>Fecha</div><div>Pendiente</div>`
+    : `<div>Proveedor</div><div>Descripción</div><div>Fecha</div><div>Pendiente</div>`;
+
+  const rows = pending.map(e => {
+    const monto = e.pendiente > 0 ? e.pendiente : e.amount;
+    const acuenta = e.acuenta > 0
+      ? `<span style="font-family:var(--mono);font-size:9px;color:var(--k-accent);margin-left:4px;">+S/${e.acuenta.toFixed(2)} abonado</span>` : '';
+    const today = getToday();
+    const days  = Math.round((new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000);
+    const ageCls = days >= 14 ? 'var(--k-expense)' : days >= 7 ? 'var(--k-credit)' : 'var(--k-text-3)';
+    const agePill = days > 0
+      ? `<span style="font-size:8px;color:${ageCls};margin-left:4px;font-family:var(--mono);">${days}d</span>` : '';
+
+    if (isCobrar) {
+      return `<div class="pl-row pl-cred">
+        <div class="pl-name">${e.client || '—'}</div>
+        <div class="pl-phone">${e.desc || '—'}${acuenta}</div>
+        <div class="pl-phone">${fmtDate(e.date)}${agePill}</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="pl-price" style="color:var(--k-credit);">S/ ${monto.toFixed(2)}</span>
+          <button class="cred-cobrar-btn" onclick="cobrarEntry('${e.id}');renderCredPanel();" title="Marcar como pagado">✓</button>
+        </div>
+      </div>`;
+    } else {
+      return `<div class="pl-row pl-cred">
+        <div class="pl-name">${e.client || '—'}</div>
+        <div class="pl-phone">${e.desc || '—'}${acuenta}</div>
+        <div class="pl-phone">${fmtDate(e.date)}${agePill}</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="pl-price" style="color:var(--k-expense);">S/ ${monto.toFixed(2)}</span>
+          <button class="cred-pagar-btn" onclick="pagarDebt('${e.id}');renderCredPanel();" title="Marcar como pagado">✓</button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+
+  list.innerHTML = `
+    <div class="pl-head-row pl-cred">${headerCols}</div>
+    ${rows}`;
 }
 
 /* ══════════════════════════════════════════
@@ -10085,86 +10189,319 @@ function saveOrders() {
 loadOrders();
 
 // ── Formulario ──
+let _ordItems  = []; // accumulated items for new order form
+let _ordEditId = null; // null = new order, number = editing existing
+let _ordDeliveryType = 'delivery';
+let _ordDateMode = '';
+
+function _ordReset() {
+  _ordItems = [];
+  _ordEditId = null;
+  _ordDeliveryType = 'delivery';
+  _ordDateMode = '';
+  document.getElementById('pfOrdClient').value  = '';
+  document.getElementById('pfOrdDesc').value    = '';
+  document.getElementById('pfOrdQty').value     = '1';
+  document.getElementById('pfOrdUnit').value    = '';
+  document.getElementById('pfOrdAmt').value     = '';
+  document.getElementById('pfOrdNote').value    = '';
+  document.getElementById('pfOrdAddress').value = '';
+  document.getElementById('pfOrdDate').value    = '';
+  document.getElementById('pfOrdCal').style.display = 'none';
+  document.getElementById('pfOrdDateDisplay').style.display = 'none';
+  document.getElementById('pfOrdDateDisplay').textContent = '';
+  // reset date chips
+  ['ordDateHoy','ordDateManana','ordDateCustom'].forEach(id =>
+    document.getElementById(id)?.classList.remove('active'));
+  // delivery default
+  setOrdDelivery('delivery');
+  ordRenderItems();
+}
+
 function toggleOrderForm() {
-  // reset form
-  document.getElementById('pfOrdClient').value = '';
-  document.getElementById('pfOrdDate').value = '';
-  document.getElementById('pfOrdNote').value = '';
-  document.getElementById('pfOrdTotal').textContent = 'S/ 0.00';
-  const list = document.getElementById('pfOrdItemsList');
-  list.innerHTML = '';
-  addOrderItem();
+  _ordReset();
+  document.getElementById('newOrdModal').querySelector('.ord-modal-client').textContent = '📋 Nuevo Pedido';
+  document.getElementById('pfOrdSaveBtn').textContent = 'Guardar pedido';
   document.getElementById('newOrdBackdrop').classList.add('open');
   setTimeout(() => document.getElementById('pfOrdClient').focus(), 80);
 }
 
 function closeNewOrderModal() {
   document.getElementById('newOrdBackdrop').classList.remove('open');
+  _ordEditId = null;
 }
 
-function addOrderItem() {
-  const list = document.getElementById('pfOrdItemsList');
-  const row = document.createElement('div');
-  row.className = 'order-item-row';
-  row.innerHTML = `
-    <input class="panel-form-inp" type="text" placeholder="Producto / descripción..." maxlength="80" oninput="syncOrderItem(this)">
-    <input class="panel-form-inp w-sm" type="number" placeholder="S/ precio" min="0" step="0.01" oninput="calcOrderTotal()">
-    <button class="order-item-remove" onclick="removeOrderItem(this)" title="Quitar">×</button>`;
-  list.appendChild(row);
-  row.querySelector('input').focus();
+/* ── Delivery toggle ── */
+function setOrdDelivery(type) {
+  _ordDeliveryType = type;
+  document.getElementById('ordDelDelivery').classList.toggle('active', type === 'delivery');
+  document.getElementById('ordDelLocal').classList.toggle('active', type === 'local');
+  document.getElementById('pfOrdAddress').style.display = type === 'delivery' ? 'block' : 'none';
+  if (type === 'local') document.getElementById('pfOrdAddress').value = '';
 }
 
-function removeOrderItem(btn) {
-  const list = document.getElementById('pfOrdItemsList');
-  if (list.children.length <= 1) return; // mínimo 1
-  btn.closest('.order-item-row').remove();
-  calcOrderTotal();
+/* ── Date quick-pick ── */
+function _isoToday() {
+  const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function _isoTomorrow() {
+  const d = new Date(); d.setDate(d.getDate()+1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function _fmtDateDisplay(iso) {
+  if (!iso) return '';
+  const [y,m,d] = iso.split('-');
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `📅 ${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
 }
 
-function syncOrderItem() { calcOrderTotal(); }
+let _kjCalYear  = 0;
+let _kjCalMonth = 0; // 0-based
 
-function calcOrderTotal() {
-  const rows = document.querySelectorAll('#pfOrdItemsList .order-item-row');
-  let total = 0;
-  rows.forEach(r => {
-    const v = parseFloat(r.querySelectorAll('input')[1].value) || 0;
-    total += v;
-  });
-  document.getElementById('pfOrdTotal').textContent = 'S/ ' + total.toFixed(2);
+function setOrdDate(mode) {
+  _ordDateMode = mode;
+  ['ordDateHoy','ordDateManana','ordDateCustom'].forEach(id =>
+    document.getElementById(id)?.classList.remove('active'));
+
+  const cal  = document.getElementById('pfOrdCal');
+  const disp = document.getElementById('pfOrdDateDisplay');
+
+  if (mode === 'today') {
+    document.getElementById('ordDateHoy').classList.add('active');
+    document.getElementById('pfOrdDate').value = _isoToday();
+    cal.style.display = 'none';
+    disp.textContent = _fmtDateDisplay(_isoToday());
+    disp.style.display = 'block';
+  } else if (mode === 'tomorrow') {
+    document.getElementById('ordDateManana').classList.add('active');
+    document.getElementById('pfOrdDate').value = _isoTomorrow();
+    cal.style.display = 'none';
+    disp.textContent = _fmtDateDisplay(_isoTomorrow());
+    disp.style.display = 'block';
+  } else {
+    document.getElementById('ordDateCustom').classList.add('active');
+    disp.style.display = 'none';
+    // init calendar at current selected date or today
+    const cur = document.getElementById('pfOrdDate').value;
+    const ref  = cur ? new Date(cur+'T12:00:00') : new Date();
+    _kjCalYear  = ref.getFullYear();
+    _kjCalMonth = ref.getMonth();
+    kjCalRender();
+    cal.style.display = 'block';
+  }
+}
+
+function kjCalNav(delta) {
+  _kjCalMonth += delta;
+  if (_kjCalMonth > 11) { _kjCalMonth = 0;  _kjCalYear++; }
+  if (_kjCalMonth < 0)  { _kjCalMonth = 11; _kjCalYear--; }
+  kjCalRender();
+}
+
+function kjCalRender() {
+  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('kjCalMonthLbl').textContent = `${months[_kjCalMonth]} ${_kjCalYear}`;
+
+  const todayIso = _isoToday();
+  const selIso   = document.getElementById('pfOrdDate').value;
+
+  const firstDay = new Date(_kjCalYear, _kjCalMonth, 1);
+  const lastDay  = new Date(_kjCalYear, _kjCalMonth + 1, 0);
+  // Mon=0 offset
+  let startDow = (firstDay.getDay() + 6) % 7;
+
+  const grid = document.getElementById('kjCalGrid');
+  let html = '';
+
+  // prev month filler
+  const prevLast = new Date(_kjCalYear, _kjCalMonth, 0).getDate();
+  for (let i = startDow - 1; i >= 0; i--) {
+    html += `<button class="kj-cal-day other-month" disabled>${prevLast - i}</button>`;
+  }
+
+  // current month days
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const iso = `${_kjCalYear}-${String(_kjCalMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const cls = [
+      'kj-cal-day',
+      iso === todayIso ? 'today'    : '',
+      iso === selIso   ? 'selected' : '',
+    ].filter(Boolean).join(' ');
+    html += `<button class="${cls}" onclick="kjCalPick('${iso}')">${d}</button>`;
+  }
+
+  // next month filler
+  const totalCells = Math.ceil((startDow + lastDay.getDate()) / 7) * 7;
+  const trailing   = totalCells - startDow - lastDay.getDate();
+  for (let d = 1; d <= trailing; d++) {
+    html += `<button class="kj-cal-day other-month" disabled>${d}</button>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function kjCalPick(iso) {
+  document.getElementById('pfOrdDate').value = iso;
+  document.getElementById('pfOrdCal').style.display = 'none';
+  const disp = document.getElementById('pfOrdDateDisplay');
+  disp.textContent = _fmtDateDisplay(iso);
+  disp.style.display = 'block';
+  // re-render to show selection
+  kjCalRender();
+}
+
+/* ── Edit existing order ── */
+function openEditOrderModal(id) {
+  const orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+
+  closeOrderModal(); // close detail modal first
+  _ordReset();
+
+  _ordEditId = id;
+  // Rebuild _ordItems from saved order
+  _ordItems = (o.items || []).map(it => ({
+    desc: it.desc,
+    qty:  it.qty  || 1,
+    price: it.price || 0,
+    total: it.total || it.price || 0
+  }));
+
+  document.getElementById('pfOrdClient').value = o.client || '';
+  document.getElementById('pfOrdNote').value   = o.note   || '';
+
+  // delivery
+  const dtype = o.delivery || 'delivery';
+  setOrdDelivery(dtype);
+  if (dtype === 'delivery') document.getElementById('pfOrdAddress').value = o.address || '';
+
+  // date
+  if (o.date) {
+    const today    = _isoToday();
+    const tomorrow = _isoTomorrow();
+    document.getElementById('pfOrdDate').value = o.date;
+    if (o.date === today)    setOrdDate('today');
+    else if (o.date === tomorrow) setOrdDate('tomorrow');
+    else {
+      document.getElementById('ordDateCustom').classList.add('active');
+      _ordDateMode = 'pick';
+      const disp = document.getElementById('pfOrdDateDisplay');
+      disp.textContent = _fmtDateDisplay(o.date);
+      disp.style.display = 'block';
+      document.getElementById('pfOrdCal').style.display = 'none';
+    }
+  }
+
+  ordRenderItems();
+
+  document.getElementById('newOrdModal').querySelector('.ord-modal-client').textContent = '✏️ Editar Pedido';
+  document.getElementById('pfOrdSaveBtn').textContent = 'Guardar cambios';
+  document.getElementById('newOrdBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('pfOrdClient').focus(), 80);
+}
+
+function ordStepQty(delta) {
+  const el = document.getElementById('pfOrdQty');
+  el.value = Math.max(1, (parseFloat(el.value) || 1) + delta);
+  ordRecalc();
+}
+
+function ordRecalc() {
+  const qty  = parseFloat(document.getElementById('pfOrdQty').value)  || 1;
+  const unit = parseFloat(document.getElementById('pfOrdUnit').value) || 0;
+  if (unit > 0) document.getElementById('pfOrdAmt').value = (qty * unit).toFixed(2);
+}
+
+function ordRecalcFromAmt() {
+  const qty = parseFloat(document.getElementById('pfOrdQty').value) || 1;
+  const amt = parseFloat(document.getElementById('pfOrdAmt').value) || 0;
+  if (amt > 0) document.getElementById('pfOrdUnit').value = (amt / qty).toFixed(2);
+}
+
+function ordPushItem() {
+  const desc = document.getElementById('pfOrdDesc').value.trim();
+  const qty  = parseFloat(document.getElementById('pfOrdQty').value)  || 1;
+  const unit = parseFloat(document.getElementById('pfOrdUnit').value) || 0;
+  const amt  = parseFloat(document.getElementById('pfOrdAmt').value)  || (qty * unit);
+  if (!desc) { document.getElementById('pfOrdDesc').focus(); return; }
+  if (amt <= 0) { document.getElementById('pfOrdUnit').focus(); return; }
+  _ordItems.push({ desc, qty, price: unit || (amt / qty), total: amt });
+  // reset input row
+  document.getElementById('pfOrdDesc').value  = '';
+  document.getElementById('pfOrdQty').value   = '1';
+  document.getElementById('pfOrdUnit').value  = '';
+  document.getElementById('pfOrdAmt').value   = '';
+  ordRenderItems();
+  document.getElementById('pfOrdDesc').focus();
+}
+
+function ordRemoveItem(idx) {
+  _ordItems.splice(idx, 1);
+  ordRenderItems();
+}
+
+function ordRenderItems() {
+  const wrap = document.getElementById('pfOrdItemsList');
+  const rows = document.getElementById('pfOrdItemsRows');
+  const totalEl = document.getElementById('pfOrdTotal');
+  if (!_ordItems.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const grandTotal = _ordItems.reduce((s, i) => s + i.total, 0);
+  totalEl.textContent = 'S/ ' + grandTotal.toFixed(2);
+  rows.innerHTML = _ordItems.map((it, i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,0.04);border-radius:9px;font-family:var(--sans);font-size:13px;">
+      <span style="flex:1;color:var(--k-text);">${it.desc}</span>
+      <span style="color:var(--k-text-3);font-size:11px;white-space:nowrap;">${it.qty > 1 ? it.qty+'× S/'+it.price.toFixed(2) : ''}</span>
+      <span style="font-family:var(--mono);font-weight:700;color:var(--k-accent);min-width:60px;text-align:right;">S/ ${it.total.toFixed(2)}</span>
+      <button onclick="ordRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0 2px;line-height:1;" title="Quitar">×</button>
+    </div>`).join('');
 }
 
 function getOrderItems() {
-  const rows = document.querySelectorAll('#pfOrdItemsList .order-item-row');
-  const items = [];
-  rows.forEach(r => {
-    const desc  = r.querySelectorAll('input')[0].value.trim();
-    const price = parseFloat(r.querySelectorAll('input')[1].value) || 0;
-    if (desc) items.push({ desc, price });
-  });
-  return items;
+  // Returns items compatible with the order data structure
+  return _ordItems.map(i => ({ desc: i.desc, price: i.total }));
 }
 
 function saveOrder() {
   const client = document.getElementById('pfOrdClient').value.trim();
-  if (!client) { document.getElementById('pfOrdClient').focus(); return; }
+  if (!client) { document.getElementById('pfOrdClient').focus(); toast('Escribe el nombre del cliente'); return; }
+  // auto-push if there's a pending desc+amount
+  const pendingDesc = document.getElementById('pfOrdDesc').value.trim();
+  const pendingAmt  = parseFloat(document.getElementById('pfOrdAmt').value) || 0;
+  if (pendingDesc && pendingAmt > 0) ordPushItem();
   const items = getOrderItems();
-  if (!items.length) { alert('Agrega al menos un ítem con descripción.'); return; }
-  const total = items.reduce((s, i) => s + i.price, 0);
-  const order = {
-    id:     Date.now(),
+  if (!items.length) { document.getElementById('pfOrdDesc').focus(); toast('Agrega al menos un ítem'); return; }
+  const total    = _ordItems.reduce((s, i) => s + i.total, 0);
+  const delivery = _ordDeliveryType;
+  const address  = delivery === 'delivery' ? (document.getElementById('pfOrdAddress').value.trim() || '') : '';
+  const orderData = {
     client,
     items,
     total,
+    delivery,
+    address,
     date:   document.getElementById('pfOrdDate').value || '',
     note:   document.getElementById('pfOrdNote').value.trim(),
-    status: 'pending',
-    createdAt: new Date().toISOString()
   };
-  _orders.unshift(order);
+
+  if (_ordEditId) {
+    // Edit mode — update existing
+    const idx = _orders.findIndex(x => x.id === _ordEditId);
+    if (idx !== -1) {
+      _orders[idx] = { ..._orders[idx], ...orderData };
+    }
+    toast('Pedido actualizado ✓');
+  } else {
+    // New order
+    _orders.unshift({ id: Date.now(), status: 'pending', createdAt: new Date().toISOString(), ...orderData });
+    toast('¡Pedido guardado! 📋');
+  }
+
   saveOrders();
   closeNewOrderModal();
   renderOrdPanel();
-  toast('¡Pedido guardado! 📋');
 }
 
 // ── Filtros ──
@@ -11064,6 +11401,7 @@ function openOrderModal(id) {
         <div class="ord-modal-meta">
           <span class="order-badge ${statusClass[o.status]||'pending'}">${statusLabel[o.status]||'Pendiente'}</span>
           ${dateLine}
+          ${o.delivery === 'local' ? `<span style="font-size:11px;color:var(--k-text-3)">🏪 Recojo en local</span>` : o.address ? `<span style="font-size:11px;color:var(--k-text-3)">🚚 ${o.address}</span>` : ''}
           ${o.note ? `<span style="font-size:11px;color:var(--k-text-3)">📝 ${o.note}</span>` : ''}
         </div>
       </div>
@@ -11083,7 +11421,10 @@ function openOrderModal(id) {
         <button class="ord-btn ord-btn-print" onclick="ordPrint(${o.id})">🖨️ Imprimir</button>
         <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">💬 WhatsApp</button>
       </div>
-      <button class="ord-btn ord-btn-del" onclick="ordModalDelete(${o.id})">🗑️ Eliminar pedido</button>
+      <div class="ord-modal-actions-row">
+        <button class="ord-btn" onclick="openEditOrderModal(${o.id})" style="flex:1;">✏️ Editar pedido</button>
+        <button class="ord-btn ord-btn-del" onclick="ordModalDelete(${o.id})" style="flex:1;">🗑️ Eliminar</button>
+      </div>
     </div>
   `;
 
@@ -11262,38 +11603,111 @@ function ordPrint(id) {
 
 <!-- ══ MODAL: NUEVO PEDIDO ══ -->
 <div class="ord-modal-backdrop" id="newOrdBackdrop" onclick="if(event.target===this)closeNewOrderModal()">
-  <div class="ord-modal" id="newOrdModal" style="max-width:460px;">
+  <div class="ord-modal" id="newOrdModal" style="max-width:500px;">
     <div class="ord-modal-header">
       <div>
         <div class="ord-modal-client" style="font-size:16px;">📋 Nuevo Pedido</div>
-        <div style="font-size:11px;color:var(--k-text-3);margin-top:3px;">Completa los datos del pedido</div>
       </div>
       <button class="ord-modal-close" onclick="closeNewOrderModal()">✕</button>
     </div>
-    <div style="padding:16px 22px;display:flex;flex-direction:column;gap:10px;">
-      <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Nombre del cliente..." maxlength="60" autocomplete="off"
-        style="width:100%;box-sizing:border-box;">
-      <div class="ord-modal-items-title" style="margin-bottom:0;">Productos / Servicios</div>
-      <div id="pfOrdItemsList">
-        <div class="order-item-row">
-          <input class="panel-form-inp" type="text" placeholder="Producto / descripción..." maxlength="80" oninput="syncOrderItem(this)">
-          <input class="panel-form-inp w-sm" type="number" placeholder="S/ precio" min="0" step="0.01" oninput="calcOrderTotal()">
-          <button class="order-item-remove" onclick="removeOrderItem(this)" title="Quitar">×</button>
+
+    <div style="padding:14px 22px 0;display:flex;flex-direction:column;gap:14px;">
+
+      <!-- Cliente -->
+      <div class="fld">
+        <label>Cliente</label>
+        <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Nombre del cliente..." maxlength="60" autocomplete="off" style="width:100%;box-sizing:border-box;">
+      </div>
+
+      <!-- Descripción -->
+      <div class="fld">
+        <label>Descripción / Producto</label>
+        <input class="panel-form-inp" id="pfOrdDesc" type="text" placeholder="Escribe el producto o servicio..." maxlength="80" autocomplete="off" style="width:100%;box-sizing:border-box;" onkeydown="if(event.key==='Enter')ordPushItem()">
+      </div>
+
+      <!-- Cant / P.Unit / Monto / + -->
+      <div class="num-fields-row" style="grid-template-columns:1fr 1fr 1fr auto;align-items:end;">
+        <div class="fld fld-qty">
+          <label>Cant.</label>
+          <div class="num-stepper">
+            <button type="button" class="step-btn" onclick="ordStepQty(-1)">−</button>
+            <input type="number" id="pfOrdQty" placeholder="1" min="1" step="1" value="1" oninput="ordRecalc()">
+            <button type="button" class="step-btn" onclick="ordStepQty(1)">+</button>
+          </div>
+        </div>
+        <div class="fld fld-unit">
+          <label>P. Unit. (S/)</label>
+          <input type="number" id="pfOrdUnit" class="panel-form-inp" placeholder="0.00" min="0" step="0.01" oninput="ordRecalc()" style="width:100%;box-sizing:border-box;">
+        </div>
+        <div class="fld fld-amt">
+          <label>Monto (S/)</label>
+          <input type="number" id="pfOrdAmt" class="panel-form-inp" placeholder="0.00" min="0" step="0.01" oninput="ordRecalcFromAmt()" style="width:100%;box-sizing:border-box;opacity:0.75;">
+        </div>
+        <button class="push-item-btn" onclick="ordPushItem()" title="Agregar ítem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Lista de ítems acumulados -->
+      <div id="pfOrdItemsList" style="display:none;">
+        <div id="pfOrdItemsRows" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(196,240,66,0.07);border:1px solid rgba(196,240,66,0.2);border-radius:10px;">
+          <span style="font-family:var(--sans);font-size:12px;color:var(--k-text-3);">Total acumulado</span>
+          <span id="pfOrdTotal" style="font-family:var(--mono);font-size:15px;font-weight:700;color:var(--k-accent);">S/ 0.00</span>
         </div>
       </div>
-      <button class="order-add-item-btn" onclick="addOrderItem()">+ agregar ítem</button>
-      <div style="display:flex;gap:8px;">
-        <input class="panel-form-inp" id="pfOrdDate" type="date" title="Fecha de entrega" style="flex:1;">
-        <input class="panel-form-inp" id="pfOrdNote" type="text" placeholder="Nota (opcional)..." maxlength="100" style="flex:2;">
+
+      <!-- Tipo de entrega -->
+      <div class="fld">
+        <label>Tipo de entrega</label>
+        <div class="ord-delivery-row">
+          <button class="ord-delivery-btn active" id="ordDelDelivery" onclick="setOrdDelivery('delivery')">🚚 Delivery</button>
+          <button class="ord-delivery-btn" id="ordDelLocal" onclick="setOrdDelivery('local')">🏪 Recojo en local</button>
+        </div>
+        <input class="panel-form-inp" id="pfOrdAddress" type="text"
+          placeholder="Dirección de entrega..." maxlength="120"
+          style="width:100%;box-sizing:border-box;margin-top:8px;">
       </div>
+
+      <!-- Fecha de entrega -->
+      <div class="fld">
+        <label>Fecha de entrega</label>
+        <div class="ord-date-row">
+          <button class="ord-date-btn" id="ordDateHoy"    onclick="setOrdDate('today')">Hoy</button>
+          <button class="ord-date-btn" id="ordDateManana" onclick="setOrdDate('tomorrow')">Mañana</button>
+          <button class="ord-date-btn" id="ordDateCustom" onclick="setOrdDate('pick')">📅 Otra fecha</button>
+        </div>
+        <input type="hidden" id="pfOrdDate">
+        <div id="pfOrdDateDisplay" style="display:none;font-family:var(--mono);font-size:11px;color:var(--k-accent);margin-top:6px;padding:5px 12px;background:rgba(196,240,66,0.08);border:1px solid rgba(196,240,66,0.2);border-radius:8px;display:none;cursor:pointer;" onclick="setOrdDate('pick')"></div>
+        <!-- Custom calendar -->
+        <div class="kj-cal" id="pfOrdCal" style="display:none;">
+          <div class="kj-cal-head">
+            <button class="kj-cal-nav" onclick="kjCalNav(-1)">‹</button>
+            <span class="kj-cal-month" id="kjCalMonthLbl"></span>
+            <button class="kj-cal-nav" onclick="kjCalNav(1)">›</button>
+          </div>
+          <div class="kj-cal-dow">
+            <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+          </div>
+          <div class="kj-cal-grid" id="kjCalGrid"></div>
+        </div>
+      </div>
+
+      <!-- Nota -->
+      <div class="fld">
+        <label>Nota (opcional)</label>
+        <input class="panel-form-inp" id="pfOrdNote" type="text"
+          placeholder="Ej: color rojo, talla M, sin cebolla..." maxlength="100"
+          style="width:100%;box-sizing:border-box;">
+      </div>
+
     </div>
-    <div class="ord-modal-total" style="padding:10px 22px;">
-      <span class="ord-modal-total-lbl">Total</span>
-      <span class="ord-modal-total-val" id="pfOrdTotal" style="font-size:18px;">S/ 0.00</span>
-    </div>
-    <div style="padding:14px 22px 20px;display:flex;gap:8px;">
+
+    <div style="padding:16px 22px 20px;display:flex;gap:8px;margin-top:14px;">
       <button class="ord-btn" onclick="closeNewOrderModal()" style="flex:0 0 auto;padding:11px 18px;">Cancelar</button>
-      <button class="ord-btn" onclick="saveOrder()"
+      <button class="ord-btn" id="pfOrdSaveBtn" onclick="saveOrder()"
         style="flex:1;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;">
         Guardar pedido
       </button>
