@@ -10420,6 +10420,73 @@ function ordRecalcFromAmt() {
   if (amt > 0) document.getElementById('pfOrdUnit').value = (amt / qty).toFixed(2);
 }
 
+/* ── Order autocomplete ── */
+function ordHideDrop(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+
+function _ordRenderDrop(dropId, items, onSelectHtml) {
+  const drop = document.getElementById(dropId);
+  if (!drop) return;
+  if (!items.length) { drop.style.display = 'none'; return; }
+  drop.innerHTML = items.map(onSelectHtml).join('');
+  drop.style.display = 'block';
+}
+
+function ordFilterClients() {
+  const q = (document.getElementById('pfOrdClient').value || '').toLowerCase();
+  const list = (typeof clients !== 'undefined' ? clients : [])
+    .filter(c => !q || c.name.toLowerCase().includes(q))
+    .slice(0, 8);
+  _ordRenderDrop('ordClientDrop', list,
+    c => `<button type="button" class="cchip" onmousedown="ordSelectClient(${c.id})">${c.name}${c.phone ? ' · <span style="opacity:.5;font-size:10px">'+c.phone+'</span>' : ''}</button>`
+  );
+}
+
+function ordToggleClients() {
+  const drop = document.getElementById('ordClientDrop');
+  if (drop.style.display === 'block') { drop.style.display = 'none'; return; }
+  document.getElementById('pfOrdClient').value = '';
+  ordFilterClients();
+  document.getElementById('pfOrdClient').focus();
+}
+
+function ordSelectClient(id) {
+  const c = (typeof clients !== 'undefined' ? clients : []).find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('pfOrdClient').value = c.name;
+  ordHideDrop('ordClientDrop');
+}
+
+function ordFilterProducts() {
+  const q = (document.getElementById('pfOrdDesc').value || '').toLowerCase();
+  const list = (typeof products !== 'undefined' ? products : [])
+    .filter(p => !q || p.name.toLowerCase().includes(q))
+    .slice(0, 8);
+  _ordRenderDrop('ordProdDrop', list,
+    p => `<button type="button" class="pchip" onmousedown="ordSelectProduct(${p.id})">${p.name}<span class="pchip-price">S/ ${parseFloat(p.price||0).toFixed(2)}</span></button>`
+  );
+}
+
+function ordToggleProducts() {
+  const drop = document.getElementById('ordProdDrop');
+  if (drop.style.display === 'block') { drop.style.display = 'none'; return; }
+  document.getElementById('pfOrdDesc').value = '';
+  ordFilterProducts();
+  document.getElementById('pfOrdDesc').focus();
+}
+
+function ordSelectProduct(id) {
+  const p = (typeof products !== 'undefined' ? products : []).find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pfOrdDesc').value = p.name;
+  document.getElementById('pfOrdUnit').value = parseFloat(p.price || 0).toFixed(2);
+  ordHideDrop('ordProdDrop');
+  ordRecalc();
+  document.getElementById('pfOrdQty').focus();
+}
+
 function ordPushItem() {
   const desc = document.getElementById('pfOrdDesc').value.trim();
   const qty  = parseFloat(document.getElementById('pfOrdQty').value)  || 1;
@@ -11616,13 +11683,26 @@ function ordPrint(id) {
       <!-- Cliente -->
       <div class="fld">
         <label>Cliente</label>
-        <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Nombre del cliente..." maxlength="60" autocomplete="off" style="width:100%;box-sizing:border-box;">
+        <div class="input-with-toggle">
+          <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Escribe o elige cliente..." maxlength="60" autocomplete="off"
+            oninput="ordFilterClients()" onblur="setTimeout(()=>ordHideDrop('ordClientDrop'),150)"
+            style="width:100%;box-sizing:border-box;">
+          <button type="button" class="field-toggle-btn" onclick="ordToggleClients()" title="Ver clientes"><span>⌄</span></button>
+        </div>
+        <div class="picker-panel" id="ordClientDrop" style="display:none;position:relative;z-index:200;top:0;left:0;right:0;margin-top:2px;width:100%;"></div>
       </div>
 
-      <!-- Descripción -->
+      <!-- Descripción / Producto -->
       <div class="fld">
         <label>Descripción / Producto</label>
-        <input class="panel-form-inp" id="pfOrdDesc" type="text" placeholder="Escribe el producto o servicio..." maxlength="80" autocomplete="off" style="width:100%;box-sizing:border-box;" onkeydown="if(event.key==='Enter')ordPushItem()">
+        <div class="input-with-toggle">
+          <input class="panel-form-inp" id="pfOrdDesc" type="text" placeholder="Escribe o elige producto..." maxlength="80" autocomplete="off"
+            oninput="ordFilterProducts()" onblur="setTimeout(()=>ordHideDrop('ordProdDrop'),150)"
+            onkeydown="if(event.key==='Enter')ordPushItem()"
+            style="width:100%;box-sizing:border-box;">
+          <button type="button" class="field-toggle-btn" onclick="ordToggleProducts()" title="Ver productos"><span>⌄</span></button>
+        </div>
+        <div class="picker-panel" id="ordProdDrop" style="display:none;position:relative;z-index:200;top:0;left:0;right:0;margin-top:2px;width:100%;"></div>
       </div>
 
       <!-- Cant / P.Unit / Monto / + -->
