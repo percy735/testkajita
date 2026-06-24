@@ -1777,25 +1777,37 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: border-color 0.2s, transform 0.25s ease;
   position: relative; will-change: transform;
 }
-/* Order card direct action icons */
-.ord-card-actions {
-  display: flex; gap: 4px; align-items: center; flex-shrink: 0; margin-top: 4px;
+/* Order card timeline */
+.ord-timeline {
+  display: flex; align-items: center; gap: 0;
+  margin-top: 8px; padding: 8px 14px 12px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
-.ord-icon-btn {
-  width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--k-line);
-  background: rgba(255,255,255,0.04); color: var(--k-text-3);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+.ord-tml-step {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; cursor: pointer; padding: 2px 6px;
   flex-shrink: 0;
 }
-.ord-icon-btn svg { display: block; }
-.ord-icon-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: var(--k-text); }
-.ord-icon-btn.ord-icon-wa:hover  { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.35); color: #25d366; }
-.ord-icon-btn.ord-icon-del:hover { background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.35); color: var(--k-expense); }
-.ord-icon-btn.ord-icon-status.pending:hover { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); color: #34d399; }
-.ord-icon-btn.ord-icon-status.ready:hover   { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.35); color: #60a5fa; }
-.ord-icon-btn.ord-icon-status.done:hover    { background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.3); color: var(--k-accent); }
-.ord-icon-btn.ord-icon-edit:hover { background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.3); color: var(--k-accent); }
+.ord-tml-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--k-text-3); background: transparent;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.ord-tml-label {
+  font-family: var(--sans); font-size: 10px; color: var(--k-text-3);
+  white-space: nowrap; transition: color 0.2s;
+}
+.ord-tml-step.done .ord-tml-dot   { background: var(--k-accent); border-color: var(--k-accent); }
+.ord-tml-step.done .ord-tml-label { color: var(--k-text-2); }
+.ord-tml-step.active .ord-tml-dot { background: var(--k-accent); border-color: var(--k-accent); box-shadow: 0 0 0 3px rgba(196,240,66,0.2); }
+.ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 600; }
+.ord-tml-step:not(.active):hover .ord-tml-dot   { border-color: var(--k-text); }
+.ord-tml-step:not(.active):hover .ord-tml-label { color: var(--k-text); }
+.ord-tml-line {
+  flex: 1; height: 2px; background: var(--k-line); border-radius: 1px;
+  transition: background 0.2s; min-width: 16px;
+}
+.ord-tml-line.filled { background: var(--k-accent); }
 
 /* Swipe reveal hints */
 .swipe-hint-right,
@@ -3809,7 +3821,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.21c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.22c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4078,7 +4090,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.21</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.22</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4319,7 +4331,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.21</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.22</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -6730,6 +6742,18 @@ function closeAllMenus() {
 }
 // Cerrar al tocar fuera
 document.addEventListener('click', () => closeAllMenus());
+
+function toggleOrdMenu(event, id) {
+  event.stopPropagation();
+  const menu = document.getElementById('ordmenu-' + id);
+  if (!menu) return;
+  const isOpen = menu.classList.contains('open');
+  closeAllMenus();
+  if (!isOpen) {
+    menu.classList.add('open');
+    event.currentTarget.classList.add('open');
+  }
+}
 
 /* ══════════════════════════════════════════
    CONFIRM DIALOG
@@ -10793,10 +10817,25 @@ function renderOrdPanel() {
     done:    { status:'pending', icon:'↩', svg:ORD_SVG.undo, label:'Reabrir pedido' }
   };
 
+  const tmlSteps = ['pending','ready','done'];
+  const tmlLabels = {pending:'Pendiente', ready:'Listo', done:'Entregado'};
+
   list.innerHTML = filtered.map(o => {
     const itemsText = o.items.map(i => i.desc + (i.price ? ` (S/ ${i.price.toFixed(2)})` : '')).join(' · ');
     const dateStr   = fmtDate(o.date);
     const ns = nextStatusMap[o.status] || nextStatusMap.pending;
+    const tmlIdx = tmlSteps.indexOf(o.status);
+    const timelineHtml = tmlSteps.map((s, i) => {
+      const isDone   = i < tmlIdx;
+      const isActive = i === tmlIdx;
+      const cls = isActive ? 'active' : isDone ? 'done' : '';
+      const lineFilled = i > 0 && (i <= tmlIdx);
+      return `${i > 0 ? `<div class="ord-tml-line${lineFilled ? ' filled' : ''}"></div>` : ''}
+        <button class="ord-tml-step ${cls}" onclick="setOrderStatus(${o.id},'${s}')" title="${tmlLabels[s]}">
+          <span class="ord-tml-dot"></span>
+          <span class="ord-tml-label">${tmlLabels[s]}</span>
+        </button>`;
+    }).join('');
     return `<div class="order-card" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
       <div class="swipe-hint-right">${ns.icon} ${ns.label}</div>
       <div class="swipe-hint-left">↩ Retroceder</div>
@@ -10806,22 +10845,22 @@ function renderOrdPanel() {
           <div class="order-card-client">${o.client}</div>
           <div class="order-card-items">${itemsText}</div>
           <div class="order-card-meta">
-            <span class="order-badge ${o.status}">${statusLabel[o.status]}</span>
             ${dateStr ? `<span>${dateStr}</span>` : ''}
             ${o.note ? `<span>📝 ${o.note}</span>` : ''}
           </div>
         </div>
-        <div class="order-card-right">
+        <div class="order-card-right" onclick="event.stopPropagation()" style="position:relative;">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
-          <div class="ord-card-actions" onclick="event.stopPropagation()">
-            <button class="ord-icon-btn" onclick="generateOrderReceipt(${o.id})" title="Generar recibo">${ORD_SVG.receipt}</button>
-            <button class="ord-icon-btn ord-icon-wa" onclick="ordWhatsApp(${o.id})" title="Enviar por WhatsApp">${ORD_SVG.chat}</button>
-            <button class="ord-icon-btn ord-icon-edit" onclick="openEditOrderModal(${o.id})" title="Editar pedido">${ORD_SVG.edit}</button>
-            <button class="ord-icon-btn ord-icon-status ${o.status}" onclick="setOrderStatus(${o.id},'${ns.status}')" title="${ns.label}">${ns.svg}</button>
-            <button class="ord-icon-btn ord-icon-del" onclick="deleteOrderFromPanel(${o.id})" title="Eliminar pedido">${ORD_SVG.trash}</button>
+          <button class="abtn-menu" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
+          <div class="entry-popover" id="ordmenu-${o.id}">
+            <button class="ep-item" onclick="closeAllMenus();generateOrderReceipt(${o.id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Generar recibo</button>
+            <button class="ep-item" onclick="closeAllMenus();ordWhatsApp(${o.id})"><span class="ep-ic">${ORD_SVG.chat}</span>WhatsApp</button>
+            <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${o.id})"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
+            <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrderFromPanel(${o.id})"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>
           </div>
         </div>
       </div>
+      <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
     </div>`;
   }).join('');
 
