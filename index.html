@@ -1774,7 +1774,26 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .order-card {
   border-radius: 14px; border: 1px solid var(--k-line);
   background: var(--k-panel); margin-bottom: 8px; overflow: hidden;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, transform 0.25s ease;
+  position: relative; will-change: transform;
+}
+/* Swipe reveal hints */
+.swipe-hint-right,
+.swipe-hint-left {
+  position: absolute; inset: 0; display: flex; align-items: center;
+  pointer-events: none; opacity: 0; transition: opacity 0.1s;
+  font-size: 13px; font-weight: 700; font-family: var(--sans);
+  letter-spacing: .03em;
+}
+.swipe-hint-right {
+  justify-content: flex-start; padding-left: 20px;
+  background: linear-gradient(90deg, rgba(52,211,153,.18) 0%, transparent 70%);
+  color: #34d399;
+}
+.swipe-hint-left {
+  justify-content: flex-end; padding-right: 20px;
+  background: linear-gradient(270deg, rgba(251,191,36,.18) 0%, transparent 70%);
+  color: var(--k-credit);
 }
 .order-card:hover { border-color: rgba(255,255,255,0.12); }
 .order-card-head {
@@ -3764,7 +3783,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.10c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.11c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4033,7 +4052,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.10</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.11</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4278,7 +4297,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.10</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.11</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -10640,6 +10659,134 @@ function deleteOrder(id) {
   renderOrdPanel();
 }
 
+function deleteOrderFromPanel(id) {
+  if (!confirm('¿Eliminar este pedido?')) return;
+  _orders = _orders.filter(x => x.id !== id);
+  saveOrders();
+  renderOrdPanel();
+  toast('Pedido eliminado');
+}
+
+function generateOrderReceipt(id) {
+  const o = _orders.find(x => x.id === id);
+  if (!o) { toast('⚠️ Pedido no encontrado'); return; }
+
+  const biz = bizProfile || {};
+  const C = {
+    accent:'#7aaa1e', accentL:'#eef7d4', ink:'#1F2937',
+    line:'#E5E7EB', muted:'#6B7280', light:'#F8FAFC',
+    ord:'#0284c7', ordL:'#f0f9ff'
+  };
+
+  const numToWords = (n) => {
+    const u = ['','UNO','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE'];
+    const t = ['DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE'];
+    const d = ['','','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
+    const c = ['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
+    const entero = Math.floor(n);
+    const cent   = Math.round((n - entero) * 100);
+    const conv = (num) => {
+      if (num === 0)   return 'CERO';
+      if (num === 100) return 'CIEN';
+      let r = '';
+      if (num >= 100)  { r += c[Math.floor(num/100)] + ' '; num %= 100; }
+      if (num >= 20)   { r += d[Math.floor(num/10)]; if (num%10) r += ' Y ' + u[num%10]; }
+      else if (num >= 10) { r += t[num-10]; }
+      else if (num > 0) { r += u[num]; }
+      return r.trim();
+    };
+    if (entero >= 1000) {
+      const miles = Math.floor(entero/1000);
+      const resto = entero % 1000;
+      return (miles === 1 ? 'MIL' : conv(miles) + ' MIL') + (resto ? ' ' + conv(resto) : '') + ` CON ${String(cent).padStart(2,'0')}/100 SOLES`;
+    }
+    return conv(entero) + ` CON ${String(cent).padStart(2,'0')}/100 SOLES`;
+  };
+
+  const dateStr = o.date
+    ? new Date(o.date + 'T12:00:00').toLocaleDateString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+    : '—';
+  const today   = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' });
+  const nowStr  = new Date().toLocaleTimeString('es-PE', { hour:'2-digit', minute:'2-digit' });
+  const recNum  = String(o.id).slice(-6);
+  const deliveryLbl = o.delivery === 'local' ? '🏪 Recojo en local' : '🚚 Delivery';
+
+  const itemsRows = (o.items||[]).map(i =>
+    `<tr>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;">${i.desc}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;text-align:right;white-space:nowrap;">S/ ${parseFloat(i.price||0).toFixed(2)}</td>
+    </tr>`
+  ).join('');
+
+  const receiptHtml = `
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pedido #${recNum} — ${o.client}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',sans-serif; background:#f3f4f6; display:flex; justify-content:center; padding:32px 16px; }
+  .doc { background:#fff; width:100%; max-width:480px; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,.1); overflow:hidden; }
+  .doc-head { background:${C.ordL}; border-bottom:3px solid ${C.ord}; padding:22px 24px 18px; }
+  .doc-type { font-size:11px; font-weight:700; letter-spacing:.12em; color:${C.ord}; text-transform:uppercase; margin-bottom:6px; }
+  .doc-biz  { font-size:20px; font-weight:700; color:${C.ink}; }
+  .doc-num  { font-size:11px; color:${C.muted}; margin-top:2px; }
+  .doc-body { padding:20px 24px; }
+  .doc-row  { display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; }
+  .doc-lbl  { color:${C.muted}; }
+  .doc-val  { color:${C.ink}; font-weight:600; text-align:right; }
+  .items-table { width:100%; border-collapse:collapse; margin:14px 0; }
+  .items-table th { text-align:left; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:${C.muted}; padding:6px 8px; border-bottom:2px solid ${C.line}; }
+  .items-table th:last-child { text-align:right; }
+  .total-row { display:flex; justify-content:space-between; align-items:center; background:${C.accentL}; border:1px solid ${C.accent}; border-radius:10px; padding:12px 14px; margin:14px 0; }
+  .total-lbl { font-size:12px; font-weight:700; color:#3f6009; text-transform:uppercase; letter-spacing:.06em; }
+  .total-val { font-size:22px; font-weight:800; color:#3f6009; }
+  .total-words { font-size:10px; color:${C.muted}; margin-top:2px; text-align:right; }
+  .doc-footer { background:${C.light}; border-top:1px solid ${C.line}; padding:14px 24px; font-size:10.5px; color:${C.muted}; text-align:center; }
+  @media print { body { background:#fff; padding:0; } .doc { border-radius:0; box-shadow:none; } }
+</style>
+</head><body>
+<div class="doc">
+  <div class="doc-head">
+    <div class="doc-type">Recibo de Pedido</div>
+    <div class="doc-biz">${biz.name || 'Mi Negocio'}</div>
+    <div class="doc-num">N° ${recNum} · Emitido: ${today} ${nowStr}</div>
+  </div>
+  <div class="doc-body">
+    <div class="doc-row"><span class="doc-lbl">Cliente</span><span class="doc-val">${o.client}</span></div>
+    <div class="doc-row"><span class="doc-lbl">Entrega</span><span class="doc-val">${deliveryLbl}</span></div>
+    ${o.address ? `<div class="doc-row"><span class="doc-lbl">Dirección</span><span class="doc-val">${o.address}</span></div>` : ''}
+    <div class="doc-row"><span class="doc-lbl">Fecha entrega</span><span class="doc-val">${dateStr}</span></div>
+    ${o.note ? `<div class="doc-row"><span class="doc-lbl">Nota</span><span class="doc-val">${o.note}</span></div>` : ''}
+    <table class="items-table">
+      <thead><tr><th>Descripción</th><th>Monto</th></tr></thead>
+      <tbody>${itemsRows}</tbody>
+    </table>
+    <div class="total-row">
+      <span class="total-lbl">Total</span>
+      <div style="text-align:right">
+        <div class="total-val">S/ ${(o.total||0).toFixed(2)}</div>
+        <div class="total-words">${numToWords(o.total||0)}</div>
+      </div>
+    </div>
+  </div>
+  <div class="doc-footer">
+    ${biz.name || 'Kajita'} · Generado con Kajita · kajita.pe
+  </div>
+</div>
+</body></html>`;
+
+  let printDiv = document.getElementById('print-container');
+  if (!printDiv) {
+    printDiv = document.createElement('div');
+    printDiv.id = 'print-container';
+    document.body.appendChild(printDiv);
+  }
+  printDiv.innerHTML = receiptHtml;
+  setTimeout(() => window.print(), 400);
+}
+
 // ── Render ──
 function renderOrdPanel() {
   loadOrders();
@@ -10673,19 +10820,19 @@ function renderOrdPanel() {
     return `Entrega: ${day}/${m}/${y}`;
   };
 
+  const nextStatusMap = {
+    pending: { status:'ready', icon:'✅', label:'Marcar listo' },
+    ready:   { status:'done',  icon:'📦', label:'Marcar entregado' },
+    done:    { status:'pending', icon:'↩', label:'Reabrir pedido' }
+  };
+
   list.innerHTML = filtered.map(o => {
     const itemsText = o.items.map(i => i.desc + (i.price ? ` (S/ ${i.price.toFixed(2)})` : '')).join(' · ');
     const dateStr   = fmtDate(o.date);
-    const actions = o.status === 'pending'
-      ? `<button class="order-action-btn ready" onclick="setOrderStatus(${o.id},'ready')">✅ Marcar listo</button>
-         <button class="order-action-btn del" onclick="deleteOrder(${o.id})">Eliminar</button>`
-      : o.status === 'ready'
-      ? `<button class="order-action-btn done" onclick="setOrderStatus(${o.id},'done')">📦 Entregado</button>
-         <button class="order-action-btn" onclick="setOrderStatus(${o.id},'pending')">↩ Pendiente</button>
-         <button class="order-action-btn del" onclick="deleteOrder(${o.id})">Eliminar</button>`
-      : `<button class="order-action-btn" onclick="setOrderStatus(${o.id},'pending')">↩ Reabrir</button>
-         <button class="order-action-btn del" onclick="deleteOrder(${o.id})">Eliminar</button>`;
-    return `<div class="order-card" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
+    const ns = nextStatusMap[o.status] || nextStatusMap.pending;
+    return `<div class="order-card" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
+      <div class="swipe-hint-right">${ns.icon} ${ns.label}</div>
+      <div class="swipe-hint-left">↩ Retroceder</div>
       <div class="order-card-head">
         <div class="order-card-dot ${o.status}"></div>
         <div class="order-card-info">
@@ -10697,13 +10844,58 @@ function renderOrdPanel() {
             ${o.note ? `<span>📝 ${o.note}</span>` : ''}
           </div>
         </div>
-        <div class="order-card-right">
-          <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--k-text-3);margin-top:4px;text-align:right;">Ver detalle ›</div>
+        <div class="order-card-right" style="flex-direction:row;align-items:center;gap:8px;">
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
+          </div>
+          <button class="abtn-menu" onclick="toggleEntryMenu(event,'ord-${o.id}')" title="Acciones">···</button>
+          <div class="entry-popover" id="emenu-ord-${o.id}">
+            <button class="ep-item" onclick="closeAllMenus();generateOrderReceipt(${o.id})"><span class="ep-ic">🧾</span>Generar recibo</button>
+            <button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'${ns.status}')"><span class="ep-ic">${ns.icon}</span>${ns.label}</button>
+            <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${o.id})"><span class="ep-ic">✎</span>Editar</button>
+            <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrderFromPanel(${o.id})"><span class="ep-ic">×</span>Eliminar</button>
+          </div>
         </div>
       </div>
     </div>`;
   }).join('');
+
+  // Swipe-to-change-status (mobile)
+  document.querySelectorAll('#panelOrdList .order-card').forEach(card => {
+    const ordId = parseInt(card.dataset.ordId);
+    let startX = 0, dx = 0, swiping = false;
+    const hintR = card.querySelector('.swipe-hint-right');
+    const hintL = card.querySelector('.swipe-hint-left');
+
+    card.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX; dx = 0; swiping = false;
+    }, { passive: true });
+
+    card.addEventListener('touchmove', e => {
+      dx = e.touches[0].clientX - startX;
+      if (Math.abs(dx) < 8) return;
+      swiping = true;
+      const clamped = Math.max(-130, Math.min(130, dx));
+      card.style.transform = `translateX(${clamped}px)`;
+      card.style.transition = 'none';
+      hintR.style.opacity = dx > 20 ? Math.min(1, (dx - 20) / 60) : 0;
+      hintL.style.opacity = dx < -20 ? Math.min(1, (-dx - 20) / 60) : 0;
+    }, { passive: true });
+
+    card.addEventListener('touchend', () => {
+      card.style.transition = 'transform .28s cubic-bezier(.34,1.2,.64,1)';
+      card.style.transform  = 'translateX(0)';
+      hintR.style.opacity = 0; hintL.style.opacity = 0;
+      if (!swiping) return;
+      const o = _orders.find(x => x.id === ordId);
+      if (!o) return;
+      if (dx > 80)  setOrderStatus(ordId, nextStatusMap[o.status]?.status || 'pending');
+      if (dx < -80) {
+        const prev = { ready:'pending', done:'ready' }[o.status];
+        if (prev) setOrderStatus(ordId, prev);
+      }
+    });
+  });
 }
 </script>
 
