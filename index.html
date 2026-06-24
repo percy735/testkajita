@@ -1777,37 +1777,50 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: border-color 0.2s, transform 0.25s ease;
   position: relative; will-change: transform;
 }
-/* Order card timeline */
+/* Order card timeline — chips compactos */
 .ord-timeline {
   display: flex; align-items: center; gap: 0;
-  margin-top: 8px; padding: 8px 14px 12px;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 7px;
 }
 .ord-tml-step {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  background: none; border: none; cursor: pointer; padding: 2px 6px;
-  flex-shrink: 0;
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 99px;
+  border: 1px solid transparent;
+  background: none; cursor: pointer; flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
 }
 .ord-tml-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  border: 2px solid var(--k-text-3); background: transparent;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--k-text-3); flex-shrink: 0;
+  transition: background 0.15s;
 }
 .ord-tml-label {
-  font-family: var(--sans); font-size: 10px; color: var(--k-text-3);
-  white-space: nowrap; transition: color 0.2s;
+  font-family: var(--sans); font-size: 10px; font-weight: 500;
+  color: var(--k-text-3); white-space: nowrap;
 }
-.ord-tml-step.done .ord-tml-dot   { background: var(--k-accent); border-color: var(--k-accent); }
+/* Paso completado (anterior al actual) */
+.ord-tml-step.done .ord-tml-dot   { background: rgba(196,240,66,0.55); }
 .ord-tml-step.done .ord-tml-label { color: var(--k-text-2); }
-.ord-tml-step.active .ord-tml-dot { background: var(--k-accent); border-color: var(--k-accent); box-shadow: 0 0 0 3px rgba(196,240,66,0.2); }
-.ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 600; }
-.ord-tml-step:not(.active):hover .ord-tml-dot   { border-color: var(--k-text); }
-.ord-tml-step:not(.active):hover .ord-tml-label { color: var(--k-text); }
-.ord-tml-line {
-  flex: 1; height: 2px; background: var(--k-line); border-radius: 1px;
-  transition: background 0.2s; min-width: 16px;
+/* Paso actual */
+.ord-tml-step.active {
+  background: rgba(196,240,66,0.1);
+  border-color: rgba(196,240,66,0.35);
 }
-.ord-tml-line.filled { background: var(--k-accent); }
+.ord-tml-step.active .ord-tml-dot   { background: var(--k-accent); }
+.ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 600; }
+/* Hover en pasos no activos */
+.ord-tml-step:not(.active):hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.12);
+}
+.ord-tml-step:not(.active):hover .ord-tml-dot   { background: var(--k-text-2); }
+.ord-tml-step:not(.active):hover .ord-tml-label { color: var(--k-text); }
+/* Línea conectora */
+.ord-tml-line {
+  flex: 1; height: 1px; background: var(--k-line);
+  min-width: 6px; max-width: 20px;
+}
+.ord-tml-line.filled { background: rgba(196,240,66,0.35); }
 
 /* Swipe reveal hints */
 .swipe-hint-right,
@@ -3834,7 +3847,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.23c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.24c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4103,7 +4116,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.23</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.24</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4344,7 +4357,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.23</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.24</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -6769,16 +6782,20 @@ function toggleOrdMenu(event, id) {
     // Fixed positioning to escape overflow:hidden on order-card
     const r = btn.getBoundingClientRect();
     menu.style.position = 'fixed';
-    menu.style.top      = (r.bottom + 6) + 'px';
-    menu.style.right    = (window.innerWidth - r.right) + 'px';
-    menu.style.left     = 'auto';
     menu.style.zIndex   = '99990';
+    menu.style.top      = (r.bottom + 6) + 'px';
+    menu.style.left     = 'auto';
+    menu.style.right    = (window.innerWidth - r.right) + 'px';
     menu.classList.add('open');
+    // After render: fix overflow on bottom or right edge
     requestAnimationFrame(() => {
       const mr = menu.getBoundingClientRect();
       if (mr.bottom > window.innerHeight - 16) {
-        menu.style.top    = (r.top - mr.height - 6) + 'px';
-        menu.style.bottom = 'auto';
+        menu.style.top = (r.top - mr.height - 6) + 'px';
+      }
+      if (mr.left < 8) {
+        menu.style.right = 'auto';
+        menu.style.left  = '8px';
       }
     });
   }
@@ -10877,8 +10894,9 @@ function renderOrdPanel() {
             ${dateStr ? `<span>${dateStr}</span>` : ''}
             ${o.note ? `<span>📝 ${o.note}</span>` : ''}
           </div>
+          <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
         </div>
-        <div class="order-card-right" onclick="event.stopPropagation()" style="position:relative;">
+        <div class="order-card-right" onclick="event.stopPropagation()">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
           <button class="abtn-menu" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
           <div class="entry-popover" id="ordmenu-${o.id}">
@@ -10889,7 +10907,6 @@ function renderOrdPanel() {
           </div>
         </div>
       </div>
-      <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
     </div>`;
   }).join('');
 
