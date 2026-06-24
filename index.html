@@ -3764,7 +3764,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.9c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.10c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4033,7 +4033,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.9</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.10</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4278,7 +4278,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:8px;right:8px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.25);z-index:100;pointer-events:none;">v14.8.9</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.10</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -11730,7 +11730,7 @@ function ordPrint(id) {
         <label>Cliente</label>
         <div class="input-with-toggle">
           <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Escribe o elige cliente..." maxlength="60" autocomplete="off"
-            oninput="ordFilterClients()" onblur="setTimeout(()=>ordHideDrop('ordClientDrop'),150)"
+            oninput="ordFilterClients()"
             style="width:100%;box-sizing:border-box;">
           <button type="button" class="field-toggle-btn" onclick="ordToggleClients()" title="Ver clientes"><span>⌄</span></button>
         </div>
@@ -11742,7 +11742,7 @@ function ordPrint(id) {
         <label>Descripción / Producto</label>
         <div class="input-with-toggle">
           <input class="panel-form-inp" id="pfOrdDesc" type="text" placeholder="Escribe o elige producto..." maxlength="80" autocomplete="off"
-            oninput="ordFilterProducts()" onblur="setTimeout(()=>ordHideDrop('ordProdDrop'),150)"
+            oninput="ordFilterProducts()"
             onkeydown="if(event.key==='Enter')ordPushItem()"
             style="width:100%;box-sizing:border-box;">
           <button type="button" class="field-toggle-btn" onclick="ordToggleProducts()" title="Ver productos"><span>⌄</span></button>
