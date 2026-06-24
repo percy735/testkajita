@@ -3801,7 +3801,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.14c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.15c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4070,7 +4070,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.14</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.15</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4315,7 +4315,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.14</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.15</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -4574,11 +4574,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             <span id="creditToggleLbl">A crédito</span>
           </label>
-          <label class="order-pill" id="orderPillWrap">
-            <input type="checkbox" id="iIsOrder" onchange="onOrderToggle()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-            Es pedido
-          </label>
         </div>
       </div>
     </div>
@@ -4605,40 +4600,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       </div>
     </div>
 
-    <!-- SECCIÓN PEDIDO: campos extra, visible al activar "Es pedido" -->
-    <div id="orderSection" style="display:none;">
-      <div class="form-row s1">
-        <div class="fld">
-          <label>Tipo de entrega</label>
-          <div class="type-tgl" style="margin-bottom:0;">
-            <button class="tgl-btn ai" id="ordDeliveryLocal" onclick="setOrderDelivery('local')">🏪 Recojo en local</button>
-            <button class="tgl-btn"    id="ordDeliveryAddr"  onclick="setOrderDelivery('address')">📍 Envío a domicilio</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row s1" id="ordAddressRow" style="display:none;">
-        <div class="fld">
-          <label>Dirección de entrega</label>
-          <input class="panel-form-inp" id="mainOrdAddress" type="text" placeholder="Av. Los Pinos 123, Miraflores..." maxlength="120" style="width:100%;">
-        </div>
-      </div>
-      <div class="form-row s1" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="fld">
-          <label>Fecha de entrega <span style="color:var(--k-text-3);font-weight:400;">(opcional)</span></label>
-          <input class="panel-form-inp" id="mainOrdDate" type="date" style="width:100%;">
-        </div>
-        <div class="fld">
-          <label>Hora <span style="color:var(--k-text-3);font-weight:400;">(opcional)</span></label>
-          <input class="panel-form-inp" id="mainOrdTime" type="time" style="width:100%;">
-        </div>
-      </div>
-      <div class="form-row s1">
-        <div class="fld">
-          <label>Nota del pedido <span style="color:var(--k-text-3);font-weight:400;">(opcional)</span></label>
-          <input class="panel-form-inp" id="mainOrdNote" type="text" placeholder="Ej: sin cebolla, talla M, color azul..." maxlength="120" style="width:100%;">
-        </div>
-      </div>
-    </div>
+
 
     <button class="btn-reg" id="btnReg" onclick="submitEntry()">Registrar Movimiento</button>
     <button class="btn-cancel" id="btnCan" style="display:none;" onclick="cancelEdit()">Cancelar edición</button>
@@ -6994,12 +6956,7 @@ function setType(t) {
   const lbl=document.getElementById('clientFieldLabel');
   const iClient=document.getElementById('iClient');
   const creditLbl=document.getElementById('creditToggleLbl');
-  const orderPill=document.getElementById('orderPillWrap');
   closeAllPickers();
-  // Reset order toggle al cambiar tipo
-  document.getElementById('iIsOrder').checked=false;
-  if(orderPill) orderPill.classList.remove('active');
-  onOrderToggle();
   if(t==='expense'){
     wrap.classList.remove('disabled');
     if(sep) sep.style.opacity='1';
@@ -7009,7 +6966,6 @@ function setType(t) {
     if(lbl) lbl.textContent='Proveedor (opcional)';
     if(iClient){ iClient.placeholder='Escribe o elige proveedor...'; iClient.value=''; }
     if(creditLbl) creditLbl.textContent='A fiado';
-    if(orderPill) orderPill.style.display='none';
   } else {
     wrap.classList.remove('disabled');
     if(sep) sep.style.opacity='1';
@@ -7017,29 +6973,10 @@ function setType(t) {
     if(lbl) lbl.textContent='Cliente (opcional)';
     if(iClient){ iClient.placeholder='Escribe o elige cliente...'; iClient.value=''; }
     if(creditLbl) creditLbl.textContent='A crédito';
-    if(orderPill) orderPill.style.display='';
     showClientDropdown('');
   }
 }
 
-function onOrderToggle() {
-  const checked = document.getElementById('iIsOrder').checked;
-  const pill = document.getElementById('orderPillWrap');
-  const section = document.getElementById('orderSection');
-  const formTtl = document.getElementById('formTtl');
-  if(pill) pill.classList.toggle('active', checked);
-  if(section) section.style.display = checked ? '' : 'none';
-  if(formTtl) formTtl.textContent = checked ? 'Nuevo pedido' : 'Registrar movimiento';
-  if(checked) {
-    // Reset delivery al abrir
-    const btnLocal = document.getElementById('ordDeliveryLocal');
-    const btnAddr  = document.getElementById('ordDeliveryAddr');
-    const addrRow  = document.getElementById('ordAddressRow');
-    if(btnLocal) btnLocal.className='tgl-btn ai';
-    if(btnAddr)  btnAddr.className='tgl-btn';
-    if(addrRow)  addrRow.style.display='none';
-  }
-}
 
 function setPay(p) {
   cPay=p;
@@ -9191,52 +9128,6 @@ async function autoEnsureContact(name, type) {
 }
 
 async function submitEntry(){
-  // ── Modo Pedido ──
-  if(document.getElementById('iIsOrder').checked) {
-    const descForm  = document.getElementById('iDesc').value.trim();
-    const amtForm   = parseFloat(document.getElementById('iAmt').value)||0;
-    const qtyForm   = parseInt(document.getElementById('iQty').value)||1;
-    const accItems  = [..._items];
-    if(descForm) accItems.push({ desc: descForm+(qtyForm>1?` ×${qtyForm}`:''), price: amtForm, qty: qtyForm, unit: parseFloat(document.getElementById('iUnitPrice').value)||0 });
-    const client = document.getElementById('iClient').value.trim();
-    if(!accItems.length) { document.getElementById('iDesc').focus(); toast('Agrega al menos un producto'); return; }
-    if(!client) { document.getElementById('iClient').focus(); toast('Escribe el nombre del cliente'); return; }
-    const total = accItems.reduce((s,i)=>s+i.price, 0);
-    const order = {
-      id: Date.now(),
-      client,
-      items: accItems.map(i=>({ desc: i.desc, price: i.price })),
-      total,
-      delivery: document.getElementById('ordDeliveryAddr').classList.contains('ao') ? 'address' : 'local',
-      address:  document.getElementById('mainOrdAddress').value.trim(),
-      date:     document.getElementById('mainOrdDate').value || '',
-      time:     document.getElementById('mainOrdTime').value || '',
-      note:     document.getElementById('mainOrdNote').value.trim(),
-      status:   'pending',
-      createdAt: new Date().toISOString()
-    };
-    loadOrders();
-    _orders.unshift(order);
-    saveOrders();
-    document.getElementById('iDesc').value      = '';
-    document.getElementById('iAmt').value       = '';
-    document.getElementById('iQty').value       = '';
-    document.getElementById('iUnitPrice').value = '';
-    document.getElementById('iClient').value    = '';
-    document.getElementById('mainOrdDate').value    = '';
-    document.getElementById('mainOrdTime').value    = '';
-    document.getElementById('mainOrdNote').value    = '';
-    document.getElementById('mainOrdAddress').value = '';
-    document.getElementById('ordAddressRow').style.display = 'none';
-    resetExtraItems();
-    document.getElementById('iIsOrder').checked = false;
-    document.getElementById('orderPillWrap').classList.remove('active');
-    onOrderToggle();
-    renderDayOrders();
-    toast('📋 Pedido guardado');
-    return;
-  }
-
   // Ítem del formulario actual
   const desc      = document.getElementById('iDesc').value.trim();
   const qty       = parseInt(document.getElementById('iQty').value)||1;
