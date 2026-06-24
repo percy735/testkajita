@@ -3559,14 +3559,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.30
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.31
    FIX v14.8.27: saveOrder() persistía con saveOrders() DESPUÉS de render(),
    pero render()->renderDayOrders()->loadOrders() recargaba localStorage (aún vacío)
    y vaciaba _orders antes de guardarlo. Ahora saveOrders() corre ANTES de render().
    v14.8.28: edición de pedidos unificada en un solo modal (openEditOrderModal);
    eliminado overlay viejo editOrdOverlay + funciones Eo*, y código muerto
    (person-card/_expanded, inv-card, cred-card, refreshData, resetBizProfile, no-ops).
-   v14.8.30: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
+   v14.8.31: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
    SpeechRecognition, parseVoiceLocal, ~571 líneas) — estaba oculto y sin uso.
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
@@ -3836,7 +3836,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.30</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.31</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4077,7 +4077,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.30</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.31</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -9611,7 +9611,8 @@ function ordSelectClient(id) {
   const c = (typeof clients !== 'undefined' ? clients : []).find(x => String(x.id) === String(id));
   if (!c) return;
   document.getElementById('pfOrdClient').value = c.name;
-  if (c.phone) document.getElementById('pfOrdPhone').value = c.phone;
+  // Siempre sincronizar el teléfono con el cliente elegido (limpia el del cliente anterior)
+  document.getElementById('pfOrdPhone').value = c.phone || '';
   ordHideDrop('ordClientDrop');
 }
 
@@ -11173,17 +11174,17 @@ function ordPrint(id) {
 
       <!-- Fecha y hora de entrega -->
       <div class="fld">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-          <label style="margin:0;">Fecha de entrega</label>
-          <div style="display:flex;align-items:center;gap:6px;">
+        <label>Fecha de entrega</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;">
+          <div class="ord-date-row" style="flex:1 1 auto;min-width:0;margin:0;">
+            <button class="ord-date-btn" id="ordDateHoy"    onclick="setOrdDate('today')">Hoy</button>
+            <button class="ord-date-btn" id="ordDateManana" onclick="setOrdDate('tomorrow')">Mañana</button>
+            <button class="ord-date-btn" id="ordDateCustom" onclick="setOrdDate('pick')">📅 Otra fecha</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
             <span style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">🕐 Hora</span>
             <input type="time" id="pfOrdTime" class="panel-form-inp" style="width:auto;padding:6px 9px;box-sizing:border-box;color-scheme:dark;">
           </div>
-        </div>
-        <div class="ord-date-row" style="margin-top:8px;">
-          <button class="ord-date-btn" id="ordDateHoy"    onclick="setOrdDate('today')">Hoy</button>
-          <button class="ord-date-btn" id="ordDateManana" onclick="setOrdDate('tomorrow')">Mañana</button>
-          <button class="ord-date-btn" id="ordDateCustom" onclick="setOrdDate('pick')">📅 Otra fecha</button>
         </div>
         <input type="hidden" id="pfOrdDate">
         <div id="pfOrdDateDisplay" style="display:none;font-family:var(--mono);font-size:11px;color:var(--k-accent);margin-top:6px;padding:5px 12px;background:rgba(196,240,66,0.08);border:1px solid rgba(196,240,66,0.2);border-radius:8px;display:none;cursor:pointer;" onclick="setOrdDate('pick')"></div>
