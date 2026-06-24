@@ -3801,7 +3801,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.15c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.16c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4070,7 +4070,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.15</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.16</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4315,7 +4315,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.15</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.16</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -4547,7 +4547,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <label id="clientFieldLabel">Cliente (opcional)</label>
         <div class="picker-wrap">
           <div class="input-with-toggle">
-            <input type="text" id="iClient" placeholder="Escribe o elige..." maxlength="50" oninput="filterClients()">
+            <input type="text" id="iClient" placeholder="Escribe o elige..." maxlength="50" oninput="filterClients()" onblur="setTimeout(()=>{clientPickerOpen=false;_portalClose('clientDropdown');const ic=document.getElementById('ftbCliIcon');if(ic)ic.classList.remove('open');},150)">
             <button type="button" class="field-toggle-btn" id="btnToggleClients" onclick="toggleClientPicker()" title="Ver lista">
               <span class="ftb-icon" id="ftbCliIcon">⌄</span>
             </button>
@@ -7934,6 +7934,9 @@ function renderEntries(){
             <button class="abtn-menu" onclick="toggleEntryMenu(event,'${e.id}')" title="Acciones">···</button>
             <div class="entry-popover" id="emenu-${e.id}">
               ${isCredit ? `<button class="ep-item ep-cobrar" onclick="closeAllMenus();cobrarEntry('${e.id}')"><span class="ep-ic">✓</span>Pagó</button>` : ''}
+              ${isDebt ? `<button class="ep-item ep-cobrar" onclick="closeAllMenus();pagarDebt('${e.id}')"><span class="ep-ic">✓</span>Pagué</button>` : ''}
+              ${(e.paid && e.type==='income') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();uncobrarEntry('${e.id}')"><span class="ep-ic">↩</span>Desmarcar cobro</button>` : ''}
+              ${(e.paid && e.type==='expense') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();unpagarDebt('${e.id}')"><span class="ep-ic">↩</span>Desmarcar pago</button>` : ''}
               <button class="ep-item" onclick="closeAllMenus();generateReceipt('${e.id}')"><span class="ep-ic">🧾</span>Generar recibo</button>
               <button class="ep-item" onclick="closeAllMenus();editEntry('${e.id}')"><span class="ep-ic">✎</span>Editar</button>
               <button class="ep-item ep-del" onclick="closeAllMenus();delEntry('${e.id}')"><span class="ep-ic">×</span>Eliminar</button>
@@ -8644,6 +8647,20 @@ async function pagarDebt(id){
   }
   save(); buildDayBar(); render();
   toast('✓ Deuda pagada — descontada del balance');
+}
+
+function uncobrarEntry(id){
+  const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
+  e.paid=false; e.credit=true; delete e.paidAt;
+  save(); buildDayBar(); render();
+  toast('↩ Pago desmarcado — vuelve a pendiente de cobro');
+}
+
+function unpagarDebt(id){
+  const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
+  e.paid=false; e.debt=true; delete e.paidAt;
+  save(); buildDayBar(); render();
+  toast('↩ Pago desmarcado — vuelve a pendiente de pago');
 }
 
 function toggleRemindersBar(){
