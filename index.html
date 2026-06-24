@@ -1783,17 +1783,19 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .ord-icon-btn {
   width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--k-line);
-  background: rgba(255,255,255,0.04); font-size: 15px;
+  background: rgba(255,255,255,0.04); color: var(--k-text-3);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
   flex-shrink: 0;
 }
-.ord-icon-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-.ord-icon-btn.ord-icon-wa:hover  { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.35); }
-.ord-icon-btn.ord-icon-del:hover { background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.35); }
-.ord-icon-btn.ord-icon-status.pending:hover { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); }
-.ord-icon-btn.ord-icon-status.ready:hover   { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.35); }
-.ord-icon-btn.ord-icon-edit:hover { background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.3); }
+.ord-icon-btn svg { display: block; }
+.ord-icon-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: var(--k-text); }
+.ord-icon-btn.ord-icon-wa:hover  { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.35); color: #25d366; }
+.ord-icon-btn.ord-icon-del:hover { background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.35); color: var(--k-expense); }
+.ord-icon-btn.ord-icon-status.pending:hover { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); color: #34d399; }
+.ord-icon-btn.ord-icon-status.ready:hover   { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.35); color: #60a5fa; }
+.ord-icon-btn.ord-icon-status.done:hover    { background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.3); color: var(--k-accent); }
+.ord-icon-btn.ord-icon-edit:hover { background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.3); color: var(--k-accent); }
 
 /* Swipe reveal hints */
 .swipe-hint-right,
@@ -2012,6 +2014,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   font-weight: 600; color: var(--k-text-2); cursor: pointer; transition: all .15s;
   display: flex; align-items: center; justify-content: center; gap: 7px;
 }
+.ord-btn svg { flex-shrink: 0; }
 .ord-btn:hover { background: rgba(255,255,255,0.09); color: var(--k-text); }
 .ord-btn.ord-btn-wa { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.3); color: #25d166; }
 .ord-btn.ord-btn-wa:hover { background: rgba(37,211,102,0.18); }
@@ -3794,7 +3797,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.19c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.20c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4063,7 +4066,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.19</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.20</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4304,7 +4307,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.19</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.20</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -10402,7 +10405,7 @@ function ordFilterClients() {
     .filter(c => !q || c.name.toLowerCase().includes(q))
     .slice(0, 8);
   _ordRenderDrop('pfOrdClient', 'ordClientDrop', list,
-    c => `<button type="button" class="cchip" onmousedown="ordSelectClient(${c.id})">${c.name}${c.phone ? ' · <span style="opacity:.5;font-size:10px">'+c.phone+'</span>' : ''}</button>`
+    c => `<button type="button" class="cchip" onmousedown="ordSelectClient('${String(c.id).replace(/'/g,"\\'")}')">${c.name}${c.phone ? ' · <span style="opacity:.5;font-size:10px">'+c.phone+'</span>' : ''}</button>`
   );
 }
 
@@ -10415,7 +10418,7 @@ function ordToggleClients() {
 }
 
 function ordSelectClient(id) {
-  const c = (typeof clients !== 'undefined' ? clients : []).find(x => x.id === id);
+  const c = (typeof clients !== 'undefined' ? clients : []).find(x => String(x.id) === String(id));
   if (!c) return;
   document.getElementById('pfOrdClient').value = c.name;
   ordHideDrop('ordClientDrop');
@@ -10427,7 +10430,7 @@ function ordFilterProducts() {
     .filter(p => !q || p.name.toLowerCase().includes(q))
     .slice(0, 8);
   _ordRenderDrop('pfOrdDesc', 'ordProdDrop', list,
-    p => `<button type="button" class="pchip" onmousedown="ordSelectProduct(${p.id})">${p.name}<span class="pchip-price">S/ ${parseFloat(p.price||0).toFixed(2)}</span></button>`
+    p => `<button type="button" class="pchip" onmousedown="ordSelectProduct('${String(p.id).replace(/'/g,"\\'")}')">${p.name}<span class="pchip-price">S/ ${parseFloat(p.price||0).toFixed(2)}</span></button>`
   );
 }
 
@@ -10440,7 +10443,7 @@ function ordToggleProducts() {
 }
 
 function ordSelectProduct(id) {
-  const p = (typeof products !== 'undefined' ? products : []).find(x => x.id === id);
+  const p = (typeof products !== 'undefined' ? products : []).find(x => String(x.id) === String(id));
   if (!p) return;
   document.getElementById('pfOrdDesc').value = p.name;
   document.getElementById('pfOrdUnit').value = parseFloat(p.price || 0).toFixed(2);
@@ -10723,6 +10726,17 @@ function generateOrderReceipt(id) {
   setTimeout(() => { w.focus(); w.print(); }, 400);
 }
 
+// ── Iconos SVG de línea (coherentes con el resto de Kajita) ──
+const ORD_SVG = {
+  receipt: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2-1.2L9 21l2-1.2L13 21l2-1.2L17 21l2-1.2V3l-2 1.2L15 3l-2 1.2L11 3 9 4.2 7 3 5 4.2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
+  chat: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+  edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  trash: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  check: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  box: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+  undo: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>',
+};
+
 // ── Render ──
 function renderOrdPanel() {
   loadOrders();
@@ -10757,9 +10771,9 @@ function renderOrdPanel() {
   };
 
   const nextStatusMap = {
-    pending: { status:'ready', icon:'✅', label:'Marcar listo' },
-    ready:   { status:'done',  icon:'📦', label:'Marcar entregado' },
-    done:    { status:'pending', icon:'↩', label:'Reabrir pedido' }
+    pending: { status:'ready', icon:'✅', svg:ORD_SVG.check, label:'Marcar listo' },
+    ready:   { status:'done',  icon:'📦', svg:ORD_SVG.box,   label:'Marcar entregado' },
+    done:    { status:'pending', icon:'↩', svg:ORD_SVG.undo, label:'Reabrir pedido' }
   };
 
   list.innerHTML = filtered.map(o => {
@@ -10783,11 +10797,11 @@ function renderOrdPanel() {
         <div class="order-card-right">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
           <div class="ord-card-actions" onclick="event.stopPropagation()">
-            <button class="ord-icon-btn" onclick="generateOrderReceipt(${o.id})" title="Generar recibo">🧾</button>
-            <button class="ord-icon-btn ord-icon-wa" onclick="ordWhatsApp(${o.id})" title="Enviar por WhatsApp">💬</button>
-            <button class="ord-icon-btn ord-icon-edit" onclick="openEditOrderModal(${o.id})" title="Editar pedido">✏️</button>
-            <button class="ord-icon-btn ord-icon-status ${o.status}" onclick="setOrderStatus(${o.id},'${ns.status}')" title="${ns.label}">${ns.icon}</button>
-            <button class="ord-icon-btn ord-icon-del" onclick="deleteOrderFromPanel(${o.id})" title="Eliminar pedido">🗑️</button>
+            <button class="ord-icon-btn" onclick="generateOrderReceipt(${o.id})" title="Generar recibo">${ORD_SVG.receipt}</button>
+            <button class="ord-icon-btn ord-icon-wa" onclick="ordWhatsApp(${o.id})" title="Enviar por WhatsApp">${ORD_SVG.chat}</button>
+            <button class="ord-icon-btn ord-icon-edit" onclick="openEditOrderModal(${o.id})" title="Editar pedido">${ORD_SVG.edit}</button>
+            <button class="ord-icon-btn ord-icon-status ${o.status}" onclick="setOrderStatus(${o.id},'${ns.status}')" title="${ns.label}">${ns.svg}</button>
+            <button class="ord-icon-btn ord-icon-del" onclick="deleteOrderFromPanel(${o.id})" title="Eliminar pedido">${ORD_SVG.trash}</button>
           </div>
         </div>
       </div>
@@ -11658,12 +11672,12 @@ function openOrderModal(id) {
     <div class="ord-modal-actions">
       <div class="ord-status-row">${statusBtnsHtml}</div>
       <div class="ord-modal-actions-row">
-        <button class="ord-btn ord-btn-print" onclick="ordPrint(${o.id})">🖨️ Imprimir</button>
-        <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">💬 WhatsApp</button>
+        <button class="ord-btn ord-btn-print" onclick="ordPrint(${o.id})">${ORD_SVG.receipt} Imprimir</button>
+        <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">${ORD_SVG.chat} WhatsApp</button>
       </div>
       <div class="ord-modal-actions-row">
-        <button class="ord-btn" onclick="openEditOrderModal(${o.id})" style="flex:1;">✏️ Editar pedido</button>
-        <button class="ord-btn ord-btn-del" onclick="ordModalDelete(${o.id})" style="flex:1;">🗑️ Eliminar</button>
+        <button class="ord-btn" onclick="openEditOrderModal(${o.id})" style="flex:1;">${ORD_SVG.edit} Editar pedido</button>
+        <button class="ord-btn ord-btn-del" onclick="ordModalDelete(${o.id})" style="flex:1;">${ORD_SVG.trash} Eliminar</button>
       </div>
     </div>
   `;
