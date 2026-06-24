@@ -1777,50 +1777,46 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: border-color 0.2s, transform 0.25s ease;
   position: relative; will-change: transform;
 }
-/* Order card timeline — chips compactos */
+/* Order card timeline — columna central del card */
 .ord-timeline {
-  display: flex; align-items: center; gap: 0;
-  margin-top: 7px;
+  display: flex; flex-direction: column; align-items: flex-start;
+  align-self: center; flex-shrink: 0; gap: 0; padding: 0 8px;
 }
 .ord-tml-step {
-  display: flex; align-items: center; gap: 5px;
-  padding: 3px 9px; border-radius: 99px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px 8px; border-radius: 99px;
   border: 1px solid transparent;
-  background: none; cursor: pointer; flex-shrink: 0;
+  background: none; cursor: pointer; width: 100%;
   transition: background 0.15s, border-color 0.15s;
+  text-align: left;
 }
 .ord-tml-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--k-text-3); flex-shrink: 0;
-  transition: background 0.15s;
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid var(--k-text-3); background: transparent;
+  transition: all 0.15s;
 }
 .ord-tml-label {
-  font-family: var(--sans); font-size: 10px; font-weight: 500;
+  font-family: var(--sans); font-size: 10.5px; font-weight: 500;
   color: var(--k-text-3); white-space: nowrap;
 }
-/* Paso completado (anterior al actual) */
-.ord-tml-step.done .ord-tml-dot   { background: rgba(196,240,66,0.55); }
+/* Paso completado */
+.ord-tml-step.done .ord-tml-dot   { background: rgba(196,240,66,0.6); border-color: var(--k-accent); }
 .ord-tml-step.done .ord-tml-label { color: var(--k-text-2); }
 /* Paso actual */
 .ord-tml-step.active {
-  background: rgba(196,240,66,0.1);
-  border-color: rgba(196,240,66,0.35);
+  background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.35);
 }
-.ord-tml-step.active .ord-tml-dot   { background: var(--k-accent); }
-.ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 600; }
-/* Hover en pasos no activos */
-.ord-tml-step:not(.active):hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.12);
-}
-.ord-tml-step:not(.active):hover .ord-tml-dot   { background: var(--k-text-2); }
+.ord-tml-step.active .ord-tml-dot   { background: var(--k-accent); border-color: var(--k-accent); }
+.ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 700; }
+/* Hover */
+.ord-tml-step:not(.active):hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
 .ord-tml-step:not(.active):hover .ord-tml-label { color: var(--k-text); }
-/* Línea conectora */
+/* Línea conectora vertical entre pasos */
 .ord-tml-line {
-  flex: 1; height: 1px; background: var(--k-line);
-  min-width: 6px; max-width: 20px;
+  width: 1px; height: 6px; background: var(--k-line);
+  margin-left: 11px; /* alinea con centro del dot (8px padding + 3.5px = ~11px) */
 }
-.ord-tml-line.filled { background: rgba(196,240,66,0.35); }
+.ord-tml-line.filled { background: rgba(196,240,66,0.4); }
 
 /* Swipe reveal hints */
 .swipe-hint-right,
@@ -3847,7 +3843,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.24c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.25c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4116,7 +4112,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.24</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.25</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4357,7 +4353,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.24</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.25</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -6772,33 +6768,30 @@ document.addEventListener('click', () => closeAllMenus());
 
 function toggleOrdMenu(event, id) {
   event.stopPropagation();
-  const menu = document.getElementById('ordmenu-' + id);
-  if (!menu) return;
-  const isOpen = menu.classList.contains('open');
+  const ctx = document.getElementById('ordContextMenu');
+  const alreadyOpen = ctx.classList.contains('open') && ctx.dataset.ordId == id;
   closeAllMenus();
-  if (!isOpen) {
-    const btn = event.currentTarget;
-    btn.classList.add('open');
-    // Fixed positioning to escape overflow:hidden on order-card
-    const r = btn.getBoundingClientRect();
-    menu.style.position = 'fixed';
-    menu.style.zIndex   = '99990';
-    menu.style.top      = (r.bottom + 6) + 'px';
-    menu.style.left     = 'auto';
-    menu.style.right    = (window.innerWidth - r.right) + 'px';
-    menu.classList.add('open');
-    // After render: fix overflow on bottom or right edge
-    requestAnimationFrame(() => {
-      const mr = menu.getBoundingClientRect();
-      if (mr.bottom > window.innerHeight - 16) {
-        menu.style.top = (r.top - mr.height - 6) + 'px';
-      }
-      if (mr.left < 8) {
-        menu.style.right = 'auto';
-        menu.style.left  = '8px';
-      }
-    });
-  }
+  if (alreadyOpen) return;
+  // Poblar el menú con los ítems de este pedido
+  ctx.innerHTML = `
+    <button class="ep-item" onclick="closeAllMenus();generateOrderReceipt(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Generar recibo</button>
+    <button class="ep-item" onclick="closeAllMenus();ordWhatsApp(${id})"><span class="ep-ic">${ORD_SVG.chat}</span>WhatsApp</button>
+    <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${id})"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
+    <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrderFromPanel(${id})"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>`;
+  ctx.dataset.ordId = id;
+  const btn = event.currentTarget;
+  btn.classList.add('open');
+  const r = btn.getBoundingClientRect();
+  ctx.style.top   = (r.bottom + 6) + 'px';
+  ctx.style.right = (window.innerWidth - r.right) + 'px';
+  ctx.style.left  = 'auto';
+  ctx.classList.add('open');
+  requestAnimationFrame(() => {
+    const mr = ctx.getBoundingClientRect();
+    if (mr.bottom > window.innerHeight - 16)
+      ctx.style.top = (r.top - mr.height - 6) + 'px';
+    if (mr.left < 8) { ctx.style.right = 'auto'; ctx.style.left = '8px'; }
+  });
 }
 
 /* ══════════════════════════════════════════
@@ -10890,21 +10883,12 @@ function renderOrdPanel() {
         <div class="order-card-info">
           <div class="order-card-client">${o.client}</div>
           <div class="order-card-items">${itemsText}</div>
-          <div class="order-card-meta">
-            ${dateStr ? `<span>${dateStr}</span>` : ''}
-            ${o.note ? `<span>📝 ${o.note}</span>` : ''}
-          </div>
-          <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
+          ${dateStr || o.note ? `<div class="order-card-meta">${dateStr ? `<span>${dateStr}</span>` : ''}${o.note ? `<span>📝 ${o.note}</span>` : ''}</div>` : ''}
         </div>
+        <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
         <div class="order-card-right" onclick="event.stopPropagation()">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
-          <button class="abtn-menu" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
-          <div class="entry-popover" id="ordmenu-${o.id}">
-            <button class="ep-item" onclick="closeAllMenus();generateOrderReceipt(${o.id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Generar recibo</button>
-            <button class="ep-item" onclick="closeAllMenus();ordWhatsApp(${o.id})"><span class="ep-ic">${ORD_SVG.chat}</span>WhatsApp</button>
-            <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${o.id})"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
-            <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrderFromPanel(${o.id})"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>
-          </div>
+          <button class="abtn-menu" data-ord-id="${o.id}" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
         </div>
       </div>
     </div>`;
@@ -11960,6 +11944,9 @@ function ordPrint(id) {
     </div>
   </div>
 </div>
+
+<!-- Menú contextual global de pedidos (en body, fuera de cualquier card) -->
+<div class="entry-popover" id="ordContextMenu" style="position:fixed;z-index:99990;"></div>
 
 <!-- ══ MODAL: NUEVO PEDIDO ══ -->
 <div class="ord-modal-backdrop" id="newOrdBackdrop" onclick="if(event.target===this)closeNewOrderModal()">
