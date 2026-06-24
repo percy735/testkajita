@@ -5647,6 +5647,30 @@ document.addEventListener('click', (e) => {
       document.getElementById('ftbCliIcon').classList.remove('open');
     }
   }
+
+  // Close order-form floating overlays when clicking outside
+  const cliDrop  = document.getElementById('ordClientDrop');
+  const prodDrop = document.getElementById('ordProdDrop');
+  const ordCal   = document.getElementById('pfOrdCal');
+  const cliInp   = document.getElementById('pfOrdClient');
+  const prodInp  = document.getElementById('pfOrdDesc');
+  const calBtn   = document.getElementById('ordDateCustom');
+
+  if (cliDrop && cliDrop.style.display === 'block' &&
+      !cliDrop.contains(e.target) && e.target !== cliInp &&
+      !e.target.closest('.field-toggle-btn[onclick*="ordToggleClients"]')) {
+    cliDrop.style.display = 'none';
+  }
+  if (prodDrop && prodDrop.style.display === 'block' &&
+      !prodDrop.contains(e.target) && e.target !== prodInp &&
+      !e.target.closest('.field-toggle-btn[onclick*="ordToggleProducts"]')) {
+    prodDrop.style.display = 'none';
+  }
+  if (ordCal && ordCal.style.display === 'block' &&
+      !ordCal.contains(e.target) && e.target !== calBtn &&
+      !e.target.closest('#ordDateCustom')) {
+    ordCal.style.display = 'none';
+  }
 });
 
 function renderProductChips(filter='') {
@@ -10228,6 +10252,9 @@ function toggleOrderForm() {
 
 function closeNewOrderModal() {
   document.getElementById('newOrdBackdrop').classList.remove('open');
+  ordHideDrop('ordClientDrop');
+  ordHideDrop('ordProdDrop');
+  ordHideDrop('pfOrdCal');
   _ordEditId = null;
 }
 
@@ -10287,6 +10314,13 @@ function setOrdDate(mode) {
     _kjCalYear  = ref.getFullYear();
     _kjCalMonth = ref.getMonth();
     kjCalRender();
+    // position calendar below the date-row buttons
+    const anchor = document.getElementById('ordDateCustom');
+    if (anchor) {
+      const r = anchor.getBoundingClientRect();
+      cal.style.top  = (r.bottom + 6) + 'px';
+      cal.style.left = r.left + 'px';
+    }
     cal.style.display = 'block';
   }
 }
@@ -10426,11 +10460,22 @@ function ordHideDrop(id) {
   if (el) el.style.display = 'none';
 }
 
-function _ordRenderDrop(dropId, items, onSelectHtml) {
+function _ordPositionDrop(inputId, dropId) {
+  const inp  = document.getElementById(inputId);
+  const drop = document.getElementById(dropId);
+  if (!inp || !drop) return;
+  const r = inp.getBoundingClientRect();
+  drop.style.left  = r.left + 'px';
+  drop.style.top   = (r.bottom + 4) + 'px';
+  drop.style.width = r.width + 'px';
+}
+
+function _ordRenderDrop(inputId, dropId, items, onSelectHtml) {
   const drop = document.getElementById(dropId);
   if (!drop) return;
   if (!items.length) { drop.style.display = 'none'; return; }
   drop.innerHTML = items.map(onSelectHtml).join('');
+  _ordPositionDrop(inputId, dropId);
   drop.style.display = 'block';
 }
 
@@ -10439,7 +10484,7 @@ function ordFilterClients() {
   const list = (typeof clients !== 'undefined' ? clients : [])
     .filter(c => !q || c.name.toLowerCase().includes(q))
     .slice(0, 8);
-  _ordRenderDrop('ordClientDrop', list,
+  _ordRenderDrop('pfOrdClient', 'ordClientDrop', list,
     c => `<button type="button" class="cchip" onmousedown="ordSelectClient(${c.id})">${c.name}${c.phone ? ' · <span style="opacity:.5;font-size:10px">'+c.phone+'</span>' : ''}</button>`
   );
 }
@@ -10464,7 +10509,7 @@ function ordFilterProducts() {
   const list = (typeof products !== 'undefined' ? products : [])
     .filter(p => !q || p.name.toLowerCase().includes(q))
     .slice(0, 8);
-  _ordRenderDrop('ordProdDrop', list,
+  _ordRenderDrop('pfOrdDesc', 'ordProdDrop', list,
     p => `<button type="button" class="pchip" onmousedown="ordSelectProduct(${p.id})">${p.name}<span class="pchip-price">S/ ${parseFloat(p.price||0).toFixed(2)}</span></button>`
   );
 }
@@ -11689,7 +11734,7 @@ function ordPrint(id) {
             style="width:100%;box-sizing:border-box;">
           <button type="button" class="field-toggle-btn" onclick="ordToggleClients()" title="Ver clientes"><span>⌄</span></button>
         </div>
-        <div class="picker-panel" id="ordClientDrop" style="display:none;position:relative;z-index:200;top:0;left:0;right:0;margin-top:2px;width:100%;"></div>
+        <div class="picker-panel" id="ordClientDrop" style="display:none;position:fixed;z-index:99999;"></div>
       </div>
 
       <!-- Descripción / Producto -->
@@ -11702,7 +11747,7 @@ function ordPrint(id) {
             style="width:100%;box-sizing:border-box;">
           <button type="button" class="field-toggle-btn" onclick="ordToggleProducts()" title="Ver productos"><span>⌄</span></button>
         </div>
-        <div class="picker-panel" id="ordProdDrop" style="display:none;position:relative;z-index:200;top:0;left:0;right:0;margin-top:2px;width:100%;"></div>
+        <div class="picker-panel" id="ordProdDrop" style="display:none;position:fixed;z-index:99999;"></div>
       </div>
 
       <!-- Cant / P.Unit / Monto / + -->
@@ -11762,7 +11807,7 @@ function ordPrint(id) {
         <input type="hidden" id="pfOrdDate">
         <div id="pfOrdDateDisplay" style="display:none;font-family:var(--mono);font-size:11px;color:var(--k-accent);margin-top:6px;padding:5px 12px;background:rgba(196,240,66,0.08);border:1px solid rgba(196,240,66,0.2);border-radius:8px;display:none;cursor:pointer;" onclick="setOrdDate('pick')"></div>
         <!-- Custom calendar -->
-        <div class="kj-cal" id="pfOrdCal" style="display:none;">
+        <div class="kj-cal" id="pfOrdCal" style="display:none;position:fixed;z-index:99999;">
           <div class="kj-cal-head">
             <button class="kj-cal-nav" onclick="kjCalNav(-1)">‹</button>
             <span class="kj-cal-month" id="kjCalMonthLbl"></span>
