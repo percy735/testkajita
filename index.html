@@ -1777,6 +1777,24 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: border-color 0.2s, transform 0.25s ease;
   position: relative; will-change: transform;
 }
+/* Order card direct action icons */
+.ord-card-actions {
+  display: flex; gap: 4px; align-items: center; flex-shrink: 0; margin-top: 4px;
+}
+.ord-icon-btn {
+  width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.04); font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.ord-icon-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+.ord-icon-btn.ord-icon-wa:hover  { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.35); }
+.ord-icon-btn.ord-icon-del:hover { background: rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.35); }
+.ord-icon-btn.ord-icon-status.pending:hover { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); }
+.ord-icon-btn.ord-icon-status.ready:hover   { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.35); }
+.ord-icon-btn.ord-icon-edit:hover { background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.3); }
+
 /* Swipe reveal hints */
 .swipe-hint-right,
 .swipe-hint-left {
@@ -3783,7 +3801,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.11c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.12c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4052,7 +4070,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.11</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.12</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4297,7 +4315,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.11</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.12</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -10844,16 +10862,14 @@ function renderOrdPanel() {
             ${o.note ? `<span>📝 ${o.note}</span>` : ''}
           </div>
         </div>
-        <div class="order-card-right" style="flex-direction:row;align-items:center;gap:8px;">
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-            <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
-          </div>
-          <button class="abtn-menu" onclick="toggleEntryMenu(event,'ord-${o.id}')" title="Acciones">···</button>
-          <div class="entry-popover" id="emenu-ord-${o.id}">
-            <button class="ep-item" onclick="closeAllMenus();generateOrderReceipt(${o.id})"><span class="ep-ic">🧾</span>Generar recibo</button>
-            <button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'${ns.status}')"><span class="ep-ic">${ns.icon}</span>${ns.label}</button>
-            <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${o.id})"><span class="ep-ic">✎</span>Editar</button>
-            <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrderFromPanel(${o.id})"><span class="ep-ic">×</span>Eliminar</button>
+        <div class="order-card-right">
+          <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
+          <div class="ord-card-actions" onclick="event.stopPropagation()">
+            <button class="ord-icon-btn" onclick="generateOrderReceipt(${o.id})" title="Generar recibo">🧾</button>
+            <button class="ord-icon-btn ord-icon-wa" onclick="ordWhatsApp(${o.id})" title="Enviar por WhatsApp">💬</button>
+            <button class="ord-icon-btn ord-icon-edit" onclick="openEditOrderModal(${o.id})" title="Editar pedido">✏️</button>
+            <button class="ord-icon-btn ord-icon-status ${o.status}" onclick="setOrderStatus(${o.id},'${ns.status}')" title="${ns.label}">${ns.icon}</button>
+            <button class="ord-icon-btn ord-icon-del" onclick="deleteOrderFromPanel(${o.id})" title="Eliminar pedido">🗑️</button>
           </div>
         </div>
       </div>
