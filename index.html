@@ -3801,7 +3801,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.13c
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.14c
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4070,7 +4070,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.13</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.14</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4315,7 +4315,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.13</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.14</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -10636,15 +10636,50 @@ function saveOrder() {
   };
 
   if (_ordEditId) {
-    // Edit mode — update existing
+    // Edit mode — update existing order and its linked entry
     const idx = _orders.findIndex(x => x.id === _ordEditId);
     if (idx !== -1) {
       _orders[idx] = { ..._orders[idx], ...orderData };
+      // Update linked income entry if exists
+      const entryIdx = entries.findIndex(e => e.orderId === _ordEditId);
+      if (entryIdx !== -1) {
+        const descText = items.map(i => i.desc).join(', ');
+        entries[entryIdx].amount = total;
+        entries[entryIdx].desc   = descText;
+        entries[entryIdx].client = client;
+        save();
+        if (typeof render === 'function') render();
+      }
     }
     toast('Pedido actualizado ✓');
   } else {
-    // New order
-    _orders.unshift({ id: Date.now(), status: 'pending', createdAt: new Date().toISOString(), ...orderData });
+    // New order — create order and a linked income entry
+    const ordId   = Date.now();
+    const descText = items.map(i => i.desc).join(', ');
+    const now     = new Date();
+    const timeStr = now.toTimeString().slice(0, 8);
+    _orders.unshift({ id: ordId, status: 'pending', createdAt: now.toISOString(), ...orderData });
+
+    // Register as income entry so it appears in daily balance
+    const newEntry = {
+      id:        'local-' + (ordId + 1),
+      type:      'income',
+      desc:      descText,
+      amount:    total,
+      qty:       null,
+      unitPrice: null,
+      pay:       'cash',
+      date:      activeDay,
+      time:      timeStr,
+      credit:    false,
+      debt:      false,
+      client:    client,
+      paid:      false,
+      orderId:   ordId
+    };
+    entries.unshift(newEntry);
+    save();
+    if (typeof render === 'function') render();
     toast('¡Pedido guardado! 📋');
   }
 
@@ -10670,17 +10705,24 @@ function setOrderStatus(id, status) {
   renderOrdPanel();
 }
 
-function deleteOrder(id) {
-  if (!confirm('¿Eliminar este pedido?')) return;
+function _deleteOrderAndEntry(id) {
   _orders = _orders.filter(x => x.id !== id);
   saveOrders();
+  // Also remove linked income entry
+  const before = entries.length;
+  entries = entries.filter(e => e.orderId !== id);
+  if (entries.length !== before) { save(); if (typeof render === 'function') render(); }
+}
+
+function deleteOrder(id) {
+  if (!confirm('¿Eliminar este pedido?')) return;
+  _deleteOrderAndEntry(id);
   renderOrdPanel();
 }
 
 function deleteOrderFromPanel(id) {
   if (!confirm('¿Eliminar este pedido?')) return;
-  _orders = _orders.filter(x => x.id !== id);
-  saveOrders();
+  _deleteOrderAndEntry(id);
   renderOrdPanel();
   toast('Pedido eliminado');
 }
