@@ -970,174 +970,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .btn-cancel { width: 100%; margin-top: 10px; padding: 11px; background: transparent; border: 1px solid var(--k-line); border-radius: 99px; font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--k-text-3); cursor: pointer; transition: all 0.2s; }
 .btn-cancel:hover { background: rgba(255,255,255,0.05); color: var(--k-text); }
 
-/* ══════════════════════════════════════
-   BOTÓN DE VOZ FAB
-══════════════════════════════════════ */
-.fab-voice {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: #1a1b1f;
-  border: 2px solid rgba(255,255,255,0.12);
-  color: var(--k-text-2);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  transition: all 0.2s ease;
-  z-index: 900;
-}
-.fab-voice:hover {
-  border-color: rgba(255,255,255,0.25);
-  transform: scale(1.05);
-}
-.fab-voice.recording {
-  background: var(--k-expense);
-  border-color: var(--k-expense);
-  color: #fff;
-  box-shadow: 0 0 0 0 rgba(255,107,107,0.6);
-  animation: voicePulse 1s infinite;
-}
-@keyframes voicePulse {
-  0%   { box-shadow: 0 0 0 0 rgba(255,107,107,0.6); }
-  70%  { box-shadow: 0 0 0 14px rgba(255,107,107,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,107,107,0); }
-}
-@media (min-width: 900px) {
-  .fab-voice { bottom: 108px; right: 28px; }
-}
-@media print { .fab-voice { display: none !important; } }
-
-/* ══ MODAL DE VOZ ══ */
-.voice-overlay {
-  position: fixed; inset: 0; z-index: 2000;
-  background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
-  display: flex; align-items: flex-end; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.2s;
-}
-.voice-overlay.open { opacity: 1; pointer-events: all; }
-.voice-modal {
-  background: #13141a;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 24px 24px 0 0;
-  padding: 28px 24px 40px;
-  width: 100%; max-width: 520px;
-  transform: translateY(40px);
-  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
-}
-.voice-overlay.open .voice-modal { transform: translateY(0); }
-
-.voice-handle {
-  width: 36px; height: 4px; border-radius: 99px;
-  background: rgba(255,255,255,0.12); margin: 0 auto 24px;
-}
-
-/* Visualizador de ondas */
-.voice-waves {
-  display: flex; align-items: center; justify-content: center;
-  gap: 5px; height: 56px; margin-bottom: 16px;
-}
-.voice-wave-bar {
-  width: 4px; border-radius: 99px;
-  background: rgba(255,255,255,0.15);
-  height: 8px;
-  transition: height 0.1s ease, background 0.2s;
-}
-.voice-waves.active .voice-wave-bar {
-  background: var(--k-expense);
-  animation: waveAnim 0.6s ease-in-out infinite alternate;
-}
-.voice-waves.active .voice-wave-bar:nth-child(1) { animation-delay: 0.0s; }
-.voice-waves.active .voice-wave-bar:nth-child(2) { animation-delay: 0.08s; }
-.voice-waves.active .voice-wave-bar:nth-child(3) { animation-delay: 0.16s; }
-.voice-waves.active .voice-wave-bar:nth-child(4) { animation-delay: 0.24s; }
-.voice-waves.active .voice-wave-bar:nth-child(5) { animation-delay: 0.32s; }
-.voice-waves.active .voice-wave-bar:nth-child(6) { animation-delay: 0.40s; }
-.voice-waves.active .voice-wave-bar:nth-child(7) { animation-delay: 0.32s; }
-.voice-waves.active .voice-wave-bar:nth-child(8) { animation-delay: 0.24s; }
-.voice-waves.active .voice-wave-bar:nth-child(9) { animation-delay: 0.16s; }
-.voice-waves.active .voice-wave-bar:nth-child(10) { animation-delay: 0.08s; }
-@keyframes waveAnim {
-  from { height: 6px; }
-  to   { height: 40px; }
-}
-.voice-waves.thinking .voice-wave-bar {
-  background: var(--k-accent);
-  animation: waveThink 1.2s ease-in-out infinite alternate;
-}
-@keyframes waveThink {
-  from { height: 4px; }
-  to   { height: 28px; }
-}
-
-.voice-status {
-  text-align: center; margin-bottom: 20px;
-  font-family: var(--sans); font-size: 14px; color: var(--k-text-3);
-  min-height: 44px; line-height: 1.5;
-}
-.voice-transcript {
-  font-family: var(--serif); font-size: 18px; color: var(--k-text);
-  font-style: italic; margin-bottom: 4px;
-}
-
-/* Tarjeta de resultado interpretado */
-.voice-result {
-  display: none; margin-bottom: 20px;
-  background: rgba(196,240,66,0.06);
-  border: 1px solid rgba(196,240,66,0.2);
-  border-radius: 16px; padding: 16px 18px;
-}
-.voice-result.show { display: block; }
-.voice-result-type {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
-}
-.voice-result-badge {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 99px; font-weight: 700;
-}
-.voice-result-badge.income { background: rgba(34,197,94,0.15); color: #4ade80; }
-.voice-result-badge.expense { background: rgba(255,107,107,0.15); color: var(--k-expense); }
-.voice-result-badge.credit { background: rgba(251,191,36,0.15); color: var(--k-credit); }
-.voice-result-badge.debt { background: rgba(255,107,107,0.1); color: var(--k-expense); }
-.voice-result-desc {
-  font-family: var(--sans); font-size: 18px; font-weight: 600; color: var(--k-text);
-  margin-bottom: 4px;
-}
-.voice-result-amount {
-  font-family: var(--mono); font-size: 26px; font-weight: 700; color: var(--k-accent);
-  letter-spacing: -0.5px;
-}
-.voice-result-meta {
-  font-family: var(--sans); font-size: 12px; color: var(--k-text-3); margin-top: 6px;
-}
-
-/* Botones del modal */
-.voice-btn-row { display: flex; gap: 10px; }
-.voice-btn-confirm {
-  flex: 1; padding: 14px; border-radius: 99px; border: none;
-  background: var(--k-accent); color: var(--k-bg);
-  font-family: var(--sans); font-size: 15px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s;
-}
-.voice-btn-confirm:hover { background: #d0ff4d; }
-.voice-btn-retry {
-  padding: 14px 20px; border-radius: 99px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: transparent; color: var(--k-text-3);
-  font-family: var(--sans); font-size: 14px; font-weight: 500;
-  cursor: pointer; transition: all 0.2s;
-}
-.voice-btn-retry:hover { border-color: rgba(255,255,255,0.3); color: var(--k-text); }
-.voice-btn-cancel {
-  width: 100%; padding: 14px; border-radius: 99px; border: none;
-  background: transparent; color: var(--k-text-3);
-  font-family: var(--sans); font-size: 14px;
-  cursor: pointer; margin-top: 8px;
-  transition: color 0.2s;
-}
-.voice-btn-cancel:hover { color: var(--k-text); }
-
 
 .day-note-wrap {
   background: var(--k-panel);
@@ -2085,22 +1917,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   font-family: var(--sans); font-size: 12px; font-weight: 700;
   color: var(--k-text-2); text-transform: uppercase; letter-spacing: .06em;
 }
-.order-item-row {
-  display: flex; gap: 6px; align-items: center;
-}
-.order-item-row .panel-form-inp { font-size: 12px; }
-.order-item-remove {
-  width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--k-line);
-  background: transparent; color: var(--k-expense); cursor: pointer; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;
-}
-.order-add-item-btn {
-  padding: 6px 12px; border-radius: 99px; border: 1px dashed var(--k-line);
-  background: transparent; font-family: var(--sans); font-size: 11.5px;
-  color: var(--k-text-3); cursor: pointer; transition: all 0.15s; align-self: flex-start;
-}
-.order-add-item-btn:hover { border-color: var(--k-accent); color: var(--k-accent); }
-
 .panel-overlay {
   display: none; position: fixed; inset: 0; z-index: 9200;
   background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
@@ -2369,37 +2185,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .pl-prov { grid-template-columns: 1.4fr 100px 1fr 120px 110px 80px; }
 .pl-inv  { grid-template-columns: 1.2fr 80px 90px 60px 60px 50px 64px; }
 
-/* Tarjeta de persona */
-.person-card {
-  border-radius: 14px; border: 1px solid var(--k-line);
-  background: var(--k-panel); margin-bottom: 7px; overflow: hidden;
-}
-.person-card-head {
-  display: flex; align-items: center;
-  padding: 13px 14px; cursor: pointer; gap: 10px;
-}
-.person-card-info { flex: 1; min-width: 0; }
-.person-card-name {
-  font-family: var(--sans); font-size: 13.5px; font-weight: 600;
-  color: var(--k-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.person-card-meta { font-family: var(--mono); font-size: 9.5px; color: var(--k-text-3); margin-top: 2px; }
-.person-card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.person-badge {
-  font-family: var(--mono); font-size: 11.5px; font-weight: 700;
-  padding: 3px 9px; border-radius: 99px; white-space: nowrap;
-}
-.person-badge.debt  { background: var(--k-credit-l);  color: var(--k-credit); }
-.person-badge.paid  { background: var(--k-accent-l);  color: var(--k-accent); }
-.person-badge.zero  { background: rgba(255,255,255,0.05); color: var(--k-text-3); }
-.person-badge.spent { background: var(--k-expense-l); color: var(--k-expense); }
-.person-chevron { color: var(--k-text-3); font-size: 10px; transition: transform .2s; }
-.person-card.expanded .person-chevron { transform: rotate(180deg); }
-
-/* Acciones CRUD en tarjeta */
-.person-card-actions {
-  display: flex; gap: 4px;
-}
+/* Acciones CRUD en fila */
 .pca-btn {
   width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--k-line);
   background: transparent; color: var(--k-text-3); font-size: 12px;
@@ -2409,10 +2195,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .pca-btn:hover { background: rgba(255,255,255,0.08); color: var(--k-text); }
 .pca-btn.del:hover { background: var(--k-expense-l); color: var(--k-expense); border-color: var(--k-expense); }
 
-/* Detalle expandible */
-.person-detail { display: none; border-top: 1px solid var(--k-line); }
-.person-card.expanded .person-detail { display: block; }
-
 /* Resumen de deuda total */
 .debt-summary {
   padding: 10px 14px; background: var(--k-credit-l);
@@ -2420,18 +2202,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .debt-summary-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--k-credit); }
 .debt-summary-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--k-credit); }
-
-.person-detail-row {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 10px;
-}
-.person-detail-row:last-child { border-bottom: none; }
-.pdr-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.pdr-desc { font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--k-text); }
-.pdr-date { font-family: var(--mono); font-size: 9px; color: var(--k-text-3); }
-.pdr-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
-.pdr-amt   { font-family: var(--mono); font-size: 12.5px; font-weight: 700; }
-.pdr-status{ font-family: var(--mono); font-size: 9px; }
 
 /* Totales del panel */
 .panel-totals {
@@ -2443,31 +2213,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .panel-total-lbl { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: var(--k-text-3); margin-bottom: 3px; }
 .panel-total-val { font-family: var(--mono); font-size: 17px; font-weight: 700; }
 
-/* Inventario */
-.inv-card {
-  border-radius: 13px; border: 1px solid var(--k-line);
-  background: var(--k-panel); padding: 13px 14px;
-  margin-bottom: 7px; display: flex; align-items: center; gap: 12px;
-}
-.inv-card-left { flex: 1; min-width: 0; }
-.inv-card-name { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--k-text); margin-bottom: 3px; }
-.inv-card-meta { font-family: var(--mono); font-size: 9.5px; color: var(--k-text-3); }
-.inv-card-right { text-align: right; flex-shrink: 0; }
-.inv-price { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--k-accent); }
-.inv-sold  { font-family: var(--mono); font-size: 9.5px; color: var(--k-text-3); margin-top: 2px; }
-.inv-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
-
 /* ══ CRÉDITOS PANEL ══ */
-.cred-card {
-  border-radius: 13px; border: 1px solid rgba(251,191,36,0.2);
-  background: rgba(251,191,36,0.05); padding: 13px 14px;
-  margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
-}
-.cred-card-left { flex: 1; min-width: 0; }
-.cred-card-client { font-size: 13px; font-weight: 600; color: var(--k-text); margin-bottom: 3px; }
-.cred-card-meta { font-family: var(--mono); font-size: 9.5px; color: var(--k-text-3); }
-.cred-card-right { text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.cred-card-amt { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--k-credit); }
 .cred-cobrar-btn {
   font-size: 10px; font-family: var(--mono); font-weight: 600;
   padding: 4px 10px; border-radius: 99px; border: 1px solid var(--k-accent);
@@ -2475,10 +2221,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: all 0.15s;
 }
 .cred-cobrar-btn:hover { background: var(--k-accent); color: #0A0B0E; }
-
-/* debt card (yo debo) */
-.cred-card.debt-card { border-color: rgba(255,107,107,0.2); background: rgba(255,107,107,0.05); }
-.cred-card.debt-card .cred-card-amt { color: var(--k-expense); }
 .cred-pagar-btn {
   font-size: 10px; font-family: var(--mono); font-weight: 600;
   padding: 4px 10px; border-radius: 99px; border: 1px solid var(--k-expense);
@@ -3809,44 +3551,23 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   }
   .ord-modal .fld-amt { display: none; }
 
-  /* ── PERSON CARD: sin desbordamiento ── */
-  .person-card-head { padding: 11px 12px; gap: 6px; }
-  .person-card-name { font-size: 13px; }
-  .person-card-meta { font-size: 9px; }
-  .person-card-right {
-    flex-shrink: 0; gap: 4px;
-    min-width: 0; max-width: 55%;
-    overflow: hidden;
-  }
-  .person-badge {
-    font-size: 10px; padding: 2px 7px;
-    min-width: 0; max-width: 100%;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    flex-shrink: 1;
-  }
-  .person-card-actions { gap: 2px; flex-shrink: 0; }
   .pca-btn { width: 24px; height: 24px; font-size: 11px; border-radius: 6px; }
-  .person-chevron { font-size: 9px; flex-shrink: 0; }
   .debt-summary { padding: 8px 12px; }
   .debt-summary-lbl { font-size: 8px; }
   .debt-summary-val { font-size: 13px; }
-  .person-detail-row { padding: 9px 12px; gap: 8px; }
-  .pdr-desc { font-size: 11.5px; }
-  .pdr-date { font-size: 9px; }
-  .pdr-amt  { font-size: 12px; }
-
-  /* ── INV CARD ── */
-  .inv-card { padding: 11px 12px; gap: 8px; }
-  .inv-card-name { font-size: 12.5px; }
-  .inv-price { font-size: 13px; }
 }
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.27
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.29
    FIX v14.8.27: saveOrder() persistía con saveOrders() DESPUÉS de render(),
    pero render()->renderDayOrders()->loadOrders() recargaba localStorage (aún vacío)
    y vaciaba _orders antes de guardarlo. Ahora saveOrders() corre ANTES de render().
+   v14.8.28: edición de pedidos unificada en un solo modal (openEditOrderModal);
+   eliminado overlay viejo editOrdOverlay + funciones Eo*, y código muerto
+   (person-card/_expanded, inv-card, cred-card, refreshData, resetBizProfile, no-ops).
+   v14.8.29: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
+   SpeechRecognition, parseVoiceLocal, ~571 líneas) — estaba oculto y sin uso.
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
@@ -4115,7 +3836,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.27</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.29</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4356,7 +4077,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.27</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.29</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5047,68 +4768,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   </div>
 </div>
 
-<!-- ══ MODAL: EDITAR PEDIDO ══ -->
-<div class="panel-overlay" id="editOrdOverlay" onclick="if(event.target===this)closeEditOrder()">
-  <div class="panel-sheet" style="width:min(100%,520px);">
-    <div class="panel-head">
-      <div>
-        <div class="panel-ttl">✏️ Editar pedido</div>
-        <div class="panel-sub" id="editOrdSub">—</div>
-      </div>
-      <div class="panel-head-right">
-        <button class="panel-close" onclick="closeEditOrder()">×</button>
-      </div>
-    </div>
-    <div class="panel-list" style="padding:16px 20px;gap:12px;display:flex;flex-direction:column;">
-      <!-- Cliente -->
-      <div class="fld">
-        <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Cliente</label>
-        <input class="panel-form-inp" id="eoClient" type="text" maxlength="60" style="width:100%;margin-top:6px;">
-      </div>
-      <!-- Ítems -->
-      <div class="fld">
-        <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Productos</label>
-        <div id="eoItemsList" style="margin-top:6px;display:flex;flex-direction:column;gap:6px;"></div>
-        <button class="order-add-item-btn" onclick="addEoItem()" style="margin-top:8px;">+ agregar producto</button>
-      </div>
-      <!-- Entrega -->
-      <div class="fld">
-        <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Tipo de entrega</label>
-        <div class="type-tgl" style="margin-top:6px;">
-          <button class="tgl-btn ai" id="eoDeliveryLocal" onclick="setEoDelivery('local')">🏪 Recojo en local</button>
-          <button class="tgl-btn"    id="eoDeliveryAddr"  onclick="setEoDelivery('address')">📍 Envío a domicilio</button>
-        </div>
-      </div>
-      <div class="fld" id="eoAddressRow" style="display:none;">
-        <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Dirección</label>
-        <input class="panel-form-inp" id="eoAddress" type="text" maxlength="120" style="width:100%;margin-top:6px;">
-      </div>
-      <!-- Fecha / Hora -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="fld">
-          <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Fecha entrega</label>
-          <input class="panel-form-inp" id="eoDate" type="date" style="width:100%;margin-top:6px;">
-        </div>
-        <div class="fld">
-          <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Hora</label>
-          <input class="panel-form-inp" id="eoTime" type="time" style="width:100%;margin-top:6px;">
-        </div>
-      </div>
-      <!-- Nota -->
-      <div class="fld">
-        <label style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">Nota</label>
-        <input class="panel-form-inp" id="eoNote" type="text" maxlength="120" style="width:100%;margin-top:6px;">
-      </div>
-      <!-- Total -->
-      <div style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--k-order);text-align:right;padding:4px 0;" id="eoTotal">Total: S/ 0.00</div>
-    </div>
-    <div style="padding:16px 20px;border-top:1px solid var(--k-line);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;">
-      <button class="pf-cancel" onclick="closeEditOrder()">Cancelar</button>
-      <button class="pf-save" onclick="saveEditOrder()" style="background:var(--k-order);color:#0A0B0E;">Guardar cambios</button>
-    </div>
-  </div>
-</div>
-
 <!-- ══ SETTINGS MODAL ══ -->
 <div class="cfg-overlay" id="cfgOverlay" onclick="if(event.target===this)closeSettings()">
   <div class="cfg-sheet" style="max-width:680px;width:92vw;padding:0;overflow:hidden;display:flex;flex-direction:column;max-height:88vh;">
@@ -5321,71 +4980,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   </div>
 </div>
 
-<!-- BOTÓN FLOTANTE AÑADIR -->
-<!-- ══ BOTÓN VOZ ══ -->
-<!-- Botón de voz (micrófono) eliminado -->
-<button class="fab-voice" id="fabVoice" onclick="openVoiceModal()" title="Registrar por voz" style="display:none !important;">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-    <line x1="12" y1="19" x2="12" y2="23"/>
-    <line x1="8" y1="23" x2="16" y2="23"/>
-  </svg>
-</button>
-
-<!-- ══ MODAL DE VOZ ══ -->
-<div class="voice-overlay" id="voiceOverlay" onclick="if(event.target===this)closeVoiceModal()">
-  <div class="voice-modal">
-    <div class="voice-handle"></div>
-
-    <!-- Visualizador ondas -->
-    <div class="voice-waves" id="voiceWaves">
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-      <div class="voice-wave-bar"></div>
-    </div>
-
-    <!-- Estado / transcripción -->
-    <div class="voice-status" id="voiceStatus">
-      Toca el micrófono y di algo como<br>
-      <span style="color:var(--k-text-2);font-style:italic;">"Venta cemento cincuenta soles"</span>
-    </div>
-
-    <!-- Resultado interpretado -->
-    <div class="voice-result" id="voiceResult">
-      <div class="voice-result-type">
-        <span class="voice-result-badge" id="vrBadge">ingreso</span>
-        <span id="vrExtra" style="font-size:11px;color:var(--k-text-3);"></span>
-      </div>
-      <div class="voice-result-desc" id="vrDesc">—</div>
-      <div class="voice-result-amount" id="vrAmt">S/ 0.00</div>
-      <div class="voice-result-meta" id="vrMeta"></div>
-    </div>
-
-    <!-- Botones -->
-    <div id="voiceBtnRow" style="display:none;">
-      <div class="voice-btn-row">
-        <button class="voice-btn-retry" onclick="startVoiceRecording()">🎤 Reintentar</button>
-        <button class="voice-btn-confirm" onclick="confirmVoiceEntry()">✓ Registrar</button>
-      </div>
-      <button class="voice-btn-cancel" onclick="closeVoiceModal()">Cancelar</button>
-    </div>
-
-    <div id="voiceBtnRecord" style="display:block;margin-top:4px;">
-      <button class="voice-btn-confirm" id="voiceRecordBtn" onclick="startVoiceRecording()" style="width:100%;">
-        🎤 Mantén para hablar
-      </button>
-      <button class="voice-btn-cancel" onclick="closeVoiceModal()">Cancelar</button>
-    </div>
-  </div>
-</div>
 
 
     </div><!-- /app-right -->
@@ -6050,7 +5644,6 @@ function _isoForCell(y, m, d) {
 ══════════════════════════════════════════ */
 
 let _panelEditId = { cli: null, prov: null, inv: null };
-const _expanded  = { cli: new Set(), prov: new Set() };
 
 function openPanel(type) {
   document.getElementById('panelCliOverlay').classList.remove('open');
@@ -6221,18 +5814,6 @@ function savePanelSupplier() {
   saveSuppliers(); closeKjModal(); renderProvPanel(); renderSupplierDropdown();
 }
 
-
-function togglePersonCard(type, id) {
-  const s=_expanded[type];
-  if(s.has(id)) s.delete(id); else s.add(id);
-  // Toggle directo en DOM sin re-renderizar — más rápido y sin bugs de ID
-  const list = document.getElementById(type==='cli'?'panelCliList':'panelProvList');
-  list.querySelectorAll('.person-card').forEach(card => {
-    if(card.dataset.pid === String(id)){
-      card.classList.toggle('expanded', s.has(id));
-    }
-  });
-}
 
 /* ── PANEL CLIENTES ── */
 function renderCliPanel() {
@@ -6731,12 +6312,6 @@ function checkOnboarding() {
   }
 }
 
-function resetBizProfile() {
-  // Permite reconfigurar el negocio desde settings (para el futuro)
-  localStorage.removeItem('kajita_biz');
-  location.reload();
-}
-
 /* ── MENÚ CONTEXTUAL DE ENTRY ── */
 function toggleEntryMenu(e, id) {
   e.stopPropagation();
@@ -7059,7 +6634,6 @@ function recalcAmount() {
   const qty  = parseFloat(document.getElementById('iQty').value)||1;
   const unit = parseFloat(document.getElementById('iUnitPrice').value)||0;
   document.getElementById('iAmt').value = (qty * unit).toFixed(2);
-  if(typeof calcItemsTotal === 'function') calcItemsTotal();
 }
 function onCreditToggle() {
   cCredit=document.getElementById('iCredit').checked;
@@ -8020,8 +7594,10 @@ function renderDayOrders() {
   list.innerHTML = dayOrders.map(o => {
     const sc = o.status==='done'?'order-done':'order-item';
     const itemsText = o.items.map(i=>i.desc+(i.price?` (S/ ${i.price.toFixed(2)})`:'') ).join(' · ');
-    const deliveryBadge = o.delivery==='address' && o.address
-      ? `<span class="order-address-badge">📍 ${o.address}</span>`
+    const deliveryBadge = o.delivery==='delivery'
+      ? (o.address
+          ? `<span class="order-address-badge">📍 ${o.address}</span>`
+          : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);">🚚 Delivery</span>`)
       : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);">🏪 Recojo en local</span>`;
     const dateBadge = o.date?`<span class="pbadge" style="background:rgba(255,255,255,0.05);color:var(--k-text-3);">${fmtDate(o.date)}</span>`:'';
     const noteBadge = o.note?`<span class="pbadge" style="background:rgba(255,255,255,0.04);color:var(--k-text-3);">📝 ${o.note}</span>`:'';
@@ -8047,7 +7623,7 @@ function renderDayOrders() {
             ${o.status==='pending'?`<button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'ready');renderDayOrders()"><span class="ep-ic">✅</span>Marcar listo</button>`:''}
             ${o.status==='ready'?`<button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'done');renderDayOrders()"><span class="ep-ic">📦</span>Entregado</button>`:''}
             ${o.status!=='pending'?`<button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'pending');renderDayOrders()"><span class="ep-ic">↩</span>Reabrir</button>`:''}
-            <button class="ep-item" onclick="closeAllMenus();openEditOrder(${o.id})"><span class="ep-ic">✎</span>Editar</button>
+            <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${o.id})"><span class="ep-ic">✎</span>Editar</button>
             <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrder(${o.id});renderDayOrders()"><span class="ep-ic">×</span>Eliminar</button>
           </div>
         </div>
@@ -8072,344 +7648,6 @@ function toast(msg){
 
 // init() ahora se llama después de la autenticación
 
-/* ══════════════════════════════════════
-   MODO ANOTACIÓN RÁPIDA POR VOZ
-══════════════════════════════════════ */
-var voiceRecognition = null;
-var voiceParsed = null;  // resultado interpretado por Claude
-
-function openVoiceModal(){
-  document.getElementById('voiceOverlay').classList.add('open');
-  resetVoiceModal();
-}
-
-function closeVoiceModal(){
-  document.getElementById('voiceOverlay').classList.remove('open');
-  if(voiceRecognition){ try{ voiceRecognition.stop(); }catch(e){} }
-  document.getElementById('fabVoice').classList.remove('recording');
-  voiceParsed = null;
-}
-
-function resetVoiceModal(){
-  voiceParsed = null;
-  document.getElementById('voiceWaves').className = 'voice-waves';
-  document.getElementById('voiceStatus').innerHTML = 'Toca el micrófono y di algo como<br><span style="color:var(--k-text-2);font-style:italic;">"Venta cemento cincuenta soles"</span>';
-  document.getElementById('voiceResult').classList.remove('show');
-  document.getElementById('voiceBtnRow').style.display = 'none';
-  document.getElementById('voiceBtnRecord').style.display = 'block';
-  document.getElementById('voiceRecordBtn').textContent = '🎤 Toca para hablar';
-  document.getElementById('voiceRecordBtn').disabled = false;
-}
-
-function startVoiceRecording(){
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SpeechRecognition){
-    document.getElementById('voiceStatus').innerHTML = '⚠️ Tu navegador no soporta reconocimiento de voz.<br><span style="font-size:12px;">Prueba con Chrome en Android o PC.</span>';
-    return;
-  }
-
-  voiceRecognition = new SpeechRecognition();
-  voiceRecognition.lang = 'es-PE';
-  voiceRecognition.continuous = false;
-  voiceRecognition.interimResults = true;
-  voiceRecognition.maxAlternatives = 1;
-
-  // UI → grabando
-  document.getElementById('voiceWaves').className = 'voice-waves active';
-  document.getElementById('voiceStatus').innerHTML = '<span style="color:var(--k-expense);font-weight:600;">● Escuchando…</span><br><span style="font-size:12px;color:var(--k-text-3);">Habla claramente</span>';
-  document.getElementById('voiceResult').classList.remove('show');
-  document.getElementById('voiceBtnRow').style.display = 'none';
-  document.getElementById('voiceBtnRecord').style.display = 'none';
-  document.getElementById('fabVoice').classList.add('recording');
-
-  voiceRecognition.onresult = (event) => {
-    const transcript = Array.from(event.results)
-      .map(r => r[0].transcript).join('');
-    document.getElementById('voiceStatus').innerHTML =
-      `<span class="voice-transcript">"${transcript}"</span>`;
-    if(event.results[0].isFinal){
-      processVoiceTranscript(transcript);
-    }
-  };
-
-  voiceRecognition.onerror = (e) => {
-    document.getElementById('fabVoice').classList.remove('recording');
-    document.getElementById('voiceWaves').className = 'voice-waves';
-    const msgs = {
-      'not-allowed': '⚠️ Permiso de micrófono denegado.<br><span style="font-size:12px;">Permite el acceso en tu navegador.</span>',
-      'no-speech':   '🔇 No escuché nada.<br><span style="font-size:12px;">Inténtalo de nuevo.</span>',
-      'network':     '⚠️ Error de red. Revisa tu conexión.',
-    };
-    document.getElementById('voiceStatus').innerHTML = msgs[e.error] || '⚠️ Error: '+e.error;
-    document.getElementById('voiceBtnRecord').style.display = 'block';
-    document.getElementById('voiceRecordBtn').textContent = '🎤 Reintentar';
-  };
-
-  voiceRecognition.onend = () => {
-    document.getElementById('fabVoice').classList.remove('recording');
-  };
-
-  voiceRecognition.start();
-}
-
-async function processVoiceTranscript(text){
-  document.getElementById('voiceWaves').className = 'voice-waves thinking';
-  document.getElementById('voiceStatus').innerHTML =
-    '<span style="color:var(--k-accent);">✦ Interpretando…</span>';
-
-  // Llamar via Edge Function de Supabase — sin CORS en iOS
-  let parsed = null;
-  try{
-    const session = await sb.auth.getSession();
-    const jwt = session?.data?.session?.access_token;
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 7000);
-
-    const res = await fetch(
-      'https://xdjqawfikdlxxelabetg.supabase.co/functions/v1/voice-parse',
-      {
-        method: 'POST',
-        signal: ctrl.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt || 'anon'}`,
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanFhd2Zpa2RseHhlbGFiZXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDYwMTAsImV4cCI6MjA5NDUyMjAxMH0.h_-97MAKlbrCaFJQbLzQgRa9X33GgbpxuXEuqHhOGOo'
-        },
-        body: JSON.stringify({ text })
-      }
-    );
-    clearTimeout(timeout);
-    if(res.ok){
-      const data = await res.json();
-      if(data && data.amount) parsed = data;
-    }
-  } catch(err){
-    console.log('Edge function no disponible, usando parser local:', err.message);
-  }
-
-  // Parser local como fallback — funciona offline
-  if(!parsed || !parsed.amount){
-    parsed = parseVoiceLocal(text);
-  }
-
-  if(!parsed || !parsed.amount || parsed.amount <= 0){
-    document.getElementById('voiceWaves').className = 'voice-waves';
-    document.getElementById('voiceStatus').innerHTML =
-      '⚠️ No detecté un monto.<br><span style="font-size:12px;">Di algo como: <em>"venta arroz cincuenta"</em></span>';
-    document.getElementById('voiceBtnRecord').style.display = 'block';
-    document.getElementById('voiceRecordBtn').textContent = '🎤 Reintentar';
-    return;
-  }
-
-  voiceParsed = parsed;
-  showVoiceResult(parsed, text);
-}
-
-/* ── PARSER LOCAL DE VOZ ── funciona sin internet ── */
-function parseVoiceLocal(text){
-  const t = text.toLowerCase().trim();
-
-  // ── MONTO ── palabras numéricas peruanas comunes
-  const numWords = {
-    'un':1,'uno':1,'una':1,'dos':2,'tres':3,'cuatro':4,'cinco':5,
-    'seis':6,'siete':7,'ocho':8,'nueve':9,'diez':10,'once':11,
-    'doce':12,'trece':13,'catorce':14,'quince':15,'dieciséis':16,
-    'diecisiete':17,'dieciocho':18,'diecinueve':19,'veinte':20,
-    'veintiuno':21,'veintidós':22,'veintitrés':23,'veinticuatro':24,
-    'veinticinco':25,'veintiséis':26,'veintisiete':27,'veintiocho':28,
-    'veintinueve':29,'treinta':30,'cuarenta':40,'cincuenta':50,
-    'sesenta':60,'setenta':70,'ochenta':80,'noventa':90,
-    'cien':100,'ciento':100,'ciento':100,'doscientos':200,'doscientas':200,
-    'trescientos':300,'trescientas':300,'cuatrocientos':400,'cuatrocientas':400,
-    'quinientos':500,'quinientas':500,'seiscientos':600,'setecientos':700,
-    'ochocientos':800,'novecientos':900,'mil':1000,'medio':0.5,'media':0.5
-  };
-
-  // Extraer número: buscar dígitos primero, luego palabras
-  let amount = 0;
-  const digitMatch = t.match(/\b(\d+(?:[.,]\d{1,2})?)\b/);
-  if(digitMatch){
-    amount = parseFloat(digitMatch[1].replace(',','.'));
-  } else {
-    // Buscar palabras numéricas — sumar compuestos como "treinta y cinco"
-    let remaining = t;
-    let total = 0;
-    let lastNum = 0;
-    const words = t.split(/\s+/);
-    for(let i=0; i<words.length; i++){
-      const w = words[i];
-      if(numWords[w] !== undefined){
-        const n = numWords[w];
-        if(w === 'mil'){
-          total += (lastNum || 1) * 1000;
-          lastNum = 0;
-        } else if(n >= 100){
-          total += n;
-          lastNum = 0;
-        } else {
-          lastNum += n;
-        }
-      } else if(w === 'y' && lastNum > 0){
-        // "treinta y cinco" → acumular
-      } else if(lastNum > 0){
-        total += lastNum;
-        lastNum = 0;
-      }
-    }
-    total += lastNum;
-    amount = total;
-  }
-
-  // ── TIPO ──
-  const incomeWords = ['venta','vendí','vendi','vendio','vendió','cobré','cobré','cobrei','cobro','ingreso','recibí','recibi','me pagó','me pago','me dió','me dio'];
-  const expenseWords = ['gasto','compré','compre','compro','pagué','pague','pago','egreso','gasté','gaste','salida'];
-  const creditWords = ['fiado','crédito','credito','me debe','al fío','al fio','fiar','fíe','fie'];
-  const debtWords = ['debo','debo a','proveed','proveedor','a fiado compra'];
-  const yapeWords = ['yape','yapé'];
-  const plinWords = ['plin'];
-  const transferWords = ['transfer','transferencia','banco'];
-  const cardWords = ['tarjeta','card','visa','mastercard'];
-
-  const isIncome = incomeWords.some(w => t.includes(w));
-  const isExpense = expenseWords.some(w => t.includes(w));
-  const isCredit = creditWords.some(w => t.includes(w)) && !isExpense;
-  const isDebt   = debtWords.some(w => t.includes(w)) && isExpense;
-
-  let pay = 'cash';
-  if(yapeWords.some(w => t.includes(w)))    pay = 'yape';
-  if(plinWords.some(w => t.includes(w)))    pay = 'plin';
-  if(transferWords.some(w => t.includes(w))) pay = 'transfer';
-  if(cardWords.some(w => t.includes(w)))    pay = 'card';
-
-  // ── DESCRIPCIÓN ── quitar verbo, monto y palabras de pago
-  const stopWords = new Set([
-    'venta','venta','vendí','vendi','vendio','vendió','cobré','cobrei','cobro','cobré',
-    'gasto','compré','compre','compro','pagué','pague','egreso','gasté','gaste',
-    'ingreso','recibí','recibi','me','pagó','pago','dió','dio','de','al','por',
-    'soles','sol','nuevo','nuevos','s/','un','una','el','la','los','las','y',
-    'en','con','a','fiado','crédito','credito','yape','yapé','plin','transfer',
-    'transferencia','tarjeta','banco','visa','efectivo','cash',
-    ...Object.keys(numWords), 'mil','medio','media'
-  ]);
-
-  const words2 = t.split(/\s+/).filter(w => {
-    if(stopWords.has(w)) return false;
-    if(/^\d+([.,]\d+)?$/.test(w)) return false;
-    return w.length > 1;
-  });
-  const desc = words2.slice(0,4).join(' ') || (isExpense ? 'gasto' : 'venta');
-
-  // ── CLIENTE ── buscar nombre propio después de "a", "de", "para"
-  let client = null;
-  const clientMatch = t.match(/(?:cobré a|venta a|a|para|de|me debe|debo a)\s+([a-záéíóúñü][a-záéíóúñü]+(?:\s+[a-záéíóúñü][a-záéíóúñü]+)?)/i);
-  if(clientMatch){
-    const cand = clientMatch[1].trim();
-    // Excluir palabras comunes
-    if(!stopWords.has(cand.toLowerCase()) && !/^\d+$/.test(cand)){
-      client = cand.charAt(0).toUpperCase() + cand.slice(1);
-    }
-  }
-
-  const type = isExpense ? 'expense' : 'income';
-  const summary = `${type==='income'?'Ingreso':'Egreso'} · ${desc} · S/ ${amount.toFixed(2)}${client?' · '+client:''}`;
-
-  return {
-    type, desc, amount, credit: isCredit, debt: isDebt,
-    client, pay, confidence: amount>0 ? 0.75 : 0.2,
-    human_summary: summary, _local: true
-  };
-}
-
-
-function showVoiceResult(p, transcript){
-  document.getElementById('voiceWaves').className = 'voice-waves';
-
-  // Mostrar resumen de lo que escuchó
-  document.getElementById('voiceStatus').innerHTML =
-    `<span style="font-size:12px;color:var(--k-text-3);">"${transcript}"</span>`;
-
-  // Badge de tipo
-  const badge = document.getElementById('vrBadge');
-  const isDebt = p.debt;
-  const isCredit = p.credit && p.type === 'income';
-  const typeKey = isDebt ? 'debt' : isCredit ? 'credit' : p.type;
-  const badgeLabels = { income:'Ingreso', expense:'Egreso', credit:'Crédito (te deben)', debt:'A fiado (debes tú)' };
-  badge.textContent = badgeLabels[typeKey] || p.type;
-  badge.className = 'voice-result-badge ' + typeKey;
-
-  document.getElementById('vrExtra').textContent = p.client ? `· ${p.client}` : '';
-  document.getElementById('vrDesc').textContent = p.desc || '—';
-  document.getElementById('vrAmt').textContent = `S/ ${Number(p.amount||0).toFixed(2)}`;
-  document.getElementById('vrMeta').textContent = p.human_summary || '';
-
-  // Mostrar tarjeta
-  document.getElementById('voiceResult').classList.add('show');
-  document.getElementById('voiceBtnRow').style.display = 'block';
-  document.getElementById('voiceBtnRecord').style.display = 'none';
-
-  // Baja confianza → advertir
-  if(p.confidence < 0.6){
-    document.getElementById('vrMeta').innerHTML =
-      `<span style="color:var(--k-credit);">⚠️ ${p.human_summary || 'No estoy seguro — revisa antes de registrar'}</span>`;
-  }
-}
-
-async function confirmVoiceEntry(){
-  if(!voiceParsed) return;
-  const p = voiceParsed;
-
-  if(!p.amount || p.amount <= 0){
-    toast('⚠️ No se pudo detectar el monto');
-    return;
-  }
-
-  if(!activeDay){
-    const n = new Date();
-    activeDay = n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
-  }
-
-  const now  = new Date();
-  const time = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-
-  const isCredit = !!p.credit && p.type === 'income';
-  const isDebt   = !!p.debt;
-  const payment  = (isCredit || isDebt) ? 'credit' : (p.pay || 'cash');
-  const client   = p.client || '';
-
-  let newId = 'local-'+Date.now();
-  if(currentUser && !currentUser.id?.includes('demo-user')){
-    try{
-      const {data, error} = await sb.from('entries').insert([{
-        user_id: currentUser.id,
-        type: p.type,
-        description: p.desc,
-        amount: p.amount,
-        payment_type: payment,
-        date: activeDay, time,
-        is_credit: isCredit,
-        is_debt: isDebt,
-        client_name: client || null,
-        is_paid: false
-      }]).select().single();
-      if(error){ console.error(error); toast('✗ Error al guardar'); return; }
-      newId = data.id;
-    }catch(e){ console.error(e); }
-  }
-
-  entries.unshift({
-    id:newId, type:p.type, desc:p.desc, amount:p.amount,
-    qty:null, unitPrice:null, pay:payment,
-    date:activeDay, time, credit:isCredit, debt:isDebt,
-    client, paid:false, acuenta:0, pendiente:0
-  });
-
-  save(); buildDayBar(); render();
-  closeVoiceModal();
-
-  const emoji = isDebt ? '🧾' : isCredit ? '⏳' : p.type==='income' ? '✓' : '✓';
-  const typeStr = isDebt ? 'Deuda' : isCredit ? 'Crédito' : p.type==='income' ? 'Ingreso' : 'Egreso';
-  toast(`${emoji} ${typeStr} registrado — S/ ${p.amount.toFixed(2)}`);
-}
 
 var dayNotes = {}; // { 'YYYY-MM-DD': 'texto' }
 var noteTimer = null;
@@ -9000,12 +8238,6 @@ async function handleLogout(){
 }
 
 // ── REFRESH ──
-async function refreshData(){
-  if(!currentUser)return;
-  await loadDB();
-  render();
-}
-
 // ── OLVIDÉ CONTRASEÑA ──
 async function handleForgotPassword(){
   const isPhone = document.getElementById('lmtPhone')?.classList.contains('active');
@@ -10066,130 +9298,6 @@ function resetExtraItems() {
   renderItemsList();
 }
 
-function calcItemsTotal() {}   // no-op, se mantiene por compatibilidad
-function addExtraItem()    {}   // no-op
-function showExtraItems()  {}   // no-op
-
-/* ── Modal editar pedido ── */
-let _editOrderId = null;
-
-function openEditOrder(id) {
-  loadOrders();
-  const o = _orders.find(x => x.id === id);
-  if(!o) return;
-  _editOrderId = id;
-
-  document.getElementById('eoClient').value = o.client || '';
-  document.getElementById('eoDate').value   = o.date   || '';
-  document.getElementById('eoTime').value   = o.time   || '';
-  document.getElementById('eoNote').value   = o.note   || '';
-  document.getElementById('eoAddress').value= o.address|| '';
-  document.getElementById('editOrdSub').textContent = 'Pedido #' + String(id).slice(-5);
-
-  // Delivery toggle
-  setEoDelivery(o.delivery || 'local');
-
-  // Ítems
-  const itemsList = document.getElementById('eoItemsList');
-  itemsList.innerHTML = '';
-  (o.items || []).forEach(item => addEoItem(item.desc, item.price));
-  if(!(o.items && o.items.length)) addEoItem();
-
-  calcEoTotal();
-  document.getElementById('editOrdOverlay').classList.add('open');
-  document.getElementById('eoClient').focus();
-}
-
-function closeEditOrder() {
-  document.getElementById('editOrdOverlay').classList.remove('open');
-  _editOrderId = null;
-}
-
-function addEoItem(desc='', price='') {
-  const list = document.getElementById('eoItemsList');
-  const row = document.createElement('div');
-  row.className = 'order-item-row';
-  row.style.cssText = 'margin-bottom:4px;';
-  row.innerHTML = `
-    <input class="panel-form-inp" type="text" placeholder="Producto / descripción..." maxlength="80" value="${desc}" oninput="calcEoTotal()">
-    <input class="panel-form-inp w-sm" type="number" placeholder="S/ precio" min="0" step="0.01" value="${price||''}" oninput="calcEoTotal()">
-    <button class="order-item-remove" onclick="removeEoItem(this)">×</button>`;
-  list.appendChild(row);
-}
-
-function removeEoItem(btn) {
-  const list = document.getElementById('eoItemsList');
-  if(list.children.length <= 1) return;
-  btn.closest('.order-item-row').remove();
-  calcEoTotal();
-}
-
-function calcEoTotal() {
-  const rows = document.querySelectorAll('#eoItemsList .order-item-row');
-  let total = 0;
-  rows.forEach(r => { total += parseFloat(r.querySelectorAll('input')[1].value) || 0; });
-  document.getElementById('eoTotal').textContent = 'Total: S/ ' + total.toFixed(2);
-}
-
-function setEoDelivery(mode) {
-  const btnL = document.getElementById('eoDeliveryLocal');
-  const btnA = document.getElementById('eoDeliveryAddr');
-  const row  = document.getElementById('eoAddressRow');
-  if(mode === 'local') {
-    btnL.className = 'tgl-btn ai'; btnA.className = 'tgl-btn';
-    if(row) row.style.display = 'none';
-  } else {
-    btnL.className = 'tgl-btn'; btnA.className = 'tgl-btn ao';
-    if(row) row.style.display = '';
-  }
-}
-
-function saveEditOrder() {
-  const o = _orders.find(x => x.id === _editOrderId);
-  if(!o) return;
-
-  const client = document.getElementById('eoClient').value.trim();
-  if(!client) { document.getElementById('eoClient').focus(); toast('Escribe el nombre del cliente'); return; }
-
-  const rows = document.querySelectorAll('#eoItemsList .order-item-row');
-  const items = [];
-  rows.forEach(r => {
-    const desc  = r.querySelectorAll('input')[0].value.trim();
-    const price = parseFloat(r.querySelectorAll('input')[1].value) || 0;
-    if(desc) items.push({ desc, price });
-  });
-  if(!items.length) { toast('Agrega al menos un producto'); return; }
-
-  o.client   = client;
-  o.items    = items;
-  o.total    = items.reduce((s,i) => s + i.price, 0);
-  o.delivery = document.getElementById('eoDeliveryAddr').classList.contains('ao') ? 'address' : 'local';
-  o.address  = document.getElementById('eoAddress').value.trim();
-  o.date     = document.getElementById('eoDate').value || '';
-  o.time     = document.getElementById('eoTime').value || '';
-  o.note     = document.getElementById('eoNote').value.trim();
-
-  saveOrders();
-  closeEditOrder();
-  renderDayOrders();
-  if(typeof renderOrdPanel === 'function') renderOrdPanel();
-  toast('✓ Pedido actualizado');
-}
-
-function setOrderDelivery(mode) {
-  const btnLocal = document.getElementById('ordDeliveryLocal');
-  const btnAddr  = document.getElementById('ordDeliveryAddr');
-  const addrRow  = document.getElementById('ordAddressRow');
-  if (mode === 'local') {
-    btnLocal.className = 'tgl-btn ai';
-    btnAddr.className  = 'tgl-btn';
-    if(addrRow) addrRow.style.display = 'none';
-  } else {
-    btnLocal.className = 'tgl-btn';
-    btnAddr.className  = 'tgl-btn ao';
-    if(addrRow) { addrRow.style.display = ''; document.getElementById('mainOrdAddress').focus(); }
-  }
-}
 </script>
 
 <script>
@@ -10648,7 +9756,8 @@ function saveOrder() {
 
   saveOrders();
   closeNewOrderModal();
-  switchView('ord');
+  renderOrdPanel();
+  if (typeof renderDayOrders === 'function') renderDayOrders();
 }
 
 // ── Filtros ──
