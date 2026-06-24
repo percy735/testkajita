@@ -1706,6 +1706,23 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .order-badge.pending { background: var(--k-credit-l);  color: var(--k-credit); }
 .order-badge.ready   { background: var(--k-order-l);   color: var(--k-order); }
 .order-badge.done    { background: rgba(255,255,255,0.05); color: var(--k-text-3); }
+/* Badge de estado de pago */
+.order-pay-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px; white-space: nowrap;
+}
+.order-pay-badge.paid   { background: var(--k-accent-l); color: var(--k-accent); }
+.order-pay-badge.unpaid { background: var(--k-expense-l); color: var(--k-expense); }
+/* Botón alternar pago en el detalle */
+.ord-pay-toggle {
+  width: 100%; padding: 10px; border-radius: 12px; cursor: pointer;
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  transition: all 0.15s; margin-bottom: 2px;
+}
+.ord-pay-toggle.is-unpaid { background: var(--k-accent); border: 1px solid var(--k-accent); color: #0A0B0E; }
+.ord-pay-toggle.is-unpaid:hover { background: #d0ff4d; }
+.ord-pay-toggle.is-paid { background: transparent; border: 1px solid var(--k-line); color: var(--k-text-3); }
+.ord-pay-toggle.is-paid:hover { border-color: var(--k-expense); color: var(--k-expense); }
 .order-card-actions {
   padding: 0 14px 12px; display: flex; gap: 6px; flex-wrap: wrap;
 }
@@ -1743,8 +1760,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .kj-cal {
   display:inline-block; margin-top:6px;
   width:236px;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
-  border-radius:14px; padding:10px 12px 12px; box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  background:#191C22; border:1px solid var(--k-line);
+  border-radius:14px; padding:10px 12px 12px; box-shadow:0 12px 32px rgba(0,0,0,0.6);
 }
 .kj-cal-head {
   display:flex; align-items:center; justify-content:space-between;
@@ -3559,14 +3576,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.31
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.32
    FIX v14.8.27: saveOrder() persistía con saveOrders() DESPUÉS de render(),
    pero render()->renderDayOrders()->loadOrders() recargaba localStorage (aún vacío)
    y vaciaba _orders antes de guardarlo. Ahora saveOrders() corre ANTES de render().
    v14.8.28: edición de pedidos unificada en un solo modal (openEditOrderModal);
    eliminado overlay viejo editOrdOverlay + funciones Eo*, y código muerto
    (person-card/_expanded, inv-card, cred-card, refreshData, resetBizProfile, no-ops).
-   v14.8.31: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
+   v14.8.32: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
    SpeechRecognition, parseVoiceLocal, ~571 líneas) — estaba oculto y sin uso.
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
@@ -3836,7 +3853,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.31</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.32</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4077,7 +4094,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.31</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.32</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -9845,8 +9862,8 @@ function generateOrderReceipt(id) {
   };
 
   const dateStr = o.date
-    ? new Date(o.date + 'T12:00:00').toLocaleDateString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
-    : '—';
+    ? new Date(o.date + 'T12:00:00').toLocaleDateString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) + (o.time ? ` · ${o.time}` : '')
+    : (o.time ? o.time : '—');
   const today   = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' });
   const nowStr  = new Date().toLocaleTimeString('es-PE', { hour:'2-digit', minute:'2-digit' });
   const recNum  = String(o.id).slice(-6);
@@ -9896,9 +9913,11 @@ function generateOrderReceipt(id) {
   </div>
   <div class="doc-body">
     <div class="doc-row"><span class="doc-lbl">Cliente</span><span class="doc-val">${o.client}</span></div>
+    ${o.phone ? `<div class="doc-row"><span class="doc-lbl">Teléfono</span><span class="doc-val">${o.phone}</span></div>` : ''}
     <div class="doc-row"><span class="doc-lbl">Entrega</span><span class="doc-val">${deliveryLbl}</span></div>
     ${o.address ? `<div class="doc-row"><span class="doc-lbl">Dirección</span><span class="doc-val">${o.address}</span></div>` : ''}
     <div class="doc-row"><span class="doc-lbl">Fecha entrega</span><span class="doc-val">${dateStr}</span></div>
+    <div class="doc-row"><span class="doc-lbl">Estado de pago</span><span class="doc-val" style="color:${o.paid?C.accent:'#c0392b'};">${o.paid?'✓ Pagado':'⏳ Pendiente de pago'}</span></div>
     ${o.note ? `<div class="doc-row"><span class="doc-lbl">Nota</span><span class="doc-val">${o.note}</span></div>` : ''}
     <table class="items-table">
       <thead><tr><th>Descripción</th><th>Monto</th></tr></thead>
@@ -10013,6 +10032,7 @@ function renderOrdPanel() {
         <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
         <div class="order-card-right" onclick="event.stopPropagation()">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
+          <span class="order-pay-badge ${o.paid?'paid':'unpaid'}">${o.paid?'✓ Pagado':'⏳ Falta pagar'}</span>
           <button class="abtn-menu" data-ord-id="${o.id}" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
         </div>
       </div>
@@ -10868,12 +10888,17 @@ function openOrderModal(id) {
     ? `<span class="ord-modal-metachip">${ORD_SVG.store} Recojo en local</span>`
     : (o.address ? `<span class="ord-modal-metachip">${ORD_SVG.truck} ${o.address}</span>` : '');
 
+  const paidChip = o.paid
+    ? `<span class="order-pay-badge paid">✓ Pagado</span>`
+    : `<span class="order-pay-badge unpaid">⏳ Falta pagar</span>`;
+
   document.getElementById('ordModalBody').innerHTML = `
     <div class="ord-modal-header">
       <div>
         <div class="ord-modal-client">${o.client||'Sin nombre'}</div>
         <div class="ord-modal-meta">
           <span class="order-badge ${statusClass[o.status]||'pending'}">${statusLabel[o.status]||'Pendiente'}</span>
+          ${paidChip}
           ${dateLine}
           ${phoneLine}
           ${deliveryLine}
@@ -10892,6 +10917,9 @@ function openOrderModal(id) {
     </div>
     <div class="ord-modal-actions">
       <div class="ord-status-row">${statusBtnsHtml}</div>
+      <button class="ord-pay-toggle ${o.paid?'is-paid':'is-unpaid'}" onclick="ordModalTogglePaid(${o.id})">
+        ${o.paid ? '⏳ Marcar como NO pagado' : '✓ Marcar como pagado'}
+      </button>
       <div class="ord-modal-actions-row">
         <button class="ord-btn ord-btn-print" onclick="ordPrint(${o.id})">${ORD_SVG.receipt} Imprimir</button>
         <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">${ORD_SVG.chat} WhatsApp</button>
@@ -10920,6 +10948,20 @@ function ordModalSetStatus(id, newStatus) {
   openOrderModal(id); // re-render modal
   if (typeof renderOrdPanel === 'function') renderOrdPanel();
   toast('Estado actualizado ✓');
+}
+
+function ordModalTogglePaid(id) {
+  let orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
+  const idx = orders.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  orders[idx].paid = !orders[idx].paid;
+  localStorage.setItem('kajita_orders', JSON.stringify(orders));
+  // Sincronizar el ingreso vinculado (si existe) para que cuadre con caja/créditos
+  const entryIdx = entries.findIndex(e => e.orderId === id);
+  if (entryIdx !== -1) { entries[entryIdx].paid = orders[idx].paid; save(); if (typeof render === 'function') render(); }
+  openOrderModal(id); // re-render modal
+  if (typeof renderOrdPanel === 'function') renderOrdPanel();
+  toast(orders[idx].paid ? 'Pedido marcado como pagado ✓' : 'Pedido marcado como pendiente');
 }
 
 function ordModalDelete(id) {
@@ -10983,8 +11025,12 @@ function ordPrint(id) {
     </style>
   </head><body>
     <h2>${bizName}</h2>
-    <p class="sub">Pedido #${o.id} · ${o.date||''}</p>
+    <p class="sub">Pedido #${o.id} · ${[o.date,o.time].filter(Boolean).join(' ')}</p>
     <p>Cliente: <strong>${o.client||'—'}</strong></p>
+    ${o.phone?`<p>Teléfono: <strong>${o.phone}</strong></p>`:''}
+    <p>Entrega: <strong>${o.delivery==='local'?'Recojo en local':'Delivery'}</strong></p>
+    ${o.address?`<p>Dirección: ${o.address}</p>`:''}
+    <p>Pago: <strong>${o.paid?'✓ Pagado':'Pendiente de pago'}</strong></p>
     <hr>
     <table>${itemRows}</table>
     <hr>
@@ -11101,7 +11147,7 @@ function ordPrint(id) {
           <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Escribe o elige cliente..." maxlength="60" autocomplete="off"
             oninput="ordFilterClients()"
             style="width:100%;box-sizing:border-box;">
-          <button type="button" class="field-toggle-btn" onclick="ordToggleClients()" title="Ver clientes"><span>⌄</span></button>
+          <button type="button" class="field-toggle-btn" onclick="ordToggleClients()" title="Ver clientes"><span class="ftb-icon">⌄</span></button>
         </div>
         <div class="picker-panel" id="ordClientDrop" style="display:none;position:fixed;z-index:99999;"></div>
       </div>
@@ -11121,7 +11167,7 @@ function ordPrint(id) {
             oninput="ordFilterProducts()"
             onkeydown="if(event.key==='Enter')ordPushItem()"
             style="width:100%;box-sizing:border-box;">
-          <button type="button" class="field-toggle-btn" onclick="ordToggleProducts()" title="Ver productos"><span>⌄</span></button>
+          <button type="button" class="field-toggle-btn" onclick="ordToggleProducts()" title="Ver productos"><span class="ftb-icon">⌄</span></button>
         </div>
         <div class="picker-panel" id="ordProdDrop" style="display:none;position:fixed;z-index:99999;"></div>
       </div>
