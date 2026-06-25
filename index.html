@@ -1721,9 +1721,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .order-pay-badge.unpaid { background: var(--k-expense-l); color: var(--k-expense); }
 /* Botón alternar pago en el detalle */
 .ord-pay-toggle {
-  width: 100%; padding: 10px; border-radius: 12px; cursor: pointer;
+  width: 100%; padding: 13px; border-radius: 12px; cursor: pointer;
   font-family: var(--sans); font-size: 13px; font-weight: 700;
-  transition: all 0.15s; margin-bottom: 2px;
+  transition: all 0.15s;
 }
 .ord-pay-toggle.is-unpaid { background: var(--k-accent); border: 1px solid var(--k-accent); color: #0A0B0E; }
 .ord-pay-toggle.is-unpaid:hover { background: #d0ff4d; }
@@ -1817,7 +1817,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .ord-modal-backdrop.open { display: flex; }
 .ord-modal {
   background: #14161B; border: 1px solid var(--k-line);
-  border-radius: 22px; width: 100%; max-width: 420px;
+  border-radius: 22px; width: 100%; max-width: 440px;
   box-shadow: 0 24px 80px rgba(0,0,0,0.6);
   overflow-y: auto; max-height: 92vh;
   animation: ordModalIn .2s cubic-bezier(.34,1.36,.64,1);
@@ -1828,22 +1828,22 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .ord-modal-header {
   display: flex; align-items: flex-start; justify-content: space-between;
-  padding: 20px 22px 14px; border-bottom: 1px solid rgba(255,255,255,0.07);
-  gap: 12px;
+  padding: 26px 28px 20px; border-bottom: 1px solid rgba(255,255,255,0.07);
+  gap: 14px;
 }
 .ord-modal-client {
-  font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--k-text);
-  line-height: 1.2;
+  font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--k-text);
+  line-height: 1.25;
 }
 /* Fila de título: nombre + badges de estado y pago */
 .ord-modal-titlerow {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
 }
 /* Bloque de información (entrega, teléfono, dirección) */
 .ord-modal-info {
-  display: flex; flex-direction: column; gap: 7px; margin-top: 12px;
+  display: flex; flex-direction: column; gap: 10px; margin-top: 16px;
 }
-.omi-row { display: flex; align-items: center; gap: 9px; }
+.omi-row { display: flex; align-items: center; gap: 10px; }
 .omi-ic {
   display: inline-flex; align-items: center; justify-content: center;
   width: 18px; flex-shrink: 0; color: var(--k-text-3); font-size: 13px;
@@ -1871,12 +1871,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .ord-modal-body { padding: 16px 22px; }
 .ord-modal-items-title {
   font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 10px;
+  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 12px;
 }
 .ord-modal-item {
   display: flex; align-items: center;
-  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-  gap: 10px;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 12px;
 }
 .ord-modal-item:last-child { border-bottom: none; }
 .ord-modal-item-qty {
@@ -1893,7 +1893,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .ord-modal-total {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 22px; background: rgba(196,240,66,0.06);
+  padding: 16px 28px; background: rgba(196,240,66,0.06);
   border-top: 1px solid rgba(196,240,66,0.15);
 }
 .ord-modal-total-lbl {
@@ -1911,14 +1911,21 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .ord-modal-note svg { flex-shrink: 0; margin-top: 2px; opacity: .8; }
 .ord-modal-actions {
-  padding: 14px 22px 20px; display: flex; flex-direction: column; gap: 8px;
+  padding: 20px 28px 24px; display: flex; flex-direction: column; gap: 10px;
 }
-.ord-modal-actions-row { display: flex; gap: 8px; }
+.ord-modal-actions-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--k-text-3); margin: 4px 0 2px;
+}
+.ord-modal-actions-row { display: flex; gap: 10px; }
+.ord-modal-actions-divider {
+  height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0 2px;
+}
 .ord-btn {
-  flex: 1; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--k-line);
+  flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--k-line);
   background: rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
   font-weight: 600; color: var(--k-text-2); cursor: pointer; transition: all .15s;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 .ord-btn svg { flex-shrink: 0; }
 .ord-btn:hover { background: rgba(255,255,255,0.09); color: var(--k-text); }
@@ -1927,9 +1934,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .ord-btn.ord-btn-print { }
 .ord-btn.ord-btn-del { background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.25); color: var(--k-expense); }
 .ord-btn.ord-btn-del:hover { background: rgba(255,107,107,0.16); }
-.ord-status-row { display: flex; gap: 6px; }
+.ord-status-row { display: flex; gap: 8px; }
 .ord-status-btn {
-  flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--k-line);
+  flex: 1; padding: 11px 10px; border-radius: 11px; border: 1px solid var(--k-line);
   background: transparent; font-family: var(--sans); font-size: 11px; font-weight: 600;
   color: var(--k-text-3); cursor: pointer; transition: all .15s; text-align: center;
   display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -2563,6 +2570,33 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 .onb-step.hidden { opacity: 0; transform: translateY(16px); pointer-events: none; position: absolute; }
+
+/* Paso 0: selección de tipo de usuario */
+.onb-typecards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  width: 100%; margin-top: 4px;
+}
+.onb-typecard {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 22px 16px; border-radius: 16px; border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.03); cursor: pointer; text-align: center;
+  transition: border-color .15s, background .15s, transform .15s, box-shadow .15s;
+}
+.onb-typecard:hover, .onb-typecard:focus {
+  border-color: var(--k-accent); background: rgba(196,240,66,0.05);
+  transform: translateY(-2px); box-shadow: 0 6px 22px rgba(196,240,66,0.12);
+  outline: none;
+}
+.otc-ic { font-size: 34px; line-height: 1; }
+.otc-title {
+  font-family: var(--sans); font-size: 14px; font-weight: 700; color: var(--k-text);
+}
+.otc-desc {
+  font-family: var(--sans); font-size: 11px; color: var(--k-text-3); line-height: 1.35;
+}
+@media (max-width: 480px) {
+  .onb-typecards { grid-template-columns: 1fr; }
+}
 
 .onb-hello {
   font-family: var(--serif); font-size: 28px; font-weight: 500;
@@ -3784,7 +3818,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     border-radius: 20px 20px 0 0;
     overflow-y: auto;
   }
-  .ord-modal-header { padding: 16px 18px 12px; }
+  .ord-modal-header { padding: 20px 20px 16px; }
   .ord-modal .num-fields-row {
     grid-template-columns: 1fr 1fr auto !important;
   }
@@ -4075,7 +4109,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.48</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.51</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4131,8 +4165,16 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     
     <div class="auth-panel" id="panelRegister" style="display:none;">
       <form onsubmit="handleRegister(event)">
+        <!-- Toggle Negocio / Persona -->
         <div class="auth-field">
-          <label>Nombre de tu negocio</label>
+          <label>¿Quién va a usar Kajita?</label>
+          <div class="login-method-toggle">
+            <button type="button" class="lmt-btn active" id="regTypeBusiness" onclick="switchRegType('business')">🏪 Negocio</button>
+            <button type="button" class="lmt-btn" id="regTypePerson" onclick="switchRegType('person')">🙋 Persona</button>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label id="registerBusinessLabel">Nombre de tu negocio</label>
           <input type="text" id="registerBusiness" required maxlength="100" placeholder="Ej: Bodega El Sol">
         </div>
 
@@ -5056,16 +5098,16 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           </div>
 
           <div class="cfg-section">
-            <div class="cfg-section-lbl">Nombre del negocio</div>
+            <div class="cfg-section-lbl" id="cfgNameSectionLbl">Nombre del negocio</div>
             <div class="cfg-field">
-              <label>¿Cómo se llama tu negocio?</label>
+              <label id="cfgNameFieldLbl">¿Cómo se llama tu negocio?</label>
               <input class="cfg-input" id="cfgBizName" type="text" placeholder="Ej: Ferretería El Sol..." maxlength="50">
             </div>
           </div>
 
-          <div class="cfg-divider"></div>
+          <div class="cfg-divider" id="cfgRubroDivider"></div>
 
-          <div class="cfg-section">
+          <div class="cfg-section" id="cfgRubroSection">
             <div class="cfg-section-lbl">Rubro o tipo de negocio</div>
             <div class="cfg-rubros" id="cfgRubros">
               <button class="cfg-rubro-btn" onclick="cfgSelectRubro(this,'Ferretería')"         ><span>🔧</span><span>Ferretería</span></button>
@@ -5153,13 +5195,31 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- Barra de progreso -->
     <div class="onb-progress"><div class="onb-progress-fill" id="onbFill" style="width:0%"></div></div>
 
+    <!-- Paso 0: tipo de usuario -->
+    <div class="onb-step" id="onbStep0">
+      <p class="onb-hello">¡Bienvenido a Kajita! 👋<br>¿Quién va a usarlo?</p>
+      <p class="onb-desc">Esto adapta Kajita a ti. <strong>Puedes cambiarlo después.</strong></p>
+      <div class="onb-typecards">
+        <button class="onb-typecard" onclick="onbSelectType('business')">
+          <span class="otc-ic">🏪</span>
+          <span class="otc-title">Soy un negocio</span>
+          <span class="otc-desc">Ventas, clientes, proveedores y caja diaria</span>
+        </button>
+        <button class="onb-typecard" onclick="onbSelectType('person')">
+          <span class="otc-ic">🙋</span>
+          <span class="otc-title">Soy una persona</span>
+          <span class="otc-desc">Gastos personales, deudas y pagos</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Paso 1: nombre del negocio -->
-    <div class="onb-step" id="onbStep1">
-      <p class="onb-hello">¡Bienvenido! 👋<br>¿Cómo se llama tu negocio?</p>
+    <div class="onb-step hidden" id="onbStep1">
+      <p class="onb-hello" id="onbStep1Title">¡Bienvenido! 👋<br>¿Cómo se llama tu negocio?</p>
       <p class="onb-desc">Kajita usará este nombre en tus reportes y recibos. <strong>Puedes cambiarlo después.</strong></p>
       <div class="onb-form">
         <div class="onb-field">
-          <label>Nombre del negocio</label>
+          <label id="onbBizNameLabel">Nombre del negocio</label>
           <input class="onb-input" id="onbBizName" type="text" placeholder="Ej: Ferretería El Sol, Bodega Mamá..." maxlength="50" oninput="onbValidate1()">
         </div>
       </div>
@@ -6590,6 +6650,13 @@ function openSettings() {
   document.getElementById('cfgBizName').value = name;
   document.getElementById('cfgCurrentName').textContent = name || 'Sin configurar';
 
+  // Adaptar UI según tipo (persona vs negocio)
+  const isPerson = bizProfile?.type === 'person';
+  document.getElementById('cfgNameSectionLbl').textContent = isPerson ? 'Tu nombre' : 'Nombre del negocio';
+  document.getElementById('cfgNameFieldLbl').textContent = isPerson ? '¿Cuál es tu nombre?' : '¿Cómo se llama tu negocio?';
+  document.getElementById('cfgRubroSection').style.display = isPerson ? 'none' : '';
+  document.getElementById('cfgRubroDivider').style.display = isPerson ? 'none' : '';
+
   // Marcar rubro actual
   cfgSelectedRubro = rubro;
   const rubros = ['Ferretería','Bodega / Abarrotes','Ropa y moda','Restaurante / Comida','Farmacia / Salud','Servicios','Tecnología'];
@@ -6633,19 +6700,20 @@ function cfgSelectRubro(btn, rubro) {
 }
 
 async function saveSettings() {
+  const isPerson = bizProfile?.type === 'person';
   const name = document.getElementById('cfgBizName').value.trim();
   const customRubro = document.getElementById('cfgCustomRubro').value.trim();
   const isCustomOpen = document.getElementById('cfgCustomWrap').classList.contains('show');
-  const rubro = isCustomOpen ? customRubro : cfgSelectedRubro;
+  const rubro = isPerson ? '' : (isCustomOpen ? customRubro : cfgSelectedRubro);
 
   if(name.length < 2) {
     document.getElementById('cfgBizName').focus();
     document.getElementById('cfgBizName').style.borderColor = 'var(--k-expense)';
     setTimeout(() => document.getElementById('cfgBizName').style.borderColor = '', 1800);
-    toast('Escribe el nombre de tu negocio');
+    toast(isPerson ? 'Escribe tu nombre' : 'Escribe el nombre de tu negocio');
     return;
   }
-  if(!rubro || rubro.length < 2) {
+  if(!isPerson && (!rubro || rubro.length < 2)) {
     toast('Elige o escribe un rubro');
     return;
   }
@@ -6674,6 +6742,37 @@ async function saveSettings() {
 ══════════════════════════════════════════ */
 var bizProfile = JSON.parse(localStorage.getItem('kajita_biz') || 'null');
 let onbSelectedRubro = '';
+let onbType = 'business';
+
+function onbSelectType(type) {
+  onbType = type;
+  // Ajustar textos del Paso 1 según el tipo
+  const title = document.getElementById('onbStep1Title');
+  const label = document.getElementById('onbBizNameLabel');
+  const input = document.getElementById('onbBizName');
+  if(type === 'person') {
+    if(title) title.innerHTML = '¡Hola! 👋<br>¿Cuál es tu nombre?';
+    if(label) label.textContent = 'Tu nombre';
+    if(input) input.placeholder = 'Ej: Percy, Mamá, Juan...';
+  } else {
+    if(title) title.innerHTML = '¡Bienvenido! 👋<br>¿Cómo se llama tu negocio?';
+    if(label) label.textContent = 'Nombre del negocio';
+    if(input) input.placeholder = 'Ej: Ferretería El Sol, Bodega Mamá...';
+  }
+  // Transición Paso 0 → Paso 1
+  const s0 = document.getElementById('onbStep0');
+  const s1 = document.getElementById('onbStep1');
+  s0.classList.add('hidden');
+  document.getElementById('onbFill').style.width = '33%';
+  setTimeout(() => {
+    s0.style.display = 'none';
+    s1.style.display = 'flex';
+    s1.style.flexDirection = 'column';
+    s1.style.alignItems = 'center';
+    requestAnimationFrame(() => s1.classList.remove('hidden'));
+    setTimeout(() => document.getElementById('onbBizName').focus(), 120);
+  }, 320);
+}
 
 function onbValidate1() {
   const val = document.getElementById('onbBizName').value.trim();
@@ -6684,13 +6783,15 @@ function onbValidate1() {
 function onbNext1() {
   const name = document.getElementById('onbBizName').value.trim();
   if(name.length < 2) { document.getElementById('onbBizName').classList.add('error'); return; }
-  // Mostrar nombre en paso 2
+  // Persona: solo nombre, finalizar directo (sin rubro)
+  if(onbType === 'person') { onbSelectedRubro = ''; onbFinish(); return; }
+  // Negocio: mostrar nombre en paso 2
   document.getElementById('onbBizNameDisplay').textContent = '"' + name + '"';
   // Transición de paso 1 → 2
   const s1 = document.getElementById('onbStep1');
   const s2 = document.getElementById('onbStep2');
   s1.classList.add('hidden');
-  document.getElementById('onbFill').style.width = '55%';
+  document.getElementById('onbFill').style.width = '66%';
   setTimeout(() => {
     s1.style.display = 'none';
     s2.classList.remove('hidden');
@@ -6726,10 +6827,11 @@ function onbValidate2() {
 
 async function onbFinish() {
   const name  = document.getElementById('onbBizName').value.trim();
-  const rubro = onbSelectedRubro;
-  if(!name || !rubro) return;
+  const rubro = onbType === 'person' ? '' : onbSelectedRubro;
+  if(!name) return;
+  if(onbType === 'business' && !rubro) return;
 
-  bizProfile = { name, rubro, createdAt: new Date().toISOString() };
+  bizProfile = { type: onbType, name, rubro, createdAt: new Date().toISOString() };
   localStorage.setItem('kajita_biz', JSON.stringify(bizProfile));
 
   // Guardar en Supabase si hay usuario logueado
@@ -6777,10 +6879,14 @@ function checkOnboarding() {
     document.getElementById('onbOverlay').classList.remove('show');
     applyBizProfile();
   } else {
-    // Primera vez — mostrar onboarding
+    // Primera vez — mostrar onboarding (empezar en Paso 0)
     document.getElementById('onbOverlay').classList.add('show');
     document.getElementById('onbOverlay').style.display = 'flex';
     document.getElementById('onbFill').style.width = '10%';
+    const s0 = document.getElementById('onbStep0');
+    const s1 = document.getElementById('onbStep1');
+    if(s0){ s0.classList.remove('hidden'); s0.style.display = 'flex'; }
+    if(s1){ s1.classList.add('hidden'); s1.style.display = 'none'; }
     // Enter en el campo nombre avanza al siguiente paso
     document.getElementById('onbBizName').addEventListener('keydown', e => {
       if(e.key === 'Enter') document.getElementById('onbBtn1').click();
@@ -7179,6 +7285,24 @@ function switchRegMethod(method){
   document.getElementById('regLmtPhone').classList.toggle('active', isPhone);
   document.getElementById('registerEmail').required = !isPhone;
   document.getElementById('registerPhone').required = isPhone;
+}
+
+// Tipo de cuenta en el registro (negocio vs persona)
+let regType = 'business';
+function switchRegType(type){
+  regType = type;
+  const isPerson = type === 'person';
+  document.getElementById('regTypeBusiness').classList.toggle('active', !isPerson);
+  document.getElementById('regTypePerson').classList.toggle('active', isPerson);
+  const label = document.getElementById('registerBusinessLabel');
+  const input = document.getElementById('registerBusiness');
+  if(isPerson){
+    if(label) label.textContent = 'Tu nombre';
+    if(input) input.placeholder = 'Ej: Percy, Juan, María...';
+  } else {
+    if(label) label.textContent = 'Nombre de tu negocio';
+    if(input) input.placeholder = 'Ej: Bodega El Sol';
+  }
 }
 
 // Convierte celular peruano a email interno para Supabase
@@ -8703,7 +8827,7 @@ async function handleRegister(e){
     if(!email){showAuthError('Ingresa tu email');return;}
   }
   const pw=document.getElementById('registerPassword').value;
-  if(!biz){showAuthError('Ingresa el nombre de tu negocio');return;}
+  if(!biz){showAuthError(regType==='person'?'Ingresa tu nombre':'Ingresa el nombre de tu negocio');return;}
   if(pw.length<6){showAuthError('Contraseña mínimo 6 caracteres');return;}
 
   const btn=document.getElementById('registerBtn');
@@ -8720,14 +8844,16 @@ async function handleRegister(e){
       try{await sb.from('profiles').upsert([{id:data.user.id, business_name:biz, recovery_email:recoveryEmail}]);}catch(e){}
       if(data.session){
         currentUser=window.currentUser=data.user;
-        bizProfile={name:biz,rubro:''};
+        bizProfile={type:regType,name:biz,rubro:''};
+        try{localStorage.setItem('kajita_biz',JSON.stringify(bizProfile));}catch(e){}
         await startApp();
         toast('¡Cuenta creada! Bienvenido a Kajita 🎉');
       } else {
         const{data:loginData,error:loginErr}=await sb.auth.signInWithPassword({email,password:pw});
         if(!loginErr&&loginData.user){
           currentUser=window.currentUser=loginData.user;
-          bizProfile={name:biz,rubro:''};
+          bizProfile={type:regType,name:biz,rubro:''};
+        try{localStorage.setItem('kajita_biz',JSON.stringify(bizProfile));}catch(e){}
           await startApp();
           toast('¡Cuenta creada! Bienvenido a Kajita 🎉');
         } else {
@@ -8736,7 +8862,8 @@ async function handleRegister(e){
           const{data:ld,error:le}=await sb.auth.signInWithPassword({email,password:pw});
           if(!le&&ld.user){
             currentUser=window.currentUser=ld.user;
-            bizProfile={name:biz,rubro:''};
+            bizProfile={type:regType,name:biz,rubro:''};
+        try{localStorage.setItem('kajita_biz',JSON.stringify(bizProfile));}catch(e){}
             await startApp();
             toast('¡Cuenta creada! Bienvenido a Kajita 🎉');
             return;
@@ -10799,7 +10926,7 @@ function renderDashboard() {
   const hr = now.getHours();
   const greeting = hr < 12 ? 'Buenos días' : hr < 19 ? 'Buenas tardes' : 'Buenas noches';
   document.getElementById('dashGreeting').textContent = greeting + (bizProfile ? ',' : '');
-  document.getElementById('dashHeroBiz').textContent = bizProfile?.name || 'Tu negocio';
+  document.getElementById('dashHeroBiz').textContent = bizProfile?.name || (bizProfile?.type === 'person' ? 'Tu espacio' : 'Tu negocio');
   document.getElementById('dashHeroRubro').textContent = bizProfile?.rubro || '';
   const dateStr = now.toLocaleString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   const dateEl = document.getElementById('dashHeroDate');
@@ -11436,7 +11563,7 @@ function openOrderModal(id) {
       </div>
       <button class="ord-modal-close" onclick="closeOrderModal()">✕</button>
     </div>
-    <div style="padding:14px 22px 0;">
+    <div style="padding:20px 28px 0;">
       <div class="ord-modal-items-title">Productos / Servicios</div>
       ${itemsHtml || '<div style="color:var(--k-text-3);font-size:13px;padding:8px 0;">Sin items registrados</div>'}
     </div>
@@ -11445,10 +11572,12 @@ function openOrderModal(id) {
       <span class="ord-modal-total-val">S/ ${(o.total||0).toFixed(2)}</span>
     </div>
     <div class="ord-modal-actions">
+      <div class="ord-modal-actions-label">Estado del pedido</div>
       <div class="ord-status-row">${statusBtnsHtml}</div>
       <button class="ord-pay-toggle ${o.paid?'is-paid':'is-unpaid'}" onclick="ordModalTogglePaid(${o.id})">
         ${o.paid ? '⏳ Marcar como NO pagado' : '✓ Marcar como pagado'}
       </button>
+      <div class="ord-modal-actions-divider"></div>
       <div class="ord-modal-actions-row">
         <button class="ord-btn ord-btn-print" onclick="generateOrderReceipt(${o.id})">${ORD_SVG.receipt} Imprimir</button>
         <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">${ORD_SVG.chat} WhatsApp</button>
