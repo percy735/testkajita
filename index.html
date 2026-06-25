@@ -1829,6 +1829,24 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--k-text);
   line-height: 1.2;
 }
+/* Fila de título: nombre + badges de estado y pago */
+.ord-modal-titlerow {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+/* Bloque de información (entrega, teléfono, dirección) */
+.ord-modal-info {
+  display: flex; flex-direction: column; gap: 7px; margin-top: 12px;
+}
+.omi-row { display: flex; align-items: center; gap: 9px; }
+.omi-ic {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; flex-shrink: 0; color: var(--k-text-3); font-size: 13px;
+}
+.omi-ic svg { width: 15px; height: 15px; opacity: .9; }
+.omi-val {
+  font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--k-text-2);
+  min-width: 0; overflow: hidden; text-overflow: ellipsis;
+}
 .ord-modal-meta {
   display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap;
 }
@@ -1850,13 +1868,18 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   text-transform: uppercase; color: var(--k-text-3); margin-bottom: 10px;
 }
 .ord-modal-item {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center;
   padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-  gap: 12px;
+  gap: 10px;
 }
 .ord-modal-item:last-child { border-bottom: none; }
+.ord-modal-item-qty {
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  color: var(--k-text-3); min-width: 30px; text-align: center; flex-shrink: 0;
+  background: rgba(255,255,255,0.05); border-radius: 7px; padding: 3px 0;
+}
 .ord-modal-item-desc {
-  font-family: var(--sans); font-size: 13px; color: var(--k-text); flex: 1;
+  font-family: var(--sans); font-size: 13px; color: var(--k-text); flex: 1; min-width: 0;
 }
 .ord-modal-item-price {
   font-family: var(--mono); font-size: 13px; font-weight: 700;
@@ -2149,15 +2172,26 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   display: flex; align-items: center; justify-content: center; transition: all .15s;
 }
 .kj-cat-add-btn:hover { background: var(--k-accent-l); border-style: solid; }
-.kj-cat-chip {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 10px 3px 10px; border-radius: 99px;
-  background: rgba(196,240,66,0.1); border: 1px solid rgba(196,240,66,0.25);
-  font-size: 11px; color: var(--k-accent); font-family: var(--mono); cursor: pointer;
-  transition: background .12s;
+/* Desplegable de categorías guardadas */
+.kj-cat-dropdown {
+  display: none; position: absolute; left: 0; right: 0; top: 100%; z-index: 50;
+  margin-top: 4px; max-height: 184px; overflow-y: auto;
+  background: #1B1E25; border: 1px solid var(--k-line); border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.55); padding: 5px;
 }
-.kj-cat-chip:hover { background: rgba(196,240,66,0.18); }
-.kj-cat-chip .kj-cat-x { font-size: 13px; color: var(--k-text-3); margin-left: 2px; }
+.kj-cat-dropdown.open { display: block; }
+.kj-cat-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background .12s;
+}
+.kj-cat-item:hover { background: rgba(255,255,255,0.06); }
+.kj-cat-item-name { font-family: var(--sans); font-size: 13px; color: var(--k-text); }
+.kj-cat-del {
+  border: none; background: transparent; color: var(--k-text-3); font-size: 16px;
+  line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px; flex-shrink: 0;
+}
+.kj-cat-del:hover { background: var(--k-expense-l); color: var(--k-expense); }
+.kj-cat-empty { font-size: 12px; color: var(--k-text-3); padding: 10px; text-align: center; }
 
 /* Lista del panel */
 .panel-list { flex: 1; overflow-y: auto; padding: 0; }
@@ -3576,14 +3610,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.32
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.35
    FIX v14.8.27: saveOrder() persistía con saveOrders() DESPUÉS de render(),
    pero render()->renderDayOrders()->loadOrders() recargaba localStorage (aún vacío)
    y vaciaba _orders antes de guardarlo. Ahora saveOrders() corre ANTES de render().
    v14.8.28: edición de pedidos unificada en un solo modal (openEditOrderModal);
    eliminado overlay viejo editOrdOverlay + funciones Eo*, y código muerto
    (person-card/_expanded, inv-card, cred-card, refreshData, resetBizProfile, no-ops).
-   v14.8.32: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
+   v14.8.35: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
    SpeechRecognition, parseVoiceLocal, ~571 líneas) — estaba oculto y sin uso.
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
@@ -3853,7 +3887,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.32</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.35</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4094,7 +4128,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.32</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.35</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5711,17 +5745,43 @@ function kjSaveCategory() {
 function renderCatChips() {
   const cats = getCategories();
   const dl = document.getElementById('kjCatList');
-  const chips = document.getElementById('kjCatChips');
+  const drop = document.getElementById('kjCatChips');
   if (dl) dl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
-  if (chips) chips.innerHTML = cats.map(c =>
-    `<span class="kj-cat-chip" onclick="document.getElementById('kjProdCat').value='${c.replace(/'/g,"\\'")}'">${c}<span class="kj-cat-x" onclick="event.stopPropagation();kjDeleteCat('${c.replace(/'/g,"\\'")}')"> ×</span></span>`
-  ).join('') || '<span style="font-size:11px;color:var(--k-text-3);">Sin categorías guardadas</span>';
+  if (drop) drop.innerHTML = cats.length
+    ? cats.map(c =>
+        `<div class="kj-cat-item" onclick="kjPickCat('${c.replace(/'/g,"\\'")}')">
+           <span class="kj-cat-item-name">${c}</span>
+           <button type="button" class="kj-cat-del" onclick="event.stopPropagation();kjDeleteCat('${c.replace(/'/g,"\\'")}')" title="Eliminar">×</button>
+         </div>`
+      ).join('')
+    : '<div class="kj-cat-empty">Sin categorías guardadas</div>';
+}
+function kjToggleCatList(e) {
+  if (e) e.stopPropagation();
+  const drop = document.getElementById('kjCatChips');
+  if (!drop) return;
+  const isOpen = drop.classList.contains('open');
+  if (isOpen) { drop.classList.remove('open'); document.getElementById('kjCatChevron')?.classList.remove('open'); }
+  else { renderCatChips(); drop.classList.add('open'); document.getElementById('kjCatChevron')?.classList.add('open'); }
+}
+function kjPickCat(c) {
+  document.getElementById('kjProdCat').value = c;
+  document.getElementById('kjCatChips')?.classList.remove('open');
+  document.getElementById('kjCatChevron')?.classList.remove('open');
 }
 function kjDeleteCat(name) {
   const cats = getCategories().filter(c => c !== name);
   saveCategories(cats);
   renderCatChips();
 }
+// Cerrar el desplegable de categorías al hacer clic fuera
+document.addEventListener('click', function(e) {
+  const drop = document.getElementById('kjCatChips');
+  if (drop && drop.classList.contains('open') && !e.target.closest('.kj-cat-field')) {
+    drop.classList.remove('open');
+    document.getElementById('kjCatChevron')?.classList.remove('open');
+  }
+});
 
 /* ── Modal helpers ── */
 let _kjModalType = null;
@@ -8126,15 +8186,80 @@ function showAuthError(msg,type){
 // ── DEMO ──
 async function handleDemoLogin(){
   currentUser=window.currentUser={id:'demo-user-0000',email:'demo@kajita.app',user_metadata:{business_name:'Demo'}};
-  bizProfile={name:'Demo - Prueba Kajita',rubro:'Servicios'};
+  bizProfile={name:'Ferretería Demo Kajita',rubro:'Ferretería'};
   document.getElementById('authScreen').style.display='none';
   document.getElementById('app').style.display='flex';
   activeDay=getToday();
-  entries=[];products=[];clients=[];
+  seedDemoData();
   loadDayNoteLocal();
   buildDayBar();render();applyBizProfile();
   switchView('dashboard');
-  toast('🚀 Modo Demo activo');
+  toast('🚀 Modo Demo con datos de ejemplo');
+}
+
+// Datos de ejemplo para probar todas las áreas en Modo Demo
+function seedDemoData(){
+  const today = activeDay;
+  const ayer  = (()=>{ const d=new Date(today+'T12:00:00'); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })();
+  const manana= (()=>{ const d=new Date(today+'T12:00:00'); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); })();
+
+  // ── Clientes (algunos con deuda por cobrar) ──
+  clients = [
+    { id:'cli-1', name:'María Quispe',     phone:'987654321', doc:'40123456', address:'Av. Los Olivos 123' },
+    { id:'cli-2', name:'José Ramírez',     phone:'998877665', doc:'41222333', address:'Jr. Cusco 456' },
+    { id:'cli-3', name:'Ferretería El Sol',phone:'955443322', doc:'20512345678', address:'Av. Industrial 800' },
+    { id:'cli-4', name:'Lucía Fernández',  phone:'912345678', doc:'', address:'' },
+  ];
+  saveClients();
+
+  // ── Proveedores (uno con deuda por pagar) ──
+  suppliers = [
+    { id:'prov-1', name:'Distribuidora Andina SAC', phone:'013334444', doc:'20487654321', address:'Av. Argentina 1200' },
+    { id:'prov-2', name:'Aceros del Perú',          phone:'945612378', doc:'20100200300', address:'Callao' },
+  ];
+  saveSuppliers();
+
+  // ── Inventario / Productos ──
+  products = [
+    { id:'p-1', name:'Cemento Sol 42.5kg', price:32.50, qty:45, category:'Construcción', code:'CEM-001', location:'A-1' },
+    { id:'p-2', name:'Pintura Látex 1gal',  price:55.00, qty:12, category:'Pinturas',     code:'PIN-010', location:'B-3' },
+    { id:'p-3', name:'Tubo PVC 1/2" x3m',   price:8.50,  qty:120,category:'Gasfitería',   code:'TUB-005', location:'C-2' },
+    { id:'p-4', name:'Clavos 2" (kg)',      price:6.00,  qty:0,  category:'Fijaciones',   code:'CLA-002', location:'A-4' },
+    { id:'p-5', name:'Foco LED 9W',         price:12.00, qty:60, category:'Eléctricos',   code:'ELE-009', location:'D-1' },
+  ];
+  saveProducts();
+
+  // ── Movimientos del día (ingresos, egresos, créditos, deudas) ──
+  entries = [
+    // Ingresos en efectivo y digital (hoy)
+    { id:'e-1', type:'income', desc:'Cemento Sol 42.5kg', amount:65.00, qty:2, unitPrice:32.50, pay:'cash',   date:today, time:'09:15:00', credit:false, debt:false, client:'', paid:false },
+    { id:'e-2', type:'income', desc:'Pintura Látex 1gal', amount:110.00,qty:2, unitPrice:55.00, pay:'yape',   date:today, time:'10:40:00', credit:false, debt:false, client:'Lucía Fernández', paid:false },
+    { id:'e-3', type:'income', desc:'Foco LED 9W',        amount:36.00, qty:3, unitPrice:12.00, pay:'plin',   date:today, time:'11:05:00', credit:false, debt:false, client:'', paid:false },
+    // Egreso (compra al contado)
+    { id:'e-4', type:'expense',desc:'Compra de mercadería',amount:180.00,qty:null,unitPrice:null,pay:'transfer',date:today, time:'08:30:00', credit:false, debt:false, client:'Distribuidora Andina SAC', paid:false },
+    // Crédito por cobrar (fiado a cliente) — total
+    { id:'e-5', type:'income', desc:'Tubo PVC 1/2" x3m',  amount:85.00, qty:10,unitPrice:8.50,  pay:'cash',   date:today, time:'12:10:00', credit:true,  debt:false, client:'María Quispe', paid:false, acuenta:0, pendiente:85.00 },
+    // Crédito por cobrar — con abono parcial
+    { id:'e-6', type:'income', desc:'Cemento + Clavos',   amount:150.00,qty:null,unitPrice:null, pay:'cash',   date:ayer,  time:'16:20:00', credit:true,  debt:false, client:'José Ramírez', paid:false, acuenta:50.00, pendiente:100.00 },
+    // Deuda por pagar (fiado de proveedor)
+    { id:'e-7', type:'expense',desc:'Lote de tubería',    amount:300.00,qty:null,unitPrice:null, pay:'cash',   date:ayer,  time:'15:00:00', credit:false, debt:true,  client:'Aceros del Perú', paid:false, acuenta:0, pendiente:300.00 },
+  ];
+  save();
+
+  // ── Pedidos (varios estados, entrega, pago) ──
+  const now = Date.now();
+  _orders = [
+    { id:now-3000, status:'pending', createdAt:new Date().toISOString(), client:'María Quispe', phone:'987654321',
+      items:[{desc:'Cemento Sol 42.5kg',qty:5,price:32.50,total:162.50},{desc:'Clavos 2" (kg)',qty:2,price:6,total:12}],
+      total:174.50, delivery:'delivery', address:'Av. Los Olivos 123', date:manana, time:'10:00', note:'Llamar antes de llegar', paid:false },
+    { id:now-2000, status:'ready', createdAt:new Date().toISOString(), client:'José Ramírez', phone:'998877665',
+      items:[{desc:'Pintura Látex 1gal',qty:3,price:55,total:165}],
+      total:165.00, delivery:'local', address:'', date:today, time:'17:30', note:'', paid:true },
+    { id:now-1000, status:'done', createdAt:new Date().toISOString(), client:'Lucía Fernández', phone:'912345678',
+      items:[{desc:'Foco LED 9W',qty:6,price:12,total:72}],
+      total:72.00, delivery:'delivery', address:'Calle Las Flores 55', date:ayer, time:'12:00', note:'Entregado en portería', paid:true },
+  ];
+  saveOrders();
 }
 
 // ── LOGIN ──
@@ -9701,8 +9826,9 @@ function ordRenderItems() {
 }
 
 function getOrderItems() {
-  // Returns items compatible with the order data structure
-  return _ordItems.map(i => ({ desc: i.desc, price: i.total }));
+  // Conserva cantidad, precio unitario y total por ítem para mostrarlos ordenados.
+  // 'price' = total de línea (compat. con render existente); 'unit' = precio unitario.
+  return _ordItems.map(i => ({ desc: i.desc, qty: i.qty || 1, unit: i.price || 0, price: i.total, total: i.total }));
 }
 
 function saveOrder() {
@@ -9869,12 +9995,15 @@ function generateOrderReceipt(id) {
   const recNum  = String(o.id).slice(-6);
   const deliveryLbl = o.delivery === 'local' ? '🏪 Recojo en local' : '🚚 Delivery';
 
-  const itemsRows = (o.items||[]).map(i =>
-    `<tr>
+  const itemsRows = (o.items||[]).map(i => {
+    const qty = i.qty || 1;
+    const lineTotal = (i.total != null ? i.total : i.price) || 0;
+    return `<tr>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.muted};font-size:13px;font-weight:700;text-align:center;width:34px;">${qty}</td>
       <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;">${i.desc}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;text-align:right;white-space:nowrap;">S/ ${parseFloat(i.price||0).toFixed(2)}</td>
-    </tr>`
-  ).join('');
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;text-align:right;white-space:nowrap;font-weight:600;">S/ ${lineTotal.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
 
   const receiptHtml = `
 <!DOCTYPE html><html lang="es"><head>
@@ -9920,7 +10049,7 @@ function generateOrderReceipt(id) {
     <div class="doc-row"><span class="doc-lbl">Estado de pago</span><span class="doc-val" style="color:${o.paid?C.accent:'#c0392b'};">${o.paid?'✓ Pagado':'⏳ Pendiente de pago'}</span></div>
     ${o.note ? `<div class="doc-row"><span class="doc-lbl">Nota</span><span class="doc-val">${o.note}</span></div>` : ''}
     <table class="items-table">
-      <thead><tr><th>Descripción</th><th>Monto</th></tr></thead>
+      <thead><tr><th style="text-align:center;width:34px;">Cant.</th><th>Descripción</th><th>Monto</th></tr></thead>
       <tbody>${itemsRows}</tbody>
     </table>
     <div class="total-row">
@@ -10852,26 +10981,29 @@ function openOrderModal(id) {
   const statusLabel = { pending:'Pendiente', ready:'Listo', done:'Entregado' };
   const statusClass = { pending:'pending', ready:'ready', done:'done' };
 
-  // Date display
-  let dateLine = '';
+  // Texto de fecha + hora de entrega
+  let dateTxt = '';
   if (o.date) {
     const [y,m,d] = o.date.split('-');
     const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    dateLine = `<span class="ord-modal-metachip">${ORD_SVG.calendar} ${d} ${months[parseInt(m)-1]} ${y}${o.time ? ' · ' + o.time : ''}</span>`;
+    dateTxt = `${d} ${months[parseInt(m)-1]} ${y}${o.time ? ' · ' + o.time : ''}`;
   } else if (o.time) {
-    dateLine = `<span class="ord-modal-metachip">${ORD_SVG.calendar} ${o.time}</span>`;
+    dateTxt = o.time;
   }
-  const phoneLine = o.phone
-    ? `<span class="ord-modal-metachip">📞 ${o.phone}</span>`
-    : '';
+  const deliveryTxt = o.delivery === 'local'
+    ? 'Recojo en local'
+    : ('Delivery' + (o.address ? ` — ${o.address}` : ''));
 
-  // Items rows
-  const itemsHtml = (o.items||[]).map(it =>
-    `<div class="ord-modal-item">
+  // Items rows — cantidad · descripción · total de línea
+  const itemsHtml = (o.items||[]).map(it => {
+    const qty = it.qty || 1;
+    const lineTotal = (it.total != null ? it.total : it.price) || 0;
+    return `<div class="ord-modal-item">
+      <span class="ord-modal-item-qty">${qty}</span>
       <div class="ord-modal-item-desc">${it.desc}</div>
-      <div class="ord-modal-item-price">S/ ${parseFloat(it.price||0).toFixed(2)}</div>
-    </div>`
-  ).join('');
+      <div class="ord-modal-item-price">S/ ${lineTotal.toFixed(2)}</div>
+    </div>`;
+  }).join('');
 
   // Status buttons (dot + label, coherente con las tarjetas)
   const statuses = [
@@ -10884,25 +11016,26 @@ function openOrderModal(id) {
       onclick="ordModalSetStatus(${o.id},'${s.key}')"><span class="ord-status-dot ${s.key}"></span>${s.label}</button>`
   ).join('');
 
-  const deliveryLine = o.delivery === 'local'
-    ? `<span class="ord-modal-metachip">${ORD_SVG.store} Recojo en local</span>`
-    : (o.address ? `<span class="ord-modal-metachip">${ORD_SVG.truck} ${o.address}</span>` : '');
-
   const paidChip = o.paid
     ? `<span class="order-pay-badge paid">✓ Pagado</span>`
     : `<span class="order-pay-badge unpaid">⏳ Falta pagar</span>`;
 
+  const infoRows = `
+    <div class="ord-modal-info">
+      ${dateTxt ? `<div class="omi-row"><span class="omi-ic">${ORD_SVG.calendar}</span><span class="omi-val">${dateTxt}</span></div>` : ''}
+      ${o.phone ? `<div class="omi-row"><span class="omi-ic">📞</span><span class="omi-val">${o.phone}</span></div>` : ''}
+      <div class="omi-row"><span class="omi-ic">${o.delivery==='local'?ORD_SVG.store:ORD_SVG.truck}</span><span class="omi-val">${deliveryTxt}</span></div>
+    </div>`;
+
   document.getElementById('ordModalBody').innerHTML = `
     <div class="ord-modal-header">
-      <div>
-        <div class="ord-modal-client">${o.client||'Sin nombre'}</div>
-        <div class="ord-modal-meta">
+      <div style="flex:1;min-width:0;">
+        <div class="ord-modal-titlerow">
+          <span class="ord-modal-client">${o.client||'Sin nombre'}</span>
           <span class="order-badge ${statusClass[o.status]||'pending'}">${statusLabel[o.status]||'Pendiente'}</span>
           ${paidChip}
-          ${dateLine}
-          ${phoneLine}
-          ${deliveryLine}
         </div>
+        ${infoRows}
         ${o.note ? `<div class="ord-modal-note">${ORD_SVG.note} ${o.note}</div>` : ''}
       </div>
       <button class="ord-modal-close" onclick="closeOrderModal()">✕</button>
@@ -10921,7 +11054,7 @@ function openOrderModal(id) {
         ${o.paid ? '⏳ Marcar como NO pagado' : '✓ Marcar como pagado'}
       </button>
       <div class="ord-modal-actions-row">
-        <button class="ord-btn ord-btn-print" onclick="ordPrint(${o.id})">${ORD_SVG.receipt} Imprimir</button>
+        <button class="ord-btn ord-btn-print" onclick="generateOrderReceipt(${o.id})">${ORD_SVG.receipt} Imprimir</button>
         <button class="ord-btn ord-btn-wa" onclick="ordWhatsApp(${o.id})">${ORD_SVG.chat} WhatsApp</button>
       </div>
       <div class="ord-modal-actions-row">
@@ -11000,47 +11133,6 @@ function ordWhatsApp(id) {
   window.open(waUrl, '_blank');
 }
 
-function ordPrint(id) {
-  const orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
-  const o = orders.find(x => x.id === id);
-  if (!o) return;
-  const biz = JSON.parse(localStorage.getItem('kajita_biz') || '{}');
-  const bizName = biz.name || 'Mi Negocio';
-
-  const itemRows = (o.items||[]).map(it =>
-    `<tr><td>${it.desc}</td><td style="text-align:right">S/ ${parseFloat(it.price||0).toFixed(2)}</td></tr>`
-  ).join('');
-
-  const win = window.open('', '_blank', 'width=400,height=600');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <title>Pedido #${o.id}</title>
-    <style>
-      body{font-family:monospace;font-size:13px;padding:20px;max-width:320px;margin:auto}
-      h2{text-align:center;font-size:16px;margin:0 0 4px}
-      .sub{text-align:center;color:#666;margin:0 0 14px;font-size:11px}
-      table{width:100%;border-collapse:collapse}
-      td{padding:4px 2px}
-      hr{border:none;border-top:1px dashed #999;margin:10px 0}
-      .total{font-weight:bold;font-size:15px}
-    </style>
-  </head><body>
-    <h2>${bizName}</h2>
-    <p class="sub">Pedido #${o.id} · ${[o.date,o.time].filter(Boolean).join(' ')}</p>
-    <p>Cliente: <strong>${o.client||'—'}</strong></p>
-    ${o.phone?`<p>Teléfono: <strong>${o.phone}</strong></p>`:''}
-    <p>Entrega: <strong>${o.delivery==='local'?'Recojo en local':'Delivery'}</strong></p>
-    ${o.address?`<p>Dirección: ${o.address}</p>`:''}
-    <p>Pago: <strong>${o.paid?'✓ Pagado':'Pendiente de pago'}</strong></p>
-    <hr>
-    <table>${itemRows}</table>
-    <hr>
-    <table><tr><td class="total">TOTAL</td><td class="total" style="text-align:right">S/ ${(o.total||0).toFixed(2)}</td></tr></table>
-    ${o.note?`<p style="margin-top:10px;font-size:11px">Nota: ${o.note}</p>`:''}
-    <p style="text-align:center;margin-top:16px;font-size:10px;color:#aaa">Generado con Kajita</p>
-  </body></html>`);
-  win.document.close();
-  win.print();
-}
 </script>
 
 <!-- ══ MODAL: CREAR / EDITAR REGISTRO ══ -->
@@ -11090,14 +11182,15 @@ function ordPrint(id) {
           <label>Código</label>
           <input class="kj-modal-inp" id="kjProdCode" placeholder="Ej: CEM425" maxlength="20">
         </div>
-        <div class="kj-modal-field">
+        <div class="kj-modal-field kj-cat-field" style="position:relative;">
           <label>Categoría</label>
           <div style="display:flex;gap:6px;align-items:center;">
             <input class="kj-modal-inp" id="kjProdCat" placeholder="Ej: Ferretería" maxlength="40" list="kjCatList" autocomplete="off" style="flex:1;">
             <datalist id="kjCatList"></datalist>
+            <button type="button" class="kj-cat-add-btn" onclick="kjToggleCatList(event)" title="Ver categorías"><span class="ftb-icon" id="kjCatChevron">⌄</span></button>
             <button type="button" class="kj-cat-add-btn" onclick="kjSaveCategory()" title="Guardar categoría">+</button>
           </div>
-          <div id="kjCatChips" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;"></div>
+          <div id="kjCatChips" class="kj-cat-dropdown"></div>
         </div>
       </div>
       <div class="kj-modal-row">
