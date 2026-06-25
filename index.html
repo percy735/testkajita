@@ -1030,13 +1030,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .reminders-list { display: none; border-top: 1px solid rgba(251,191,36,0.15); }
 .reminders-list.open { display: block; }
 .reminder-item {
-  display: flex; flex-direction: column; gap: 0;
+  display: flex; align-items: center; gap: 12px; padding: 11px 16px;
   border-bottom: 1px solid rgba(251,191,36,0.08);
+  transition: background 0.15s;
 }
 .reminder-item:last-child { border-bottom: none; }
-.reminder-item-row {
-  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-}
+.reminder-item:hover { background: rgba(251,191,36,0.04); }
 .reminder-days {
   flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -1051,10 +1050,15 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .reminder-client { font-size: 13px; font-weight: 600; color: var(--k-text); }
 .reminder-desc { font-size: 11px; color: var(--k-text-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .reminder-amt { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--k-credit); flex-shrink: 0; }
-.reminder-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.reminder-cobrar { flex-shrink: 0; padding: 6px 12px; border-radius: 99px; border: 1px solid rgba(196,240,66,0.3); background: rgba(196,240,66,0.08); color: var(--k-accent); font-family: var(--sans); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-.reminder-cobrar:hover { background: var(--k-accent); color: var(--k-bg); }
-.reminder-abonar { flex-shrink: 0; padding: 6px 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: var(--k-text-3); font-family: var(--sans); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.reminder-acuenta { color: var(--k-accent); font-weight: 600; }
+.reminder-count-pill {
+  display: inline-block; font-family: var(--mono); font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 99px; margin-left: 6px;
+  background: rgba(255,255,255,0.08); color: var(--k-text-3); vertical-align: middle;
+}
+.reminder-arrow { font-size: 13px; color: var(--k-text-3); flex-shrink: 0; transition: transform 0.15s; }
+.reminder-item:hover .reminder-arrow,
+.debt-item:hover .reminder-arrow { transform: translateX(3px); color: var(--k-text); }
 .reminder-abonar:hover { border-color: var(--k-credit); color: var(--k-credit); background: rgba(251,191,36,0.08); }
 .reminder-abonar.active { border-color: var(--k-credit); color: var(--k-credit); background: rgba(251,191,36,0.08); }
 
@@ -1118,14 +1122,13 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .debts-bar-toggle.open { transform: rotate(180deg); }
 .debts-list { display: none; border-top: 1px solid rgba(255,107,107,0.15); }
 .debts-list.open { display: block; }
-.debt-item {
-  display: flex; flex-direction: column;
-  border-bottom: 1px solid rgba(255,107,107,0.08);
-}
 .debt-item:last-child { border-bottom: none; }
-.debt-item-row {
-  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+.debt-item {
+  display: flex; align-items: center; gap: 12px; padding: 11px 16px;
+  border-bottom: 1px solid rgba(255,107,107,0.08);
+  transition: background 0.15s;
 }
+.debt-item:hover { background: rgba(255,107,107,0.04); }
 .debt-days {
   flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -1140,10 +1143,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .debt-supplier { font-size: 13px; font-weight: 600; color: var(--k-text); }
 .debt-desc { font-size: 11px; color: var(--k-text-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .debt-amt { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--k-expense); flex-shrink: 0; }
-.debt-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.debt-abonar { flex-shrink: 0; padding: 6px 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: var(--k-text-3); font-family: var(--sans); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-.debt-abonar:hover { border-color: var(--k-expense); color: var(--k-expense); background: rgba(255,107,107,0.08); }
-.debt-abonar.active { border-color: var(--k-expense); color: var(--k-expense); background: rgba(255,107,107,0.08); }
+/* .debt-actions y botones eliminados — gestionado en Créditos */
 .debt-pagar { flex-shrink: 0; padding: 6px 12px; border-radius: 99px; border: 1px solid rgba(196,240,66,0.3); background: rgba(196,240,66,0.08); color: var(--k-accent); font-family: var(--sans); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .debt-pagar:hover { background: var(--k-accent); color: var(--k-bg); }
 /* Panel abono deuda — mismo estilo que abono crédito pero rojo */
@@ -1609,26 +1609,26 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   transition: border-color 0.2s, transform 0.25s ease;
   position: relative; will-change: transform;
 }
-/* Order card timeline — columna central del card */
+/* Order card timeline — barra horizontal en el pie del card */
 .ord-timeline {
-  display: flex; flex-direction: column; align-items: flex-start;
-  align-self: center; flex-shrink: 0; gap: 0; padding: 0 8px;
+  display: flex; align-items: center; flex-direction: row;
+  padding: 8px 14px 11px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 .ord-tml-step {
-  display: flex; align-items: center; gap: 6px;
-  padding: 3px 8px; border-radius: 99px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 10px;
   border: 1px solid transparent;
-  background: none; cursor: pointer; width: 100%;
+  background: none; cursor: pointer; flex-shrink: 0;
   transition: background 0.15s, border-color 0.15s;
-  text-align: left;
 }
 .ord-tml-dot {
-  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
   border: 1.5px solid var(--k-text-3); background: transparent;
   transition: all 0.15s;
 }
 .ord-tml-label {
-  font-family: var(--sans); font-size: 10.5px; font-weight: 500;
+  font-family: var(--sans); font-size: 10px; font-weight: 500;
   color: var(--k-text-3); white-space: nowrap;
 }
 /* Paso completado */
@@ -1636,19 +1636,19 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .ord-tml-step.done .ord-tml-label { color: var(--k-text-2); }
 /* Paso actual */
 .ord-tml-step.active {
-  background: rgba(196,240,66,0.1); border-color: rgba(196,240,66,0.35);
+  background: rgba(196,240,66,0.08); border-color: rgba(196,240,66,0.3);
 }
 .ord-tml-step.active .ord-tml-dot   { background: var(--k-accent); border-color: var(--k-accent); }
 .ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 700; }
 /* Hover */
-.ord-tml-step:not(.active):hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+.ord-tml-step:not(.active):hover { background: rgba(255,255,255,0.05); }
 .ord-tml-step:not(.active):hover .ord-tml-label { color: var(--k-text); }
-/* Línea conectora vertical entre pasos */
+/* Línea conectora horizontal entre pasos */
 .ord-tml-line {
-  width: 1px; height: 6px; background: var(--k-line);
-  margin-left: 11px; /* alinea con centro del dot (8px padding + 3.5px = ~11px) */
+  flex: 1; height: 2px; background: var(--k-line); border-radius: 1px; min-width: 16px;
+  transition: background 0.2s;
 }
-.ord-tml-line.filled { background: rgba(196,240,66,0.4); }
+.ord-tml-line.filled { background: rgba(196,240,66,0.35); }
 
 /* Swipe reveal hints */
 .swipe-hint-right,
@@ -1670,11 +1670,11 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .order-card:hover { border-color: rgba(255,255,255,0.12); }
 .order-card-head {
-  display: flex; align-items: flex-start;
-  padding: 13px 14px 11px; gap: 10px;
+  display: flex; align-items: center;
+  padding: 13px 14px 0; gap: 10px;
 }
 .order-card-dot {
-  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 }
 .order-card-dot.pending  { background: var(--k-credit); }
 .order-card-dot.ready    { background: var(--k-order); }
@@ -1686,14 +1686,20 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .order-card-items {
   font-family: var(--sans); font-size: 12px; color: var(--k-text-3);
-  margin-top: 2px; line-height: 1.4;
+  margin-top: 3px; line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Fila secundaria: meta (fecha/tel/nota) + badge de pago */
+.order-card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 14px 9px; gap: 8px;
 }
 .order-card-meta {
   font-family: var(--mono); font-size: 9.5px; color: var(--k-text-3);
-  margin-top: 4px; display: flex; gap: 10px;
+  display: flex; gap: 8px; flex-wrap: wrap; min-width: 0;
 }
 .order-card-right {
-  display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
 }
 .order-card-price {
   font-family: var(--mono); font-size: 14px; font-weight: 700;
@@ -2265,13 +2271,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .panel-total-val { font-family: var(--mono); font-size: 17px; font-weight: 700; }
 
 /* ══ CRÉDITOS PANEL ══ */
-.cred-cobrar-btn {
-  font-size: 10px; font-family: var(--mono); font-weight: 600;
-  padding: 4px 10px; border-radius: 99px; border: 1px solid var(--k-accent);
-  background: rgba(196,240,66,0.08); color: var(--k-accent); cursor: pointer;
-  transition: all 0.15s;
-}
-.cred-cobrar-btn:hover { background: var(--k-accent); color: #0A0B0E; }
 .cred-pagar-btn {
   font-size: 10px; font-family: var(--mono); font-weight: 600;
   padding: 4px 10px; border-radius: 99px; border: 1px solid var(--k-expense);
@@ -2297,8 +2296,197 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .panel-type-tab:hover { color: var(--k-text-2); }
 .panel-type-tab.active { color: var(--k-text); border-bottom-color: var(--k-accent); }
 
-/* ── Créditos grid ── */
-.pl-cred { grid-template-columns: 1.2fr 1.6fr 90px 80px; }
+/* ── Créditos agrupados por cliente ── */
+
+/* Grupo contenedor */
+.cred-group {
+  border: 1px solid var(--k-line); border-radius: 12px;
+  margin-bottom: 8px; overflow: hidden;
+  transition: border-color 0.15s;
+}
+.cred-group:hover { border-color: rgba(255,255,255,0.12); }
+.cred-group-highlight {
+  border-color: rgba(196,240,66,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(196,240,66,0.12);
+  animation: credGroupFlash 1.8s ease-out forwards;
+}
+@keyframes credGroupFlash {
+  0%   { border-color: rgba(196,240,66,0.7); box-shadow: 0 0 0 4px rgba(196,240,66,0.18); }
+  60%  { border-color: rgba(196,240,66,0.4); box-shadow: 0 0 0 2px rgba(196,240,66,0.08); }
+  100% { border-color: var(--k-line);        box-shadow: none; }
+}
+
+/* Encabezado del grupo — clickeable */
+.cred-group-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; cursor: pointer;
+  transition: background 0.15s;
+  gap: 12px;
+}
+.cred-group-hdr:hover { background: rgba(255,255,255,0.04); }
+.cred-group-hdr.expanded { background: rgba(255,255,255,0.03); }
+
+.cred-group-name {
+  font-family: var(--sans); font-size: 13.5px; font-weight: 600;
+  color: var(--k-text); display: flex; align-items: center; gap: 8px;
+}
+.cred-count-pill {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px;
+  background: rgba(255,255,255,0.07); color: var(--k-text-3);
+}
+.cred-group-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.cred-group-total {
+  font-family: var(--mono); font-size: 15px; font-weight: 700;
+}
+.cred-chevron {
+  font-size: 10px; color: var(--k-text-3); transition: transform 0.2s; display: inline-block;
+}
+
+/* Cuerpo expandible */
+.cred-group-body { display: none; }
+.cred-group-body.open { display: block; border-top: 1px solid rgba(255,255,255,0.05); }
+
+/* Fila hija (descripción individual) */
+.cred-child-row {
+  display: grid; grid-template-columns: 1fr 90px 260px;
+  align-items: center; padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  gap: 12px;
+}
+.cred-child-row:last-of-type { border-bottom: none; }
+.cred-child-desc {
+  font-family: var(--sans); font-size: 12.5px; color: var(--k-text-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cred-abonado-tag {
+  font-family: var(--mono); font-size: 9px; color: var(--k-accent);
+  margin-left: 5px; background: none; border: none; cursor: pointer;
+  padding: 1px 4px; border-radius: 4px; transition: background 0.15s;
+}
+.cred-abonado-tag:hover { background: rgba(196,240,66,0.12); }
+.cred-child-date {
+  font-family: var(--mono); font-size: 10px; color: var(--k-text-3);
+}
+.cred-child-actions {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+}
+.cred-child-price {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  min-width: 70px; text-align: right;
+}
+
+/* eliminado — padding ahora en sub-secciones */
+
+/* Botones — mantener estilos existentes */
+.cred-btn-row { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ── Sección de pagados/cobrados revertibles ── */
+.cred-paid-section {
+  margin-top: 12px; border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px; overflow: hidden;
+}
+.cred-paid-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 16px; cursor: pointer;
+  transition: background 0.15s;
+}
+.cred-paid-toggle:hover { background: rgba(255,255,255,0.03); }
+.cred-paid-lbl {
+  font-family: var(--sans); font-size: 11.5px; font-weight: 600;
+  color: var(--k-text-3);
+}
+.cred-paid-chevron { font-size: 9px; color: var(--k-text-3); }
+.cred-paid-list { border-top: 1px solid rgba(255,255,255,0.05); }
+.cred-paid-row {
+  display: grid; grid-template-columns: 1fr 1.4fr 88px auto;
+  align-items: center; padding: 9px 16px; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04); opacity: 0.55;
+  transition: opacity 0.15s;
+}
+.cred-paid-row:last-child { border-bottom: none; }
+.cred-paid-row:hover { opacity: 0.85; }
+.cred-paid-client {
+  font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--k-text-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cred-paid-desc {
+  font-family: var(--sans); font-size: 11.5px; color: var(--k-text-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cred-paid-date { font-family: var(--mono); font-size: 10px; color: var(--k-text-3); }
+.cred-paid-right { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.cred-paid-amount {
+  font-family: var(--mono); font-size: 12px; color: var(--k-text-3); text-decoration: line-through;
+}
+.cred-revert-btn {
+  font-family: var(--sans); font-size: 10px; font-weight: 600;
+  padding: 3px 9px; border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.1); background: transparent;
+  color: var(--k-text-3); cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.cred-revert-btn:hover { border-color: var(--k-credit); color: var(--k-credit); opacity: 1; }
+.cred-abonar-btn {
+  font-size: 10px; font-family: var(--mono); font-weight: 600;
+  padding: 4px 10px; border-radius: 99px; border: 1px solid var(--k-line);
+  background: transparent; color: var(--k-text-2); cursor: pointer; transition: all 0.15s;
+  white-space: nowrap; min-width: 68px; text-align: center;
+}
+.cred-pagar-btn { min-width: 64px; text-align: center; }
+.cred-abonar-btn:hover { border-color: var(--k-accent); color: var(--k-accent); }
+.cred-abonar-btn.has-abono { border-color: rgba(196,240,66,0.3); color: var(--k-accent); background: rgba(196,240,66,0.06); }
+.cred-abonar-btn.has-abono:hover { background: rgba(196,240,66,0.12); }
+/* Panel de abono desplegable */
+.cred-abono-row {
+  display: none; flex-direction: column; gap: 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.cred-abono-row.open { display: flex; }
+
+/* Historial de abonos anteriores */
+.cred-abono-history { padding: 10px 16px 6px; }
+.cred-abono-hist-title {
+  font-family: var(--sans); font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--k-text-3); margin-bottom: 6px;
+}
+.cred-abono-hist-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.cred-abono-hist-item:last-child { border-bottom: none; }
+.cahi-date { font-family: var(--mono); font-size: 10.5px; color: var(--k-text-3); flex: 0 0 80px; }
+.cahi-amount { font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--k-accent); flex: 1; }
+.cahi-del {
+  background: none; border: 1px solid transparent; color: var(--k-text-3);
+  font-size: 10px; cursor: pointer; padding: 2px 6px; border-radius: 6px;
+  transition: all .15s; flex-shrink: 0;
+}
+.cahi-del:hover { border-color: var(--k-expense); color: var(--k-expense); }
+
+/* Sección de nuevo abono */
+.cred-abono-new-section {
+  padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.cred-abono-label { font-family: var(--sans); font-size: 11px; color: var(--k-text-3); }
+.cred-abono-inputrow { display: flex; gap: 8px; align-items: center; }
+.cred-abono-input {
+  flex: 1; max-width: 160px; padding: 8px 12px; border-radius: 9px;
+  border: 1px solid var(--k-line); background: rgba(0,0,0,0.3);
+  color: var(--k-text); font-family: var(--mono); font-size: 13px;
+}
+.cred-abono-input:focus { outline: none; border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accent-l); }
+.cred-abono-confirm {
+  padding: 8px 14px; border-radius: 9px; border: 1px solid var(--k-accent);
+  background: var(--k-accent); color: #0A0B0E; font-family: var(--sans);
+  font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+}
+.cred-abono-confirm:hover { background: #d0ff4d; }
+/* Botón "✓ Pagó" (por cobrar) en verde acento */
+.cred-full-cobrar { border-color: var(--k-accent) !important; background: rgba(196,240,66,0.08) !important; color: var(--k-accent) !important; }
+.cred-full-cobrar:hover { background: var(--k-accent) !important; color: #0A0B0E !important; }
 
 /* ── Pedidos grid ── */
 .pl-ord { grid-template-columns: 1fr 1.8fr 80px 80px; }
@@ -3610,14 +3798,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 
 /* ================================================================
-   NOTAS POST-IT CON ALFILER - Kajita v14.8.35
+   NOTAS POST-IT CON ALFILER - Kajita v14.8.48
    FIX v14.8.27: saveOrder() persistía con saveOrders() DESPUÉS de render(),
    pero render()->renderDayOrders()->loadOrders() recargaba localStorage (aún vacío)
    y vaciaba _orders antes de guardarlo. Ahora saveOrders() corre ANTES de render().
    v14.8.28: edición de pedidos unificada en un solo modal (openEditOrderModal);
    eliminado overlay viejo editOrdOverlay + funciones Eo*, y código muerto
    (person-card/_expanded, inv-card, cred-card, refreshData, resetBizProfile, no-ops).
-   v14.8.35: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
+   v14.8.48: eliminado subsistema de voz completo (FAB micrófono, modal de voz,
    SpeechRecognition, parseVoiceLocal, ~571 líneas) — estaba oculto y sin uso.
 ================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
@@ -3887,7 +4075,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.35</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.48</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4128,7 +4316,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.35</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.48</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -6069,12 +6257,33 @@ function renderInvPanel() {
    PANEL: CRÉDITOS POR COBRAR
 ══════════════════════════════════════════ */
 let _credTab = 'cobrar';
+let _credExpanded = new Set(); // nombres de clientes/proveedores expandidos
 
 function setCredTab(tab) {
   _credTab = tab;
   document.querySelectorAll('.panel-type-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('credTab' + (tab === 'cobrar' ? 'Cobrar' : 'Pagar')).classList.add('active');
   renderCredPanel();
+}
+
+// Navega a Créditos, activa el tab correcto, expande y resalta el grupo del cliente
+function goToCredClient(clientName, tab) {
+  switchView('cred');
+  setTimeout(() => {
+    setCredTab(tab);
+    // Asegurar que el grupo esté expandido
+    _credExpanded.add(clientName);
+    renderCredPanel();
+    setTimeout(() => {
+      const hdr = [...document.querySelectorAll('.cred-group-hdr')]
+        .find(h => h.dataset.client === clientName);
+      if (!hdr) return;
+      const group = hdr.closest('.cred-group');
+      group?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      group?.classList.add('cred-group-highlight');
+      setTimeout(() => group?.classList.remove('cred-group-highlight'), 1800);
+    }, 120);
+  }, 80);
 }
 
 function renderCredPanel() {
@@ -6121,46 +6330,239 @@ function renderCredPanel() {
     return;
   }
 
-  const headerCols = isCobrar
-    ? `<div>Cliente</div><div>Descripción</div><div>Fecha</div><div>Pendiente</div>`
-    : `<div>Proveedor</div><div>Descripción</div><div>Fecha</div><div>Pendiente</div>`;
+  // ── Agrupar por cliente/proveedor ──
+  const groupMap = new Map();
+  pending.forEach(e => {
+    const key = e.client || '—';
+    if (!groupMap.has(key)) groupMap.set(key, []);
+    groupMap.get(key).push(e);
+  });
 
-  const rows = pending.map(e => {
-    const monto = e.pendiente > 0 ? e.pendiente : e.amount;
-    const acuenta = e.acuenta > 0
-      ? `<span style="font-family:var(--mono);font-size:9px;color:var(--k-accent);margin-left:4px;">+S/${e.acuenta.toFixed(2)} abonado</span>` : '';
-    const today = getToday();
-    const days  = Math.round((new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000);
-    const ageCls = days >= 14 ? 'var(--k-expense)' : days >= 7 ? 'var(--k-credit)' : 'var(--k-text-3)';
-    const agePill = days > 0
-      ? `<span style="font-size:8px;color:${ageCls};margin-left:4px;font-family:var(--mono);">${days}d</span>` : '';
+  const color = isCobrar ? 'var(--k-credit)' : 'var(--k-expense)';
+  const abonoLbl = isCobrar ? '¿Cuánto abonó el cliente?' : '¿Cuánto pagaste al proveedor?';
+  const today2 = getToday();
 
-    if (isCobrar) {
-      return `<div class="pl-row pl-cred">
-        <div class="pl-name">${e.client || '—'}</div>
-        <div class="pl-phone">${e.desc || '—'}${acuenta}</div>
-        <div class="pl-phone">${fmtDate(e.date)}${agePill}</div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <span class="pl-price" style="color:var(--k-credit);">S/ ${monto.toFixed(2)}</span>
-          <button class="cred-cobrar-btn" onclick="cobrarEntry('${e.id}');renderCredPanel();" title="Marcar como pagado">✓</button>
+  const groups = [...groupMap.entries()].map(([clientName, items]) => {
+    const totalGroup = items.reduce((s, e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
+    const isExpanded = _credExpanded.has(clientName) || items.length === 1;
+    const chevron = items.length > 1
+      ? `<span class="cred-chevron${isExpanded ? ' open' : ''}">${isExpanded ? '▲' : '▼'}</span>` : '';
+    const countPill = items.length > 1
+      ? `<span class="cred-count-pill">${items.length} ${isCobrar ? 'créditos' : 'deudas'}</span>` : '';
+
+    const childRows = items.map(e => {
+      // Migrar legacy acuenta → abonos si no existe el array
+      if (!e.abonos && e.acuenta > 0) {
+        e.abonos = [{ id: 'legacy-' + e.id, amount: e.acuenta, date: e.date }];
+      }
+      const abonos = e.abonos || [];
+      const totalAbonado = abonos.reduce((s, a) => s + a.amount, 0);
+      const monto = Math.max(0, e.amount - totalAbonado);
+
+      // Tag resumen de abonos (clickeable abre el panel)
+      let abonoTag = '';
+      if (abonos.length === 1) {
+        abonoTag = `<button class="cred-abonado-tag" onclick="credToggleAbono('${e.id}')" title="Ver historial de abonos">S/${totalAbonado.toFixed(2)} abonado</button>`;
+      } else if (abonos.length > 1) {
+        abonoTag = `<button class="cred-abonado-tag" onclick="credToggleAbono('${e.id}')" title="Ver historial de abonos">${abonos.length} abonos · S/${totalAbonado.toFixed(2)}</button>`;
+      }
+
+      const days = Math.round((new Date(today2+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000);
+      const ageCls = days >= 14 ? 'var(--k-expense)' : days >= 7 ? 'var(--k-credit)' : 'var(--k-text-3)';
+      const agePill = days > 0
+        ? `<span style="font-size:8px;color:${ageCls};font-family:var(--mono);margin-left:3px;">${days}d</span>` : '';
+      const fullBtn = isCobrar
+        ? `<button class="cred-pagar-btn cred-full-cobrar" onclick="cobrarEntry('${e.id}');renderCredPanel();" title="Cobrado por completo">✓ Pagó</button>`
+        : `<button class="cred-pagar-btn cred-full-pagar" onclick="pagarDebt('${e.id}');renderCredPanel();" title="Pagado por completo">✓ Pagué</button>`;
+
+      // Historial de abonos
+      const histHtml = abonos.length ? `
+        <div class="cred-abono-history">
+          <div class="cred-abono-hist-title">Abonos registrados</div>
+          ${abonos.map(a => `
+            <div class="cred-abono-hist-item">
+              <span class="cahi-date">${fmtDate(a.date)}</span>
+              <span class="cahi-amount">+ S/ ${a.amount.toFixed(2)}</span>
+              <button class="cahi-del" onclick="credDeleteAbono('${e.id}','${a.id}',${isCobrar})" title="Eliminar este abono">✕</button>
+            </div>`).join('')}
+        </div>` : '';
+
+      const newAbonoLbl = isCobrar ? 'Nuevo abono del cliente' : 'Nuevo pago al proveedor';
+      return `
+        <div class="cred-child-row" onclick="credToggleAbono('${e.id}')" style="cursor:pointer;">
+          <div class="cred-child-desc">${e.desc || '—'}${abonoTag}</div>
+          <div class="cred-child-date">${fmtDate(e.date)}${agePill}</div>
+          <div class="cred-child-actions" onclick="event.stopPropagation()">
+            <span class="cred-child-price" style="color:${color};">S/ ${monto.toFixed(2)}</span>
+            <div class="cred-btn-row">
+              <button class="cred-abonar-btn${abonos.length ? ' has-abono' : ''}" onclick="credToggleAbono('${e.id}')" title="Registrar un abono">+ Abonar</button>
+              ${fullBtn}
+            </div>
+          </div>
         </div>
-      </div>`;
-    } else {
-      return `<div class="pl-row pl-cred">
-        <div class="pl-name">${e.client || '—'}</div>
-        <div class="pl-phone">${e.desc || '—'}${acuenta}</div>
-        <div class="pl-phone">${fmtDate(e.date)}${agePill}</div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <span class="pl-price" style="color:var(--k-expense);">S/ ${monto.toFixed(2)}</span>
-          <button class="cred-pagar-btn" onclick="pagarDebt('${e.id}');renderCredPanel();" title="Marcar como pagado">✓</button>
+        <div class="cred-abono-row" id="cabono-${e.id}">
+          ${histHtml}
+          <div class="cred-abono-new-section">
+            <span class="cred-abono-label">${newAbonoLbl}</span>
+            <div class="cred-abono-inputrow">
+              <input class="cred-abono-input" id="cabono-inp-${e.id}" type="number" min="0.01" step="0.01" placeholder="S/ 0.00"
+                onkeydown="if(event.key==='Enter') credAddAbono('${e.id}',${isCobrar})">
+              <button class="cred-abono-confirm" onclick="credAddAbono('${e.id}',${isCobrar})">Registrar</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const safeClient = clientName.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    return `<div class="cred-group">
+      <div class="cred-group-hdr ${isExpanded && items.length > 1 ? 'expanded' : ''}" data-client="${safeClient}" onclick="credToggleGroup(this.dataset.client)">
+        <div class="cred-group-name">${clientName}${countPill}</div>
+        <div class="cred-group-right">
+          <span class="cred-group-total" style="color:${color};">S/ ${totalGroup.toFixed(2)}</span>
+          ${chevron}
         </div>
-      </div>`;
-    }
+      </div>
+      <div class="cred-group-body${isExpanded ? ' open' : ''}">
+        ${childRows}
+      </div>
+    </div>`;
   }).join('');
 
-  list.innerHTML = `
-    <div class="pl-head-row pl-cred">${headerCols}</div>
-    ${rows}`;
+  // ── Sección de pagados/cobrados recientes (revertibles) ──
+  const paidEntries = isCobrar
+    ? entries.filter(e => e.wasCredit && e.paid)
+    : entries.filter(e => e.wasDebt && e.paid);
+
+  let paidSection = '';
+  if (paidEntries.length) {
+    const paidLabel  = isCobrar ? 'Cobrados' : 'Pagados';
+    const revertFn   = isCobrar ? 'uncobrarEntry' : 'unpagarDebt';
+    const revertTip  = isCobrar ? 'El cobro no fue real — revertir a pendiente' : 'El pago no fue real — revertir a pendiente';
+    const isOpen     = _credPaidOpen;
+
+    const paidRows = paidEntries.map(e => {
+      const monto = e.amount;
+      const days  = Math.round((new Date(today2+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000);
+      return `<div class="cred-paid-row">
+        <div class="cred-paid-client">${e.client || '—'}</div>
+        <div class="cred-paid-desc">${e.desc || '—'}</div>
+        <div class="cred-paid-date">${fmtDate(e.date)}${days > 0 ? ` <span style="color:var(--k-text-3);font-size:8px;">${days}d</span>` : ''}</div>
+        <div class="cred-paid-right">
+          <span class="cred-paid-amount">S/ ${monto.toFixed(2)}</span>
+          <button class="cred-revert-btn" onclick="${revertFn}('${e.id}')" title="${revertTip}">↩ Revertir</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    paidSection = `<div class="cred-paid-section">
+      <div class="cred-paid-toggle" onclick="_credPaidOpen=!_credPaidOpen;renderCredPanel()">
+        <span class="cred-paid-lbl">${paidLabel} (${paidEntries.length})</span>
+        <span class="cred-paid-chevron">${isOpen ? '▲' : '▼'}</span>
+      </div>
+      ${isOpen ? `<div class="cred-paid-list">${paidRows}</div>` : ''}
+    </div>`;
+  }
+
+  list.innerHTML = groups + paidSection;
+}
+
+let _credPaidOpen = false;
+
+// Expandir/colapsar grupo de créditos por cliente
+function credToggleGroup(clientName) {
+  if (_credExpanded.has(clientName)) {
+    _credExpanded.delete(clientName);
+  } else {
+    _credExpanded.add(clientName);
+  }
+  renderCredPanel();
+}
+
+// Abrir/cerrar el panel de abonos de una fila
+function credToggleAbono(id) {
+  const row = document.getElementById('cabono-' + id);
+  if (!row) return;
+  const isOpen = row.classList.contains('open');
+  document.querySelectorAll('.cred-abono-row.open').forEach(r => r.classList.remove('open'));
+  if (!isOpen) {
+    row.classList.add('open');
+    setTimeout(() => document.getElementById('cabono-inp-' + id)?.focus(), 80);
+  }
+}
+
+// Registrar un nuevo abono (suma al historial)
+async function credAddAbono(id, isCobrar) {
+  const inp = document.getElementById('cabono-inp-' + id);
+  if (!inp) return;
+  const valor = parseFloat(inp.value);
+  if (isNaN(valor) || valor <= 0) {
+    inp.style.borderColor = 'var(--k-expense)';
+    setTimeout(() => inp.style.borderColor = '', 1200);
+    return;
+  }
+  const e = entries.find(x => String(x.id) === String(id));
+  if (!e) return;
+
+  // Migrar legacy si aún no tiene array
+  if (!e.abonos) e.abonos = e.acuenta > 0 ? [{ id: 'legacy-' + id, amount: e.acuenta, date: e.date }] : [];
+
+  const nuevoTotal = e.abonos.reduce((s, a) => s + a.amount, 0) + valor;
+  if (nuevoTotal > e.amount + 0.001) {
+    toast('⚠️ El total de abonos superaría el monto original (S/' + e.amount.toFixed(2) + ')');
+    return;
+  }
+
+  e.abonos.push({ id: Date.now(), amount: valor, date: getToday() });
+  e.acuenta   = nuevoTotal;
+  e.pendiente = Math.max(0, e.amount - nuevoTotal);
+  const pagoTotal = e.pendiente <= 0.001;
+  if (pagoTotal) {
+    e.paid = true; e.pay = 'cash';
+    if (isCobrar) { e.credit = false; e.wasCredit = true; }
+    else           { e.debt   = false; e.wasDebt   = true; }
+  }
+
+  if (currentUser && !currentUser.id?.includes('demo-user')) {
+    try {
+      await sb.from('entries').update({
+        acuenta: e.acuenta,
+        pendiente: e.pendiente > 0 ? e.pendiente : null,
+        is_credit: isCobrar ? !pagoTotal : e.credit,
+        is_debt:   isCobrar ? e.debt     : !pagoTotal,
+        is_paid: pagoTotal,
+        payment_type: pagoTotal ? 'cash' : 'credit'
+      }).eq('id', id).eq('user_id', currentUser.id);
+    } catch(err) { console.error('credAddAbono:', err); }
+  }
+
+  save(); buildDayBar(); render(); renderCredPanel();
+  // Mantener el panel abierto para permitir más abonos seguidos
+  if (!pagoTotal) {
+    const newRow = document.getElementById('cabono-' + id);
+    if (newRow) { newRow.classList.add('open'); newRow.querySelector('.cred-abono-input')?.focus(); }
+  }
+  toast(pagoTotal
+    ? (isCobrar ? '✓ ¡Cobrado completo! Ya suma al balance.' : '✓ Deuda pagada completamente')
+    : `✓ Abono de S/${valor.toFixed(2)} registrado · Queda S/${e.pendiente.toFixed(2)}`);
+}
+
+// Eliminar un abono del historial
+function credDeleteAbono(entryId, abonoId, isCobrar) {
+  const e = entries.find(x => String(x.id) === String(entryId));
+  if (!e) return;
+  if (!e.abonos) e.abonos = [];
+  e.abonos = e.abonos.filter(a => String(a.id) !== String(abonoId));
+  e.acuenta   = e.abonos.reduce((s, a) => s + a.amount, 0);
+  e.pendiente = Math.max(0, e.amount - e.acuenta);
+  if (e.paid) {
+    e.paid = false;
+    if (isCobrar) { e.credit = true; delete e.wasCredit; }
+    else           { e.debt   = true; delete e.wasDebt; }
+  }
+  save(); buildDayBar(); render(); renderCredPanel();
+  const reopenRow = document.getElementById('cabono-' + entryId);
+  if (reopenRow) reopenRow.classList.add('open');
+  toast('↩ Abono eliminado · Queda S/' + e.pendiente.toFixed(2));
 }
 
 /* ══════════════════════════════════════════
@@ -7796,46 +8198,34 @@ function renderReminders(){
 
   if(pending.length === 0){ bar.style.display='none'; return; }
   bar.style.display = 'block';
-  if(countEl) countEl.textContent = pending.length;
 
-  // Ordenar por más antiguo primero
-  pending.sort((a,b) => a.date.localeCompare(b.date));
+  // Agrupar por cliente
+  const groupMap = new Map();
+  pending.forEach(e => {
+    const key = e.client || 'Sin nombre';
+    if(!groupMap.has(key)) groupMap.set(key, []);
+    groupMap.get(key).push(e);
+  });
+  if(countEl) countEl.textContent = groupMap.size;
 
-  list.innerHTML = pending.map(e => {
-    const diffMs = new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00');
-    const days = Math.round(diffMs / 86400000);
-    const cls = days >= 7 ? 'urgent' : days >= 3 ? 'warning' : 'normal';
-    const clientName = e.client || 'Sin nombre';
-    const fechaStr = new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short'});
-    const montoPendiente = (e.pendiente > 0 ? e.pendiente : e.amount);
-    const acuentaTag = e.acuenta > 0
-      ? `<span style="color:var(--k-accent);font-weight:600;"> · S/${e.acuenta.toFixed(2)} a cuenta</span>`
-      : '';
-    return `<div class="reminder-item" id="ritem-${e.id}">
-      <div class="reminder-item-row">
-        <div class="reminder-days ${cls}">
-          <span class="reminder-days-num">${days === 0 ? '!' : days}</span>
-          <span class="reminder-days-lbl">${days===0?'hoy':days===1?'día':'días'}</span>
-        </div>
-        <div class="reminder-info">
-          <div class="reminder-client">${clientName}</div>
-          <div class="reminder-desc">${e.desc} · ${fechaStr}${acuentaTag}</div>
-        </div>
-        <div class="reminder-amt">S/ ${montoPendiente.toFixed(2)}</div>
-        <div class="reminder-actions">
-          <button class="reminder-abonar" id="rbtn-${e.id}" onclick="toggleAbonoPanel('${e.id}', ${montoPendiente})">+ Abonar</button>
-          <button class="reminder-cobrar" onclick="cobrarEntry('${e.id}');renderReminders();">✓ Pagó</button>
-        </div>
+  list.innerHTML = [...groupMap.entries()].map(([clientName, items]) => {
+    const total = items.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
+    // Antigüedad del más antiguo
+    const oldestDays = Math.max(...items.map(e => Math.round((new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000)));
+    const cls = oldestDays >= 7 ? 'urgent' : oldestDays >= 3 ? 'warning' : 'normal';
+    const countPill = items.length > 1
+      ? `<span class="reminder-count-pill">${items.length} deudas</span>` : '';
+    const safeClient = clientName.replace(/'/g,"\\'");
+    return `<div class="reminder-item" onclick="goToCredClient('${safeClient}','cobrar')" style="cursor:pointer;" title="Ver en Créditos">
+      <div class="reminder-days ${cls}">
+        <span class="reminder-days-num">${oldestDays === 0 ? '!' : oldestDays}</span>
+        <span class="reminder-days-lbl">${oldestDays===0?'hoy':oldestDays===1?'día':'días'}</span>
       </div>
-      <div class="abono-panel" id="abono-${e.id}">
-        <div class="abono-panel-label">¿Cuánto abonó ${clientName}?</div>
-        <div class="abono-panel-row">
-          <input class="abono-input" id="abono-inp-${e.id}" type="number" min="0.01" step="0.01"
-            max="${montoPendiente}" placeholder="S/ 0.00"
-            onkeydown="if(event.key==='Enter') confirmarAbono('${e.id}', ${montoPendiente})">
-          <button class="abono-btn-confirmar" onclick="confirmarAbono('${e.id}', ${montoPendiente})">Confirmar</button>
-        </div>
+      <div class="reminder-info">
+        <div class="reminder-client">${clientName}${countPill}</div>
       </div>
+      <div class="reminder-amt">S/ ${total.toFixed(2)}</div>
+      <div class="reminder-arrow">→</div>
     </div>`;
   }).join('');
 }
@@ -7854,45 +8244,33 @@ function renderDebts(){
 
   if(pending.length === 0){ bar.style.display='none'; return; }
   bar.style.display = 'block';
-  if(countEl) countEl.textContent = pending.length;
 
-  pending.sort((a,b) => a.date.localeCompare(b.date));
+  // Agrupar por proveedor
+  const debtGroupMap = new Map();
+  pending.forEach(e => {
+    const key = e.client || 'Sin proveedor';
+    if(!debtGroupMap.has(key)) debtGroupMap.set(key, []);
+    debtGroupMap.get(key).push(e);
+  });
+  if(countEl) countEl.textContent = debtGroupMap.size;
 
-  list.innerHTML = pending.map(e => {
-    const diffMs = new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00');
-    const days = Math.round(diffMs / 86400000);
-    const cls = days >= 7 ? 'urgent' : days >= 3 ? 'warning' : 'normal';
-    const supplierName = e.client || 'Sin proveedor';
-    const fechaStr = new Date(e.date+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short'});
-    const montoPendiente = (e.pendiente > 0 ? e.pendiente : e.amount);
-    const acuentaTag = e.acuenta > 0
-      ? `<span style="color:var(--k-accent);font-weight:600;"> · S/${e.acuenta.toFixed(2)} abonado</span>`
-      : '';
-    return `<div class="debt-item" id="ditem-${e.id}">
-      <div class="debt-item-row">
-        <div class="debt-days ${cls}">
-          <span class="debt-days-num">${days === 0 ? '!' : days}</span>
-          <span class="debt-days-lbl">${days===0?'hoy':days===1?'día':'días'}</span>
-        </div>
-        <div class="debt-info">
-          <div class="debt-supplier">${supplierName}</div>
-          <div class="debt-desc">${e.desc} · ${fechaStr}${acuentaTag}</div>
-        </div>
-        <div class="debt-amt">−S/ ${montoPendiente.toFixed(2)}</div>
-        <div class="debt-actions">
-          <button class="debt-abonar" id="dbtn-${e.id}" onclick="toggleDebtAbonoPanel('${e.id}', ${montoPendiente})">+ Abonar</button>
-          <button class="debt-pagar" onclick="pagarDebt('${e.id}');renderDebts();">✓ Pagué</button>
-        </div>
+  list.innerHTML = [...debtGroupMap.entries()].map(([supplierName, items]) => {
+    const total = items.reduce((s,e) => s + (e.pendiente > 0 ? e.pendiente : e.amount), 0);
+    const oldestDays = Math.max(...items.map(e => Math.round((new Date(today+'T12:00:00') - new Date(e.date+'T12:00:00')) / 86400000)));
+    const cls = oldestDays >= 7 ? 'urgent' : oldestDays >= 3 ? 'warning' : 'normal';
+    const countPill = items.length > 1
+      ? `<span class="reminder-count-pill">${items.length} facturas</span>` : '';
+    const safeSupplier = supplierName.replace(/'/g,"\\'");
+    return `<div class="debt-item" onclick="goToCredClient('${safeSupplier}','pagar')" style="cursor:pointer;" title="Ver en Créditos">
+      <div class="debt-days ${cls}">
+        <span class="debt-days-num">${oldestDays === 0 ? '!' : oldestDays}</span>
+        <span class="debt-days-lbl">${oldestDays===0?'hoy':oldestDays===1?'día':'días'}</span>
       </div>
-      <div class="dabono-panel" id="dabono-${e.id}">
-        <div class="dabono-panel-label">¿Cuánto pagaste a ${supplierName}?</div>
-        <div class="dabono-panel-row">
-          <input class="dabono-input" id="dabono-inp-${e.id}" type="number" min="0.01" step="0.01"
-            max="${montoPendiente}" placeholder="S/ 0.00"
-            onkeydown="if(event.key==='Enter') confirmarDebtAbono('${e.id}', ${montoPendiente})">
-          <button class="dabono-btn-confirmar" onclick="confirmarDebtAbono('${e.id}', ${montoPendiente})">Confirmar</button>
-        </div>
+      <div class="debt-info">
+        <div class="debt-supplier">${supplierName}${countPill}</div>
       </div>
+      <div class="debt-amt">−S/ ${total.toFixed(2)}</div>
+      <div class="reminder-arrow">→</div>
     </div>`;
   }).join('');
 }
@@ -8008,27 +8386,33 @@ async function confirmarDebtAbono(id, montoPendiente){
 
 async function pagarDebt(id){
   const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
-  e.paid=true; e.debt=false; e.pay='cash';
+  e.paid=true; e.debt=false; e.wasDebt=true; e.pay='cash';
   if(currentUser && !currentUser.id?.includes('demo-user')){
     try{ await sb.from('entries').update({is_debt:false,is_paid:true,payment_type:'cash'}).eq('id',id).eq('user_id',currentUser.id); }
     catch(err){ console.error('pagarDebt:',err); }
   }
   save(); buildDayBar(); render();
+  if (typeof renderCredPanel === 'function') renderCredPanel();
   toast('✓ Deuda pagada — descontada del balance');
 }
 
 function uncobrarEntry(id){
   const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
   e.paid=false; e.credit=true; delete e.paidAt;
-  save(); buildDayBar(); render();
-  toast('↩ Pago desmarcado — vuelve a pendiente de cobro');
+  // Restaurar pendiente: si había abonar previo se respeta, sino vuelve al monto original
+  const acuenta = e.acuenta || 0;
+  e.pendiente = Math.max(e.amount - acuenta, e.amount);
+  e.acuenta = 0; // abonos anteriores también se revierten junto con el pago total
+  save(); buildDayBar(); render(); renderCredPanel();
+  toast('↩ Pago revertido — vuelve a pendiente de cobro');
 }
 
 function unpagarDebt(id){
   const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
   e.paid=false; e.debt=true; delete e.paidAt;
-  save(); buildDayBar(); render();
-  toast('↩ Pago desmarcado — vuelve a pendiente de pago');
+  e.pendiente = e.amount; e.acuenta = 0;
+  save(); buildDayBar(); render(); renderCredPanel();
+  toast('↩ Pago revertido — vuelve a deuda pendiente');
 }
 
 function toggleRemindersBar(){
@@ -8241,8 +8625,13 @@ function seedDemoData(){
     { id:'e-5', type:'income', desc:'Tubo PVC 1/2" x3m',  amount:85.00, qty:10,unitPrice:8.50,  pay:'cash',   date:today, time:'12:10:00', credit:true,  debt:false, client:'María Quispe', paid:false, acuenta:0, pendiente:85.00 },
     // Crédito por cobrar — con abono parcial
     { id:'e-6', type:'income', desc:'Cemento + Clavos',   amount:150.00,qty:null,unitPrice:null, pay:'cash',   date:ayer,  time:'16:20:00', credit:true,  debt:false, client:'José Ramírez', paid:false, acuenta:50.00, pendiente:100.00 },
+    // Más créditos de José Ramírez (sin pagar)
+    { id:'e-8', type:'income', desc:'Varillas de fierro 3/8"', amount:120.00,qty:10,unitPrice:12.00, pay:'cash', date:ayer, time:'09:00:00', credit:true, debt:false, client:'José Ramírez', paid:false, acuenta:0, pendiente:120.00 },
+    { id:'e-9', type:'income', desc:'Arena gruesa (2 sacos)',   amount:40.00, qty:2, unitPrice:20.00, pay:'cash', date:today,time:'08:00:00', credit:true, debt:false, client:'José Ramírez', paid:false, acuenta:0, pendiente:40.00 },
     // Deuda por pagar (fiado de proveedor)
-    { id:'e-7', type:'expense',desc:'Lote de tubería',    amount:300.00,qty:null,unitPrice:null, pay:'cash',   date:ayer,  time:'15:00:00', credit:false, debt:true,  client:'Aceros del Perú', paid:false, acuenta:0, pendiente:300.00 },
+    { id:'e-7', type:'expense',desc:'Lote de tubería PVC',     amount:300.00,qty:null,unitPrice:null, pay:'cash', date:ayer, time:'15:00:00', credit:false, debt:true,  client:'Aceros del Perú', paid:false, acuenta:0,      pendiente:300.00 },
+    // Segunda deuda con Aceros del Perú (con abono parcial)
+    { id:'e-10',type:'expense',desc:'Planchas de acero 2mm',   amount:450.00,qty:null,unitPrice:null, pay:'cash', date:ayer, time:'11:30:00', credit:false, debt:true,  client:'Aceros del Perú', paid:false, acuenta:100.00, pendiente:350.00 },
   ];
   save();
 
@@ -8691,7 +9080,7 @@ async function submitEntry(){
 
 async function cobrarEntry(id){
   const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
-  e.paid=true; e.credit=false; e.pay='cash'; e.paidAt=new Date().toISOString();
+  e.paid=true; e.credit=false; e.wasCredit=true; e.pay='cash'; e.paidAt=new Date().toISOString();
   if(currentUser && !currentUser.id?.includes('demo-user')){
     try{ await sb.from('entries').update({is_credit:false,is_paid:true,payment_type:'cash'}).eq('id',id).eq('user_id',currentUser.id); }
     catch(err){ console.error('cobrar:',err); }
@@ -8701,6 +9090,7 @@ async function cobrarEntry(id){
   const allPill=document.querySelector('.fpill[data-f="all"]');
   setFilter('all', allPill);
   buildDayBar(); render();
+  if (typeof renderCredPanel === 'function') renderCredPanel();
   toast('✓ Cobrado — ya suma al balance');
 }
 
@@ -10132,9 +10522,12 @@ function renderOrdPanel() {
   const tmlLabels = {pending:'Pendiente', ready:'Listo', done:'Entregado'};
 
   list.innerHTML = filtered.map(o => {
-    const itemsText = o.items.map(i => i.desc + (i.price ? ` (S/ ${i.price.toFixed(2)})` : '')).join(' · ');
-    const dateStr   = fmtDate(o.date, o.time);
-    const phoneStr  = o.phone ? `📞 ${o.phone}` : '';
+    const itemsText = o.items.map(i => {
+      const q = i.qty && i.qty > 1 ? `${i.qty}× ` : '';
+      return q + i.desc;
+    }).join(' · ');
+    const dateStr  = fmtDate(o.date, o.time);
+    const phoneStr = o.phone ? `📞 ${o.phone}` : '';
     const ns = nextStatusMap[o.status] || nextStatusMap.pending;
     const tmlIdx = tmlSteps.indexOf(o.status);
     const timelineHtml = tmlSteps.map((s, i) => {
@@ -10148,6 +10541,7 @@ function renderOrdPanel() {
           <span class="ord-tml-label">${tmlLabels[s]}</span>
         </button>`;
     }).join('');
+    const metaParts = [dateStr, phoneStr, o.note ? `📝 ${o.note}` : ''].filter(Boolean);
     return `<div class="order-card" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
       <div class="swipe-hint-right">${ns.icon} ${ns.label}</div>
       <div class="swipe-hint-left">↩ Retroceder</div>
@@ -10156,15 +10550,17 @@ function renderOrdPanel() {
         <div class="order-card-info">
           <div class="order-card-client">${o.client}</div>
           <div class="order-card-items">${itemsText}</div>
-          ${dateStr || phoneStr || o.note ? `<div class="order-card-meta">${dateStr ? `<span>${dateStr}</span>` : ''}${phoneStr ? `<span>${phoneStr}</span>` : ''}${o.note ? `<span>📝 ${o.note}</span>` : ''}</div>` : ''}
         </div>
-        <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
         <div class="order-card-right" onclick="event.stopPropagation()">
           <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
-          <span class="order-pay-badge ${o.paid?'paid':'unpaid'}">${o.paid?'✓ Pagado':'⏳ Falta pagar'}</span>
           <button class="abtn-menu" data-ord-id="${o.id}" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
         </div>
       </div>
+      <div class="order-card-footer">
+        <div class="order-card-meta">${metaParts.map(p=>`<span>${p}</span>`).join('')}</div>
+        <span class="order-pay-badge ${o.paid?'paid':'unpaid'}">${o.paid?'✓ Pagado':'Falta pagar'}</span>
+      </div>
+      <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
     </div>`;
   }).join('');
 
