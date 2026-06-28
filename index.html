@@ -398,6 +398,15 @@ body::before {
   max-width: 220px;
 }
 .ctb-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+.ctb-logo-mobile {
+  display: none;
+  align-items: baseline;
+  font-family: var(--serif); font-size: 20px; font-weight: 700;
+  letter-spacing: -0.5px; line-height: 1; flex-shrink: 0;
+}
+.ctb-logo-ka  { color: var(--k-text); }
+.ctb-logo-j   { color: var(--k-accent); font-size: 23px; display: inline-block; transform: translateY(1px); }
+.ctb-logo-ita { color: var(--k-text); }
 
 .content-body {
   padding: 32px 40px 60px;
@@ -431,9 +440,10 @@ body::before {
   /* Sidebar oculto a la izquierda, se desliza con .open */
   .sidebar {
     width: 280px;
+    background: #0a0b0e; /* sólido, sin transparencia */
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.34,1.05,0.64,1);
-    z-index: 1100;
+    z-index: 10001;
     box-shadow: 4px 0 32px rgba(0,0,0,0.5);
   }
   .sidebar.drawer-open {
@@ -446,7 +456,7 @@ body::before {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(4px);
-    z-index: 1099;
+    z-index: 10000;
   }
   .drawer-overlay.open { display: block; }
 
@@ -469,8 +479,107 @@ body::before {
   .sb-footer { display: flex !important; }
 
   .main-content { margin-left: 0; }
-  .content-topbar { padding: 12px 16px; }
   .content-body { padding: 14px 14px 40px; }
+
+  /* ── Topbar móvil: 2 filas fijas ── */
+  .content-topbar {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-rows: 48px auto;
+    padding: 0;
+    gap: 0;
+    min-height: unset;
+    border-bottom: 1px solid var(--k-line);
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+  }
+  /* Fila 1, col 1: hamburger */
+  .btn-hamburger {
+    display: flex !important;
+    grid-column: 1; grid-row: 1;
+    align-self: center;
+    margin-left: 14px;
+    width: 36px; height: 36px;
+  }
+  /* Fila 1, col 3: botón search */
+  .ctb-actions {
+    grid-column: 3; grid-row: 1;
+    align-self: center;
+    margin: 0;
+  }
+  /* Fila 1, col 4: logo Kajita */
+  .ctb-logo-mobile {
+    display: flex;
+    grid-column: 4; grid-row: 1;
+    align-self: center;
+    margin-right: 14px;
+  }
+  /* Fila 2: título de área, span completo */
+  .ctb-title {
+    display: flex;
+    grid-column: 1 / -1; grid-row: 2;
+    align-items: center;
+    padding: 8px 16px 10px;
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--k-text);
+    letter-spacing: -0.3px;
+    border-top: 1px solid var(--k-line);
+  }
+  .ctb-biz { display: none; }
+
+  /* ── Grab handle en bottom-sheets ── */
+  .panel-sheet::before {
+    content: '';
+    display: block;
+    width: 38px; height: 4px;
+    background: rgba(255,255,255,0.13);
+    border-radius: 2px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+  }
+
+  /* ── Panel header en móvil ── */
+  .panel-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 14px 10px;
+  }
+  .panel-head > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-head-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .panel-search { flex: 1; min-width: 0; }
+  .panel-ttl { font-size: 17px; }
+  .panel-add-btn { flex-shrink: 0; padding: 8px 14px; font-size: 13px; }
+  .panel-close { flex-shrink: 0; width: 32px; height: 32px; }
+
+  /* ── Lista scrollable horizontalmente ── */
+  .panel-list {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .panel-list::-webkit-scrollbar { display: none; }
+  .pl-head-row, .pl-row { min-width: 660px; }
+  .pl-cli { grid-template-columns: 160px 95px 130px 110px 105px 80px; }
+  /* Cabecera de tabla sticky en scroll vertical */
+  .pl-head-row {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--k-panel);
+  }
 }
 
 /* Ocultar hamburguesa en desktop */
@@ -3292,6 +3401,20 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 @media (max-width: 700px) { .dash-bottom-row { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 480px) { .dash-bottom-row { grid-template-columns: 1fr; } }
+@media (max-width: 480px) {
+  .dash-grid { grid-template-columns: 1fr; gap: 10px; }
+  .dash-card { padding: 14px 16px; }
+  .dash-card-title { font-size: 12px; }
+  .dash-card-value, .dash-kpi-val { font-size: 20px; }
+  .dash-hero { padding: 20px 18px; min-height: unset; }
+  .dash-hero-amount { font-size: 28px; }
+  .content-body { padding: 10px 12px 60px; }
+  .panel-type-tabs {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; flex-wrap: nowrap; padding-bottom: 2px;
+  }
+  .panel-type-tabs::-webkit-scrollbar { display: none; }
+}
 .dash-bottom-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .dash-mini-title {
   font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
@@ -3791,20 +3914,54 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   /* Popover se abre hacia arriba si está abajo de la pantalla */
   .abtn-menu { width: 34px; height: 34px; font-size: 19px; }
 
-  /* ── PANEL LATERAL: sube desde abajo en móvil ── */
-  .panel-overlay.open { display: flex; align-items: flex-end; }
-  .panel-sheet {
-    position: relative;
-    width: 100%; height: 92dvh;
-    border-left: none; border-radius: 20px 20px 0 0;
-    transform: translateY(100%);
+  /* ── PANEL: slide desde la derecha, pantalla completa ── */
+  /* Cubrir AMBOS casos: overlay normal y modo as-page (misma especificidad) */
+  .panel-overlay,
+  .panel-overlay.as-page {
+    background: none !important;
+    backdrop-filter: none !important;
+    position: fixed !important;
+    inset: 0 !important;
+    display: none !important;
+    z-index: 9200 !important;
   }
-  .panel-overlay.open .panel-sheet { transform: translateY(0); }
-  .panel-head   { padding: 16px 16px 12px; }
-  .panel-ttl    { font-size: 18px; }
-  .panel-add-btn{ font-size: 11px; padding: 6px 12px; }
-  .panel-search { padding: 8px 14px 4px; }
-  .panel-list   { padding: 4px 10px 12px; }
+  .panel-overlay.open,
+  .panel-overlay.as-page.open {
+    display: block !important;
+  }
+  .panel-overlay .panel-sheet,
+  .panel-overlay.as-page .panel-sheet {
+    position: fixed !important;
+    top: 91px !important; right: 0 !important; bottom: 0 !important; left: 0 !important;
+    width: 100% !important; height: calc(100dvh - 91px) !important;
+    background: #0d1014 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    transform: translateX(100%) !important;
+    transition: transform 0.28s cubic-bezier(0.34,1.02,0.64,1) !important;
+    overflow: hidden !important;
+    max-height: 100% !important;
+    z-index: 9201 !important;
+  }
+  .panel-overlay.open .panel-sheet,
+  .panel-overlay.as-page.open .panel-sheet {
+    transform: translateX(0) !important;
+  }
+  .panel-overlay .panel-list,
+  .panel-overlay.as-page .panel-list {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    max-height: none !important;
+  }
+  /* Sin grab handle */
+  .panel-sheet::before { display: none !important; }
+  .panel-head   { padding: 14px 16px 12px; flex-direction: row; align-items: center; gap: 8px; }
+  .panel-ttl    { font-size: 18px; font-family: var(--sans); font-weight: 700; flex: 1; }
+  .panel-sub    { display: none; }
+  .panel-add-btn{ font-size: 12px; padding: 7px 12px; }
+  .panel-search { padding: 0; }
+  .panel-list   { padding: 4px 0 12px; }
+  .pl-name      { white-space: nowrap; overflow: visible; text-overflow: clip; }
   .panel-form   { margin: 0 14px 8px; padding: 12px; }
   .panel-form-row { flex-wrap: wrap; }
   .panel-form-inp.w-sm { width: 100%; flex: 1; }
@@ -4109,7 +4266,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.53</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.58</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4358,6 +4515,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
+      </div>
+      <!-- Logo visible solo en móvil — al final = derecha -->
+      <div class="ctb-logo-mobile" aria-hidden="true">
+        <span class="ctb-logo-ka">Ka</span><span class="ctb-logo-j">j</span><span class="ctb-logo-ita">ita</span>
       </div>
     </div>
 
@@ -5165,6 +5326,20 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <div class="cfg-rubro-custom" id="cfgCustomWrap">
               <input class="cfg-input" id="cfgCustomRubro" type="text" placeholder="Escribe tu rubro..." maxlength="40">
             </div>
+          </div>
+
+          <div class="cfg-divider"></div>
+
+          <!-- Token RUC/DNI -->
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Consulta de RUC / DNI automática</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">
+              Ingresa tu token de <strong>apiperu.dev</strong> para autocompletar nombre y dirección al escribir un RUC o DNI.
+              Regístrate gratis en <span style="color:var(--k-accent);">apiperu.dev</span> y pega tu token aquí.
+            </div>
+            <label class="cfg-label" style="font-size:11px;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.04em;">Token API</label>
+            <input class="cfg-input" id="cfgApiToken" type="password" placeholder="Pega aquí tu token de apiperu.dev" maxlength="200" autocomplete="off">
+            <div id="cfgApiTokenStatus" style="font-size:11px;margin-top:6px;color:var(--k-text-3);"></div>
           </div>
 
           <div class="cfg-divider"></div>
@@ -6720,6 +6895,13 @@ function openSettings() {
     document.getElementById('cfgCustomRubro').value = rubro;
   }
 
+  // Cargar token API
+  const savedToken = localStorage.getItem('kajita_api_token') || '';
+  const tokenEl = document.getElementById('cfgApiToken');
+  const tokenStatus = document.getElementById('cfgApiTokenStatus');
+  if (tokenEl) tokenEl.value = savedToken;
+  if (tokenStatus) tokenStatus.textContent = savedToken ? '✓ Token configurado' : '';
+
   document.getElementById('cfgOverlay').classList.add('open');
   setTimeout(() => document.getElementById('cfgBizName').focus(), 350);
 }
@@ -6774,6 +6956,11 @@ async function saveSettings() {
       }]);
     } catch(e) { console.error('Error saving profile:', e); }
   }
+
+  // Guardar token API
+  const tokenVal = (document.getElementById('cfgApiToken')?.value || '').trim();
+  if (tokenVal) localStorage.setItem('kajita_api_token', tokenVal);
+  else localStorage.removeItem('kajita_api_token');
 
   applyBizProfile();
   closeSettings();
@@ -11727,8 +11914,15 @@ async function lookupDocumento(doc, onResult) {
   doc = doc.replace(/\D/g, '');
   if (doc.length !== 8 && doc.length !== 11) return;
   const tipo = doc.length === 11 ? 'ruc' : 'dni';
+  const token = localStorage.getItem('kajita_api_token') || '';
+  if (!token) {
+    toast('Configura tu token de apiperu.dev en Ajustes ⚙️');
+    return;
+  }
   try {
-    const res = await fetch('https://apiperu.dev/api/' + tipo + '/' + doc);
+    const res = await fetch('https://apiperu.dev/api/' + tipo + '/' + doc, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
     const json = await res.json();
     if (!json?.data) { toast('No se encontró el ' + tipo.toUpperCase()); return; }
     onResult(json.data, tipo);
