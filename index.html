@@ -4109,7 +4109,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.51</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.53</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4312,6 +4312,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <button class="sb-item" id="sbi-ord" onclick="sbPanel('ord')">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
         <span>Pedidos</span>
+      </button>
+      <button class="sb-item" id="sbi-quote" onclick="sbPanel('quote')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+        <span>Cotizaciones</span>
       </button>
     </nav>
 
@@ -5044,6 +5048,45 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <div class="panel-total-box">
         <div class="panel-total-lbl">Total en pedidos</div>
         <div class="panel-total-val" id="panelOrdTotal" style="color:var(--k-order);">S/ 0.00</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: COTIZACIONES ══ -->
+<div class="panel-overlay" id="panelQuoteOverlay" onclick="if(event.target===this)closePanel('quote')">
+  <div class="panel-sheet" id="panelQuoteSheet">
+    <div class="panel-head">
+      <div>
+        <div class="panel-ttl">Cotizaciones</div>
+        <div class="panel-sub" id="panelQuoteSub">—</div>
+      </div>
+      <div class="panel-head-right">
+        <div class="panel-search">
+          <div class="panel-search-wrap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="panel-search-inp" id="panelQuoteSearch" type="text" placeholder="Buscar..." oninput="renderQuotePanel()">
+          </div>
+        </div>
+        <button class="panel-add-btn" onclick="toggleQuoteForm()">+ Nueva</button>
+        <button class="panel-close" onclick="closePanel('quote')">×</button>
+      </div>
+    </div>
+    <div class="panel-type-tabs">
+      <button class="panel-type-tab active" id="qtF-all"      onclick="setQuoteFilter('all')">Todas</button>
+      <button class="panel-type-tab"        id="qtF-vigente"  onclick="setQuoteFilter('vigente')">Vigentes</button>
+      <button class="panel-type-tab"        id="qtF-aceptada" onclick="setQuoteFilter('aceptada')">Aceptadas</button>
+      <button class="panel-type-tab"        id="qtF-vencida"  onclick="setQuoteFilter('vencida')">Vencidas</button>
+    </div>
+    <div class="panel-list" id="panelQuoteList"></div>
+    <div class="panel-totals">
+      <div class="panel-total-box">
+        <div class="panel-total-lbl">Vigentes</div>
+        <div class="panel-total-val" id="panelQuoteVigente" style="color:var(--k-order);">0</div>
+      </div>
+      <div class="panel-total-box">
+        <div class="panel-total-lbl">Total cotizado</div>
+        <div class="panel-total-val" id="panelQuoteTotal" style="color:var(--k-accent);">S/ 0.00</div>
       </div>
     </div>
   </div>
@@ -10743,14 +10786,16 @@ const VIEW_TITLES = {
   inv:  'Inventario',
   cred: 'Créditos',
   ord:  'Pedidos',
+  quote: 'Cotizaciones',
   cal:  'Calendario',
   notas: 'Notas',
 };
 
-const PANEL_VIEWS = ['cli','prov','inv','cred','ord'];
+const PANEL_VIEWS = ['cli','prov','inv','cred','ord','quote'];
 const PANEL_OVERLAY_IDS = {
   cli:'panelCliOverlay', prov:'panelProvOverlay',
-  inv:'panelInvOverlay', cred:'panelCredOverlay', ord:'panelOrdOverlay'
+  inv:'panelInvOverlay', cred:'panelCredOverlay', ord:'panelOrdOverlay',
+  quote:'panelQuoteOverlay'
 };
 
 function switchView(view) {
@@ -10792,6 +10837,7 @@ function switchView(view) {
     if (view === 'inv')  { document.getElementById('panelInvSearch').value='';  renderInvPanel(); }
     if (view === 'cred') renderCredPanel();
     if (view === 'ord')  { loadOrders(); renderOrdPanel(); }
+    if (view === 'quote'){ loadQuotes(); document.getElementById('panelQuoteSearch').value=''; renderQuotePanel(); }
 
   } else if (view === 'cal') {
     openSalesCalendar();
@@ -11660,6 +11706,589 @@ function ordWhatsApp(id) {
 
 </script>
 
+<script>
+/* ══════════════════════════════════════
+   COTIZACIONES — mismo patrón que Pedidos
+   ══════════════════════════════════════ */
+const QUOTE_KEY = 'kajita_quotes';
+let _quotes = [];
+let _qtFilter = 'all';
+
+function loadQuotes() {
+  try { _quotes = JSON.parse(localStorage.getItem(QUOTE_KEY) || '[]'); } catch(e) { _quotes = []; }
+}
+function saveQuotes() {
+  localStorage.setItem(QUOTE_KEY, JSON.stringify(_quotes));
+}
+loadQuotes();
+
+// ── RUC / DNI lookup (apiperu.dev) ──────────────────────────────────────────
+async function lookupDocumento(doc, onResult) {
+  doc = doc.replace(/\D/g, '');
+  if (doc.length !== 8 && doc.length !== 11) return;
+  const tipo = doc.length === 11 ? 'ruc' : 'dni';
+  try {
+    const res = await fetch('https://apiperu.dev/api/' + tipo + '/' + doc);
+    const json = await res.json();
+    if (!json?.data) { toast('No se encontró el ' + tipo.toUpperCase()); return; }
+    onResult(json.data, tipo);
+  } catch(e) {
+    toast('Error al consultar ' + tipo.toUpperCase());
+  }
+}
+
+// Clientes / Proveedores (campo kjDoc)
+let _kjDocTimer = null;
+function onKjDocInput(val) {
+  clearTimeout(_kjDocTimer);
+  const doc = val.replace(/\D/g, '');
+  const statusEl = document.getElementById('kjDocStatus');
+  if (doc.length !== 8 && doc.length !== 11) { if (statusEl) statusEl.textContent = ''; return; }
+  if (statusEl) statusEl.textContent = '🔍 Buscando…';
+  _kjDocTimer = setTimeout(async () => {
+    await lookupDocumento(doc, (data, tipo) => {
+      const nameEl = document.getElementById('kjName');
+      const addrEl = document.getElementById('kjAddr');
+      if (tipo === 'ruc') {
+        if (nameEl && !nameEl.value) nameEl.value = data.nombre_o_razon_social || '';
+        if (addrEl && !addrEl.value) addrEl.value = data.direccion || '';
+      } else {
+        if (nameEl && !nameEl.value) nameEl.value = data.nombre_completo || '';
+      }
+      if (statusEl) { statusEl.textContent = '✓ Encontrado'; setTimeout(() => { statusEl.textContent = ''; }, 3000); }
+    });
+  }, 600);
+}
+
+// Pedidos (campo pfOrdClient)
+let _ordDocTimer = null;
+function ordCheckDoc(val) {
+  clearTimeout(_ordDocTimer);
+  const doc = val.replace(/\D/g, '');
+  if (doc.length !== 8 && doc.length !== 11) return;
+  _ordDocTimer = setTimeout(async () => {
+    await lookupDocumento(doc, (data, tipo) => {
+      const nombre = tipo === 'ruc' ? (data.nombre_o_razon_social || '') : (data.nombre_completo || '');
+      if (!nombre) return;
+      const el = document.getElementById('pfOrdClient');
+      if (el) { el.value = nombre; el.dispatchEvent(new Event('input')); }
+    });
+  }, 600);
+}
+
+// Cotizaciones (campo pfQtClient)
+let _qtDocTimer = null;
+function qtCheckDoc(val) {
+  clearTimeout(_qtDocTimer);
+  const doc = val.replace(/\D/g, '');
+  if (doc.length !== 8 && doc.length !== 11) return;
+  _qtDocTimer = setTimeout(async () => {
+    await lookupDocumento(doc, (data, tipo) => {
+      const nombre = tipo === 'ruc' ? (data.nombre_o_razon_social || '') : (data.nombre_completo || '');
+      if (!nombre) return;
+      const el = document.getElementById('pfQtClient');
+      if (el) { el.value = nombre; el.dispatchEvent(new Event('input')); }
+    });
+  }, 600);
+}
+
+// Estado dinámico según validez
+function qtStatus(q) {
+  if (q.status === 'aceptada') return 'aceptada';
+  if (q.status === 'rechazada') return 'rechazada';
+  if (q.validUntil) {
+    const today = _isoToday();
+    if (q.validUntil < today) return 'vencida';
+  }
+  return 'vigente';
+}
+const QT_STATUS_META = {
+  vigente:   { label:'Vigente',   color:'var(--k-order)',  dot:'ready' },
+  aceptada:  { label:'Aceptada',  color:'var(--k-accent)', dot:'done' },
+  vencida:   { label:'Vencida',   color:'var(--k-expense)',dot:'pending' },
+  rechazada: { label:'Rechazada', color:'var(--k-text-3)', dot:'pending' },
+};
+
+// ── Formulario ──
+let _qtItems  = [];
+let _qtEditId = null;
+let _qtValidDays = 15;
+
+function _qtReset() {
+  _qtItems = [];
+  _qtEditId = null;
+  _qtValidDays = 15;
+  ['pfQtClient','pfQtPhone','pfQtDesc','pfQtUnit','pfQtAmt','pfQtNote'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; });
+  document.getElementById('pfQtQty').value = '1';
+  setQtValidity(15);
+  qtRenderItems();
+}
+
+function toggleQuoteForm() {
+  _qtReset();
+  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').textContent = '🧾 Nueva Cotización';
+  document.getElementById('pfQtSaveBtn').textContent = 'Guardar cotización';
+  document.getElementById('newQuoteBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('pfQtClient').focus(), 80);
+}
+
+function closeNewQuoteModal() {
+  document.getElementById('newQuoteBackdrop').classList.remove('open');
+  qtHideDrop('qtClientDrop');
+  qtHideDrop('qtProdDrop');
+  _qtEditId = null;
+}
+
+function setQtValidity(days) {
+  _qtValidDays = days;
+  ['qtVal7','qtVal15','qtVal30'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  document.getElementById('qtVal'+days)?.classList.add('active');
+  const d = new Date(); d.setDate(d.getDate()+days);
+  const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('pfQtValidDisplay').textContent = 'Válida hasta el ' + _fmtDateDisplay(iso).replace('📅 ','');
+  document.getElementById('pfQtValidDisplay').dataset.iso = iso;
+}
+
+function qtStepQty(delta) {
+  const el = document.getElementById('pfQtQty');
+  el.value = Math.max(1, (parseFloat(el.value) || 1) + delta);
+  qtRecalc();
+}
+function qtRecalc() {
+  const qty  = parseFloat(document.getElementById('pfQtQty').value)  || 1;
+  const unit = parseFloat(document.getElementById('pfQtUnit').value) || 0;
+  if (unit > 0) document.getElementById('pfQtAmt').value = (qty * unit).toFixed(2);
+}
+function qtRecalcFromAmt() {
+  const qty = parseFloat(document.getElementById('pfQtQty').value) || 1;
+  const amt = parseFloat(document.getElementById('pfQtAmt').value) || 0;
+  if (amt > 0) document.getElementById('pfQtUnit').value = (amt / qty).toFixed(2);
+}
+
+/* ── Autocomplete (reutiliza helpers de pedidos) ── */
+function qtHideDrop(id) { const el=document.getElementById(id); if(el) el.style.display='none'; }
+
+function qtFilterClients() {
+  const q = (document.getElementById('pfQtClient').value || '').toLowerCase();
+  const list = (typeof clients !== 'undefined' ? clients : []).filter(c => !q || c.name.toLowerCase().includes(q)).slice(0,8);
+  _ordRenderDrop('pfQtClient', 'qtClientDrop', list,
+    c => `<button type="button" class="cchip" onmousedown="qtSelectClient('${String(c.id).replace(/'/g,"\\'")}')">${c.name}${c.phone ? ' · <span style="opacity:.5;font-size:10px">'+c.phone+'</span>' : ''}</button>`);
+}
+function qtToggleClients() {
+  const drop = document.getElementById('qtClientDrop');
+  if (drop.style.display === 'block') { drop.style.display = 'none'; return; }
+  document.getElementById('pfQtClient').value = '';
+  qtFilterClients();
+  document.getElementById('pfQtClient').focus();
+}
+function qtSelectClient(id) {
+  const c = (typeof clients !== 'undefined' ? clients : []).find(x => String(x.id) === String(id));
+  if (!c) return;
+  document.getElementById('pfQtClient').value = c.name;
+  document.getElementById('pfQtPhone').value = c.phone || '';
+  qtHideDrop('qtClientDrop');
+}
+function qtFilterProducts() {
+  const q = (document.getElementById('pfQtDesc').value || '').toLowerCase();
+  const list = (typeof products !== 'undefined' ? products : []).filter(p => !q || p.name.toLowerCase().includes(q)).slice(0,8);
+  _ordRenderDrop('pfQtDesc', 'qtProdDrop', list,
+    p => `<button type="button" class="pchip" onmousedown="qtSelectProduct('${String(p.id).replace(/'/g,"\\'")}')">${p.name}<span class="pchip-price">S/ ${parseFloat(p.price||0).toFixed(2)}</span></button>`);
+}
+function qtToggleProducts() {
+  const drop = document.getElementById('qtProdDrop');
+  if (drop.style.display === 'block') { drop.style.display = 'none'; return; }
+  document.getElementById('pfQtDesc').value = '';
+  qtFilterProducts();
+  document.getElementById('pfQtDesc').focus();
+}
+function qtSelectProduct(id) {
+  const p = (typeof products !== 'undefined' ? products : []).find(x => String(x.id) === String(id));
+  if (!p) return;
+  document.getElementById('pfQtDesc').value = p.name;
+  document.getElementById('pfQtUnit').value = parseFloat(p.price || 0).toFixed(2);
+  qtHideDrop('qtProdDrop');
+  qtRecalc();
+  document.getElementById('pfQtQty').focus();
+}
+
+function qtPushItem() {
+  const desc = document.getElementById('pfQtDesc').value.trim();
+  const qty  = parseFloat(document.getElementById('pfQtQty').value)  || 1;
+  const unit = parseFloat(document.getElementById('pfQtUnit').value) || 0;
+  const amt  = parseFloat(document.getElementById('pfQtAmt').value)  || (qty * unit);
+  if (!desc) { document.getElementById('pfQtDesc').focus(); return; }
+  if (amt <= 0) { document.getElementById('pfQtUnit').focus(); return; }
+  _qtItems.push({ desc, qty, price: unit || (amt / qty), total: amt });
+  document.getElementById('pfQtDesc').value = '';
+  document.getElementById('pfQtQty').value  = '1';
+  document.getElementById('pfQtUnit').value = '';
+  document.getElementById('pfQtAmt').value  = '';
+  qtRenderItems();
+  document.getElementById('pfQtDesc').focus();
+}
+function qtRemoveItem(idx) { _qtItems.splice(idx,1); qtRenderItems(); }
+
+function qtRenderItems() {
+  const wrap = document.getElementById('pfQtItemsList');
+  const rows = document.getElementById('pfQtItemsRows');
+  const totalEl = document.getElementById('pfQtTotal');
+  if (!_qtItems.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const grandTotal = _qtItems.reduce((s,i)=>s+i.total,0);
+  totalEl.textContent = 'S/ ' + grandTotal.toFixed(2);
+  rows.innerHTML = _qtItems.map((it,i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,0.04);border-radius:9px;font-family:var(--sans);font-size:13px;">
+      <span style="flex:1;color:var(--k-text);">${it.desc}</span>
+      <span style="color:var(--k-text-3);font-size:11px;white-space:nowrap;">${it.qty > 1 ? it.qty+'× S/'+it.price.toFixed(2) : ''}</span>
+      <span style="font-family:var(--mono);font-weight:700;color:var(--k-accent);min-width:60px;text-align:right;">S/ ${it.total.toFixed(2)}</span>
+      <button onclick="qtRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0 2px;line-height:1;" title="Quitar">×</button>
+    </div>`).join('');
+}
+
+function getQuoteItems() {
+  return _qtItems.map(i => ({ desc: i.desc, qty: i.qty || 1, unit: i.price || 0, price: i.total, total: i.total }));
+}
+
+function saveQuote() {
+  const client = document.getElementById('pfQtClient').value.trim();
+  if (!client) { document.getElementById('pfQtClient').focus(); toast('Escribe el nombre del cliente'); return; }
+  const pendingDesc = document.getElementById('pfQtDesc').value.trim();
+  const pendingAmt  = parseFloat(document.getElementById('pfQtAmt').value) || 0;
+  if (pendingDesc && pendingAmt > 0) qtPushItem();
+  const items = getQuoteItems();
+  if (!items.length) { document.getElementById('pfQtDesc').focus(); toast('Agrega al menos un ítem'); return; }
+  const total = _qtItems.reduce((s,i)=>s+i.total,0);
+  const validUntil = document.getElementById('pfQtValidDisplay').dataset.iso || '';
+  const quoteData = {
+    client,
+    phone: document.getElementById('pfQtPhone').value.trim(),
+    items, total, validUntil,
+    note: document.getElementById('pfQtNote').value.trim(),
+  };
+
+  if (_qtEditId) {
+    const idx = _quotes.findIndex(x => x.id === _qtEditId);
+    if (idx !== -1) _quotes[idx] = { ..._quotes[idx], ...quoteData };
+    saveQuotes();
+    toast('Cotización actualizada ✓');
+  } else {
+    const id = Date.now();
+    const num = _qtNextNum();
+    _quotes.unshift({ id, num, status:'vigente', createdAt:new Date().toISOString(), date:_isoToday(), ...quoteData });
+    saveQuotes();
+    toast('¡Cotización guardada! 🧾');
+  }
+  closeNewQuoteModal();
+  renderQuotePanel();
+}
+
+function _qtNextNum() {
+  const max = _quotes.reduce((m,q) => Math.max(m, q.num || 0), 0);
+  return max + 1;
+}
+
+// ── Filtros ──
+function setQuoteFilter(f) {
+  _qtFilter = f;
+  ['all','vigente','aceptada','vencida'].forEach(k =>
+    document.getElementById('qtF-'+k)?.classList.toggle('active', k===f));
+  renderQuotePanel();
+}
+
+// ── Render del panel ──
+function renderQuotePanel() {
+  const list   = document.getElementById('panelQuoteList');
+  const subEl  = document.getElementById('panelQuoteSub');
+  const totEl  = document.getElementById('panelQuoteTotal');
+  const vigEl  = document.getElementById('panelQuoteVigente');
+  if (!list) return;
+
+  const q = (document.getElementById('panelQuoteSearch')?.value || '').toLowerCase();
+  let filtered = _quotes.filter(qt => !q || (qt.client||'').toLowerCase().includes(q) || (qt.items||[]).some(i => i.desc.toLowerCase().includes(q)));
+  if (_qtFilter !== 'all') filtered = filtered.filter(qt => qtStatus(qt) === _qtFilter);
+
+  const vigentes = _quotes.filter(qt => qtStatus(qt) === 'vigente').length;
+  const totalAll = _quotes.filter(qt => qtStatus(qt) !== 'rechazada' && qtStatus(qt) !== 'vencida').reduce((s,qt)=>s+(qt.total||0),0);
+  vigEl.textContent = vigentes;
+  totEl.textContent = 'S/ ' + totalAll.toFixed(2);
+  subEl.textContent = _quotes.length + ' cotización' + (_quotes.length!==1?'es':'') + ' registrada' + (_quotes.length!==1?'s':'');
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="panel-empty">
+      <span style="font-size:28px;">🧾</span>
+      <span>${_qtFilter==='all' ? 'Sin cotizaciones aún.<br>Toca <b>+ Nueva</b> para crear la primera.' : 'Sin cotizaciones en este estado.'}</span>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(qt => {
+    const st = qtStatus(qt);
+    const meta = QT_STATUS_META[st] || QT_STATUS_META.vigente;
+    const itemsText = (qt.items||[]).map(i => (i.qty && i.qty>1 ? `${i.qty}× ` : '') + i.desc).join(' · ');
+    const validTxt = qt.validUntil ? 'Válida hasta ' + _fmtDateDisplay(qt.validUntil).replace('📅 ','') : '';
+    const numTxt = qt.num ? `#${String(qt.num).padStart(4,'0')}` : '';
+    return `<div class="order-card" data-qt-id="${qt.id}" onclick="openQuoteModal(${qt.id})" style="cursor:pointer;">
+      <div class="order-card-head">
+        <div class="order-card-dot ${meta.dot}"></div>
+        <div class="order-card-info">
+          <div class="order-card-client">${qt.client} <span style="font-family:var(--mono);font-size:11px;color:var(--k-text-3);font-weight:500;">${numTxt}</span></div>
+          <div class="order-card-items">${itemsText}</div>
+        </div>
+        <div class="order-card-right" onclick="event.stopPropagation()">
+          <div class="order-card-price">S/ ${(qt.total||0).toFixed(2)}</div>
+          <button class="abtn-menu" data-qt-id="${qt.id}" onclick="toggleQuoteMenu(event,${qt.id})" title="Acciones">···</button>
+        </div>
+      </div>
+      <div class="order-card-footer">
+        <div class="order-card-meta">${validTxt ? `<span>${validTxt}</span>` : ''}${qt.note ? `<span>📝 ${qt.note}</span>` : ''}</div>
+        <span class="order-pay-badge" style="background:${meta.color}1f;color:${meta.color};">${meta.label}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Menú contextual (···) ──
+function toggleQuoteMenu(event, id) {
+  event.stopPropagation();
+  const menu = document.getElementById('quoteContextMenu');
+  const open = menu.classList.contains('open') && menu.dataset.qtId == id;
+  closeAllMenus();
+  if (open) return;
+  menu.dataset.qtId = id;
+  menu.innerHTML = `
+    <button class="ep-item" onclick="closeAllMenus();openQuoteModal(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Ver detalle</button>
+    <button class="ep-item" onclick="closeAllMenus();generateQuoteReceipt(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Imprimir / PDF</button>
+    <button class="ep-item ep-wa" onclick="closeAllMenus();quoteWhatsApp(${id})"><span class="ep-ic">${ORD_SVG.chat}</span>WhatsApp</button>
+    <button class="ep-item" onclick="closeAllMenus();openEditQuoteModal(${id})"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
+    <button class="ep-item ep-del" onclick="closeAllMenus();deleteQuote(${id})"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>`;
+  const r = event.currentTarget.getBoundingClientRect();
+  menu.style.position = 'fixed';
+  menu.style.zIndex = '99990';
+  menu.style.top = (r.bottom + 4) + 'px';
+  menu.style.left = Math.max(8, r.right - 180) + 'px';
+  menu.classList.add('open');
+}
+
+// ── Modal de detalle ──
+function openQuoteModal(id) {
+  const qt = _quotes.find(x => x.id === id);
+  if (!qt) return;
+  const st = qtStatus(qt);
+  const meta = QT_STATUS_META[st] || QT_STATUS_META.vigente;
+  const numTxt = qt.num ? `#${String(qt.num).padStart(4,'0')}` : '';
+  const validTxt = qt.validUntil ? _fmtDateDisplay(qt.validUntil).replace('📅 ','') : '—';
+  const dateTxt = qt.date ? _fmtDateDisplay(qt.date).replace('📅 ','') : '';
+
+  const itemsHtml = (qt.items||[]).map(it => {
+    const qty = it.qty || 1;
+    const lineTotal = (it.total != null ? it.total : it.price) || 0;
+    return `<div class="ord-modal-item">
+      <span class="ord-modal-item-qty">${qty}</span>
+      <div class="ord-modal-item-desc">${it.desc}</div>
+      <div class="ord-modal-item-price">S/ ${lineTotal.toFixed(2)}</div>
+    </div>`;
+  }).join('');
+
+  const statuses = [
+    {key:'vigente', label:'Vigente'},
+    {key:'aceptada', label:'Aceptada'},
+    {key:'rechazada', label:'Rechazada'},
+  ];
+  const statusBtns = statuses.map(s => {
+    const active = (s.key === 'vigente' ? (st==='vigente'||st==='vencida') : st===s.key);
+    return `<button class="ord-status-btn ${active?'active-'+(s.key==='aceptada'?'done':s.key==='rechazada'?'done':'ready'):''}" onclick="setQuoteStatus(${qt.id},'${s.key}')"><span class="ord-status-dot ${s.key==='aceptada'?'done':s.key==='rechazada'?'pending':'ready'}"></span>${s.label}</button>`;
+  }).join('');
+
+  document.getElementById('quoteModalBody').innerHTML = `
+    <div class="ord-modal-header">
+      <div style="flex:1;min-width:0;">
+        <div class="ord-modal-titlerow">
+          <span class="ord-modal-client">${qt.client||'Sin nombre'}</span>
+          <span class="order-pay-badge" style="background:${meta.color}1f;color:${meta.color};">${meta.label}</span>
+        </div>
+        <div class="ord-modal-info">
+          <div class="omi-row"><span class="omi-ic">🧾</span><span class="omi-val">Cotización ${numTxt}${dateTxt ? ' · '+dateTxt : ''}</span></div>
+          ${qt.phone ? `<div class="omi-row"><span class="omi-ic">📞</span><span class="omi-val">${qt.phone}</span></div>` : ''}
+          <div class="omi-row"><span class="omi-ic">⏳</span><span class="omi-val">Válida hasta ${validTxt}</span></div>
+        </div>
+        ${qt.note ? `<div class="ord-modal-note">${ORD_SVG.note} ${qt.note}</div>` : ''}
+      </div>
+      <button class="ord-modal-close" onclick="closeQuoteModal()">✕</button>
+    </div>
+    <div style="padding:20px 28px 0;">
+      <div class="ord-modal-items-title">Productos / Servicios</div>
+      ${itemsHtml || '<div style="color:var(--k-text-3);font-size:13px;padding:8px 0;">Sin items</div>'}
+    </div>
+    <div class="ord-modal-total">
+      <span class="ord-modal-total-lbl">Total</span>
+      <span class="ord-modal-total-val">S/ ${(qt.total||0).toFixed(2)}</span>
+    </div>
+    <div class="ord-modal-actions">
+      <div class="ord-modal-actions-label">Estado de la cotización</div>
+      <div class="ord-status-row">${statusBtns}</div>
+      <button class="ord-pay-toggle is-unpaid" onclick="convertQuoteToOrder(${qt.id})">📋 Convertir a pedido</button>
+      <div class="ord-modal-actions-divider"></div>
+      <div class="ord-modal-actions-row">
+        <button class="ord-btn ord-btn-print" onclick="generateQuoteReceipt(${qt.id})">${ORD_SVG.receipt} Imprimir</button>
+        <button class="ord-btn ord-btn-wa" onclick="quoteWhatsApp(${qt.id})">${ORD_SVG.chat} WhatsApp</button>
+      </div>
+      <div class="ord-modal-actions-row">
+        <button class="ord-btn" onclick="openEditQuoteModal(${qt.id})" style="flex:1;">${ORD_SVG.edit} Editar</button>
+        <button class="ord-btn ord-btn-del" onclick="deleteQuote(${qt.id})" style="flex:1;">${ORD_SVG.trash} Eliminar</button>
+      </div>
+    </div>`;
+  document.getElementById('quoteModalBackdrop').classList.add('open');
+}
+function closeQuoteModal() { document.getElementById('quoteModalBackdrop').classList.remove('open'); }
+
+function setQuoteStatus(id, status) {
+  const idx = _quotes.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  _quotes[idx].status = status;
+  saveQuotes();
+  openQuoteModal(id);
+  renderQuotePanel();
+  toast('Estado actualizado ✓');
+}
+
+function openEditQuoteModal(id) {
+  const qt = _quotes.find(x => x.id === id);
+  if (!qt) return;
+  closeQuoteModal();
+  _qtReset();
+  _qtEditId = id;
+  _qtItems = (qt.items||[]).map(it => ({ desc:it.desc, qty:it.qty||1, price:(it.unit!=null?it.unit:it.price)||0, total:it.total||it.price||0 }));
+  document.getElementById('pfQtClient').value = qt.client || '';
+  document.getElementById('pfQtPhone').value  = qt.phone  || '';
+  document.getElementById('pfQtNote').value   = qt.note   || '';
+  // validez: calcular días restantes aproximados desde hoy
+  if (qt.validUntil) {
+    const diff = Math.round((new Date(qt.validUntil+'T12:00:00') - new Date(_isoToday()+'T12:00:00')) / 86400000);
+    const days = [7,15,30].includes(diff) ? diff : 15;
+    setQtValidity(days);
+    // conservar la fecha exacta original
+    document.getElementById('pfQtValidDisplay').dataset.iso = qt.validUntil;
+    document.getElementById('pfQtValidDisplay').textContent = 'Válida hasta el ' + _fmtDateDisplay(qt.validUntil).replace('📅 ','');
+  }
+  qtRenderItems();
+  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').textContent = '✏️ Editar Cotización';
+  document.getElementById('pfQtSaveBtn').textContent = 'Guardar cambios';
+  document.getElementById('newQuoteBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('pfQtClient').focus(), 80);
+}
+
+function deleteQuote(id) {
+  if (!confirm('¿Eliminar esta cotización?')) return;
+  _quotes = _quotes.filter(x => x.id !== id);
+  saveQuotes();
+  closeQuoteModal();
+  renderQuotePanel();
+  toast('Cotización eliminada');
+}
+
+function convertQuoteToOrder(id) {
+  const qt = _quotes.find(x => x.id === id);
+  if (!qt) return;
+  if (!confirm('¿Convertir esta cotización en un pedido?')) return;
+  const ordId = Date.now();
+  const now = new Date();
+  loadOrders();
+  _orders.unshift({
+    id: ordId, status:'pending', createdAt: now.toISOString(),
+    client: qt.client, phone: qt.phone || '',
+    items: (qt.items||[]).map(i => ({ desc:i.desc, qty:i.qty||1, unit:i.unit||0, price:i.price, total:i.total })),
+    total: qt.total || 0, delivery:'delivery', address:'', date:'', time:'',
+    note: 'Desde cotización #' + String(qt.num||'').padStart(4,'0'),
+  });
+  saveOrders();
+  // marcar cotización como aceptada
+  qt.status = 'aceptada';
+  saveQuotes();
+  closeQuoteModal();
+  renderQuotePanel();
+  toast('✓ Pedido creado desde la cotización 📋');
+  switchView('ord');
+}
+
+// ── PDF / Recibo ──
+function generateQuoteReceipt(id) {
+  const qt = _quotes.find(x => x.id === id);
+  if (!qt) { toast('⚠️ Cotización no encontrada'); return; }
+  const biz = bizProfile || {};
+  const C = { accent:'#7aaa1e', accentL:'#eef7d4', ink:'#1F2937', line:'#E5E7EB', muted:'#6B7280', light:'#F8FAFC', qt:'#7c3aed', qtL:'#f5f3ff' };
+  const today = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' });
+  const nowStr = new Date().toLocaleTimeString('es-PE', { hour:'2-digit', minute:'2-digit' });
+  const recNum = String(qt.num||'').padStart(4,'0');
+  const validTxt = qt.validUntil ? new Date(qt.validUntil+'T12:00:00').toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : '—';
+  const itemsRows = (qt.items||[]).map(i => {
+    const qty = i.qty || 1;
+    const unit = (i.unit != null ? i.unit : (i.price/(qty||1))) || 0;
+    const lineTotal = (i.total != null ? i.total : i.price) || 0;
+    return `<tr>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.muted};font-size:13px;font-weight:700;text-align:center;width:34px;">${qty}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;">${i.desc}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.muted};font-size:12px;text-align:right;white-space:nowrap;">S/ ${unit.toFixed(2)}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;text-align:right;white-space:nowrap;font-weight:600;">S/ ${lineTotal.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cotización #${recNum} — ${qt.client}</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;} body{font-family:'Inter',sans-serif;background:#f3f4f6;display:flex;justify-content:center;padding:32px 16px;}
+.doc{background:#fff;width:100%;max-width:480px;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);overflow:hidden;}
+.doc-head{background:${C.qtL};border-bottom:3px solid ${C.qt};padding:22px 24px 18px;}
+.doc-type{font-size:11px;font-weight:700;letter-spacing:.12em;color:${C.qt};text-transform:uppercase;margin-bottom:6px;}
+.doc-biz{font-size:20px;font-weight:700;color:${C.ink};} .doc-num{font-size:11px;color:${C.muted};margin-top:2px;}
+.doc-body{padding:20px 24px;} .doc-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;}
+.doc-lbl{color:${C.muted};} .doc-val{color:${C.ink};font-weight:600;text-align:right;}
+.items-table{width:100%;border-collapse:collapse;margin:14px 0;}
+.items-table th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${C.muted};padding:6px 8px;border-bottom:2px solid ${C.line};}
+.items-table th:last-child,.items-table th:nth-child(3){text-align:right;}
+.total-row{display:flex;justify-content:space-between;align-items:center;background:${C.accentL};border:1px solid ${C.accent};border-radius:10px;padding:12px 14px;margin:14px 0;}
+.total-lbl{font-size:12px;font-weight:700;color:#3f6009;text-transform:uppercase;letter-spacing:.06em;} .total-val{font-size:22px;font-weight:800;color:#3f6009;}
+.doc-footer{background:${C.light};border-top:1px solid ${C.line};padding:14px 24px;font-size:10.5px;color:${C.muted};text-align:center;}
+@media print{body{background:#fff;padding:0;} .doc{border-radius:0;box-shadow:none;}}</style></head><body>
+<div class="doc">
+  <div class="doc-head"><div class="doc-type">Cotización</div><div class="doc-biz">${biz.name || 'Mi Negocio'}</div><div class="doc-num">N° ${recNum} · Emitida: ${today} ${nowStr}</div></div>
+  <div class="doc-body">
+    <div class="doc-row"><span class="doc-lbl">Cliente</span><span class="doc-val">${qt.client}</span></div>
+    ${qt.phone ? `<div class="doc-row"><span class="doc-lbl">Teléfono</span><span class="doc-val">${qt.phone}</span></div>` : ''}
+    <div class="doc-row"><span class="doc-lbl">Válida hasta</span><span class="doc-val">${validTxt}</span></div>
+    ${qt.note ? `<div class="doc-row"><span class="doc-lbl">Condiciones</span><span class="doc-val">${qt.note}</span></div>` : ''}
+    <table class="items-table"><thead><tr><th style="text-align:center;width:34px;">Cant.</th><th>Descripción</th><th>P.Unit</th><th>Importe</th></tr></thead><tbody>${itemsRows}</tbody></table>
+    <div class="total-row"><span class="total-lbl">Total</span><div class="total-val">S/ ${(qt.total||0).toFixed(2)}</div></div>
+    <div style="font-size:10.5px;color:${C.muted};text-align:center;margin-top:6px;">Esta cotización no constituye comprobante de pago.</div>
+  </div>
+  <div class="doc-footer">${biz.name || 'Kajita'} · Generado con Kajita · kajita.pe</div>
+</div></body></html>`;
+  const w = window.open('', '_blank', 'width=600,height=800');
+  w.document.write(html); w.document.close();
+  setTimeout(() => { w.focus(); w.print(); }, 400);
+}
+
+function quoteWhatsApp(id) {
+  const qt = _quotes.find(x => x.id === id);
+  if (!qt) return;
+  const biz = bizProfile || {};
+  const recNum = String(qt.num||'').padStart(4,'0');
+  let lines = [`*Cotización N° ${recNum} - ${biz.name||'Kajita'}*`];
+  lines.push(`👤 Cliente: ${qt.client||'Sin nombre'}`);
+  if (qt.validUntil) lines.push(`⏳ Válida hasta: ${_fmtDateDisplay(qt.validUntil).replace('📅 ','')}`);
+  lines.push('');
+  lines.push('*Detalle:*');
+  (qt.items||[]).forEach(it => {
+    const qty = it.qty && it.qty>1 ? `${it.qty}× ` : '';
+    lines.push(`• ${qty}${it.desc} — S/ ${parseFloat(it.price||0).toFixed(2)}`);
+  });
+  lines.push('');
+  lines.push(`*Total: S/ ${(qt.total||0).toFixed(2)}*`);
+  if (qt.note) lines.push(`\n📝 ${qt.note}`);
+  const text = encodeURIComponent(lines.join('\n'));
+  const phoneDigits = (qt.phone || '').replace(/[^0-9]/g, '');
+  const waUrl = phoneDigits ? `https://wa.me/${phoneDigits}?text=${text}` : `https://wa.me/?text=${text}`;
+  window.open(waUrl, '_blank');
+}
+</script>
+
 <!-- ══ MODAL: CREAR / EDITAR REGISTRO ══ -->
 <div class="kj-modal-backdrop" id="kjModalBackdrop" onclick="if(event.target===this)closeKjModal()">
   <div class="kj-modal" id="kjModal">
@@ -11683,7 +12312,10 @@ function ordWhatsApp(id) {
       <div class="kj-modal-row">
         <div class="kj-modal-field">
           <label>DNI / RUC</label>
-          <input class="kj-modal-inp" id="kjDoc" placeholder="Nº de documento" maxlength="15">
+          <div style="position:relative;">
+            <input class="kj-modal-inp" id="kjDoc" placeholder="DNI (8) o RUC (11 dígitos)" maxlength="11" oninput="onKjDocInput(this.value)" style="width:100%;box-sizing:border-box;padding-right:100px;">
+            <span id="kjDocStatus" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--k-text-3);pointer-events:none;white-space:nowrap;"></span>
+          </div>
         </div>
         <div class="kj-modal-field">
           <label>Teléfono</label>
@@ -11762,8 +12394,8 @@ function ordWhatsApp(id) {
       <div class="fld">
         <label>Cliente</label>
         <div class="input-with-toggle">
-          <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Escribe o elige cliente..." maxlength="60" autocomplete="off"
-            oninput="ordFilterClients()"
+          <input class="panel-form-inp" id="pfOrdClient" type="text" placeholder="Escribe, elige o ingresa RUC/DNI..." maxlength="60" autocomplete="off"
+            oninput="ordFilterClients();ordCheckDoc(this.value)"
             style="width:100%;box-sizing:border-box;">
           <button type="button" class="field-toggle-btn" onclick="ordToggleClients()" title="Ver clientes"><span class="ftb-icon">⌄</span></button>
         </div>
@@ -11890,6 +12522,114 @@ function ordWhatsApp(id) {
 <div class="ord-modal-backdrop" id="ordModalBackdrop" onclick="if(event.target===this)closeOrderModal()">
   <div class="ord-modal" id="ordModal">
     <div id="ordModalBody"></div>
+  </div>
+</div>
+
+<!-- Menú contextual global de cotizaciones -->
+<div class="entry-popover" id="quoteContextMenu" style="position:fixed;z-index:99990;"></div>
+
+<!-- ══ MODAL: NUEVA COTIZACIÓN ══ -->
+<div class="ord-modal-backdrop" id="newQuoteBackdrop" onclick="if(event.target===this)closeNewQuoteModal()">
+  <div class="ord-modal" id="newQuoteModal" style="max-width:500px;">
+    <div class="ord-modal-header">
+      <div>
+        <div class="ord-modal-client" style="font-size:16px;">🧾 Nueva Cotización</div>
+      </div>
+      <button class="ord-modal-close" onclick="closeNewQuoteModal()">✕</button>
+    </div>
+
+    <div style="padding:14px 22px 0;display:flex;flex-direction:column;gap:14px;">
+
+      <!-- Cliente -->
+      <div class="fld">
+        <label>Cliente</label>
+        <div class="input-with-toggle">
+          <input class="panel-form-inp" id="pfQtClient" type="text" placeholder="Escribe, elige o ingresa RUC/DNI..." maxlength="60" autocomplete="off"
+            oninput="qtFilterClients();qtCheckDoc(this.value)" style="width:100%;box-sizing:border-box;">
+          <button type="button" class="field-toggle-btn" onclick="qtToggleClients()" title="Ver clientes"><span class="ftb-icon">⌄</span></button>
+        </div>
+        <div class="picker-panel" id="qtClientDrop" style="display:none;position:fixed;z-index:99999;"></div>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="fld">
+        <label>Teléfono del cliente</label>
+        <input class="panel-form-inp" id="pfQtPhone" type="tel" inputmode="tel" placeholder="Ej: 999 888 777" maxlength="20" autocomplete="off" style="width:100%;box-sizing:border-box;">
+      </div>
+
+      <!-- Descripción / Producto -->
+      <div class="fld">
+        <label>Descripción / Producto</label>
+        <div class="input-with-toggle">
+          <input class="panel-form-inp" id="pfQtDesc" type="text" placeholder="Escribe o elige producto..." maxlength="80" autocomplete="off"
+            oninput="qtFilterProducts()" onkeydown="if(event.key==='Enter')qtPushItem()" style="width:100%;box-sizing:border-box;">
+          <button type="button" class="field-toggle-btn" onclick="qtToggleProducts()" title="Ver productos"><span class="ftb-icon">⌄</span></button>
+        </div>
+        <div class="picker-panel" id="qtProdDrop" style="display:none;position:fixed;z-index:99999;"></div>
+      </div>
+
+      <!-- Cant / P.Unit / Monto / + -->
+      <div class="num-fields-row" style="grid-template-columns:1fr 1fr 1fr auto;align-items:end;">
+        <div class="fld fld-qty">
+          <label>Cant.</label>
+          <div class="num-stepper">
+            <button type="button" class="step-btn" onclick="qtStepQty(-1)">−</button>
+            <input type="number" id="pfQtQty" placeholder="1" min="1" step="1" value="1" oninput="qtRecalc()">
+            <button type="button" class="step-btn" onclick="qtStepQty(1)">+</button>
+          </div>
+        </div>
+        <div class="fld fld-unit">
+          <label>P. Unit. (S/)</label>
+          <input type="number" id="pfQtUnit" class="panel-form-inp" placeholder="0.00" min="0" step="0.01" oninput="qtRecalc()" style="width:100%;box-sizing:border-box;">
+        </div>
+        <div class="fld fld-amt">
+          <label>Monto (S/)</label>
+          <input type="number" id="pfQtAmt" class="panel-form-inp" placeholder="0.00" min="0" step="0.01" oninput="qtRecalcFromAmt()" style="width:100%;box-sizing:border-box;opacity:0.75;">
+        </div>
+        <button class="push-item-btn" onclick="qtPushItem()" title="Agregar ítem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+
+      <!-- Lista de ítems acumulados -->
+      <div id="pfQtItemsList" style="display:none;">
+        <div id="pfQtItemsRows" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(196,240,66,0.07);border:1px solid rgba(196,240,66,0.2);border-radius:10px;">
+          <span style="font-family:var(--sans);font-size:12px;color:var(--k-text-3);">Total acumulado</span>
+          <span id="pfQtTotal" style="font-family:var(--mono);font-size:15px;font-weight:700;color:var(--k-accent);">S/ 0.00</span>
+        </div>
+      </div>
+
+      <!-- Validez -->
+      <div class="fld">
+        <label>Válida por</label>
+        <div class="ord-date-row" style="margin:0;">
+          <button class="ord-date-btn" id="qtVal7"  onclick="setQtValidity(7)">7 días</button>
+          <button class="ord-date-btn active" id="qtVal15" onclick="setQtValidity(15)">15 días</button>
+          <button class="ord-date-btn" id="qtVal30" onclick="setQtValidity(30)">30 días</button>
+        </div>
+        <div id="pfQtValidDisplay" style="font-family:var(--mono);font-size:11px;color:var(--k-accent);margin-top:8px;padding:5px 12px;background:rgba(196,240,66,0.08);border:1px solid rgba(196,240,66,0.2);border-radius:8px;"></div>
+      </div>
+
+      <!-- Nota -->
+      <div class="fld">
+        <label>Nota / Condiciones (opcional)</label>
+        <input class="panel-form-inp" id="pfQtNote" type="text" placeholder="Ej: precios sin IGV, no incluye envío..." maxlength="120" style="width:100%;box-sizing:border-box;">
+      </div>
+
+    </div>
+
+    <div style="padding:16px 22px 20px;display:flex;gap:8px;margin-top:14px;">
+      <button class="ord-btn" onclick="closeNewQuoteModal()" style="flex:0 0 auto;padding:11px 18px;">Cancelar</button>
+      <button class="ord-btn" id="pfQtSaveBtn" onclick="saveQuote()" style="flex:1;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;">Guardar cotización</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: DETALLE DE COTIZACIÓN ══ -->
+<div class="ord-modal-backdrop" id="quoteModalBackdrop" onclick="if(event.target===this)closeQuoteModal()">
+  <div class="ord-modal" id="quoteModal">
+    <div id="quoteModalBody"></div>
   </div>
 </div>
 
