@@ -12630,7 +12630,7 @@ function vqToggleMic() {
 
   _vqRecognition = new SR();
   _vqRecognition.lang = 'es-PE';
-  _vqRecognition.continuous = false;
+  _vqRecognition.continuous = true;       // escucha continua (https: el permiso se guarda)
   _vqRecognition.interimResults = true;
   _vqRecognition.onresult = e => {
     let confirmed = '', interim = '';
@@ -12638,27 +12638,26 @@ function vqToggleMic() {
       if (r.isFinal) confirmed += r[0].transcript + ' ';
       else interim += r[0].transcript;
     }
-    if (confirmed) _vqAccumText = (_vqAccumText ? _vqAccumText + ', ' : '') + confirmed.trim();
+    if (confirmed) _vqAccumText = (_vqAccumText ? _vqAccumText + ' ' : '') + confirmed.trim();
     const full = (_vqAccumText || '') + (interim ? ((_vqAccumText ? ' ' : '') + interim) : '');
     document.getElementById('vqText').value = full.trim();
     vqRenderPreview();
   };
   _vqRecognition.onend = () => {
-    // No reiniciar automáticamente (file:// pide permiso en cada start)
-    // Solo marcar como detenido y mostrar estado listo para continuar
+    // Reiniciar automáticamente: solo se apaga si el usuario presionó ⏹ (_vqListening=false)
     if (_vqListening) {
-      _vqListening = false;
-      const btn = document.getElementById('vqMicBtn');
-      const sts = document.getElementById('vqMicStatus');
-      if (btn) { btn.style.background = ''; btn.style.color = ''; btn.textContent = '🎤'; btn.classList.remove('vq-listening'); }
-      if (sts) sts.textContent = _vqAccumText ? '✅ Toca para agregar más productos' : 'Toca el micrófono para hablar';
-      _vqRecognition = null;
+      try { _vqRecognition.start(); } catch(e) { setTimeout(() => { if (_vqListening) try { _vqRecognition.start(); } catch(_){} }, 200); }
     }
   };
   _vqRecognition.onerror = e => {
-    if (e.error === 'no-speech' || e.error === 'aborted') return;
-    vqStopMic();
-    toast('Error de micrófono: ' + e.error);
+    if (e.error === 'no-speech' || e.error === 'aborted') return;  // ignorar: parte del flujo continuo
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+      vqStopMic();
+      toast('Permiso de micrófono denegado. Actívalo en el candado de la barra de direcciones.');
+      return;
+    }
+    // network u otros: reintentar una vez antes de rendirse
+    if (_vqListening) { setTimeout(() => { if (_vqListening) try { _vqRecognition.start(); } catch(_){} }, 300); }
   };
   _vqRecognition.start();
 }
@@ -12677,34 +12676,35 @@ function vqParseText(text) {
     treinta:30,cuarenta:40,cincuenta:50,sesenta:60,setenta:70,ochenta:80,noventa:90,
     cien:100,ciento:100,doscientos:200,quinientos:500 };
 
-  // Split into item chunks: first try explicit separators (comma, period, newline)
+  // Normalizar: comas/puntos/saltos/"y suelto" → espacios, para detectar SIEMPRE por número
+  const norm = text.replace(/[,;\n]+/g, ' ').replace(/\s+y\s+/gi, ' ').replace(/\s+/g, ' ').trim();
+
+  // Detectar dónde empieza cada ítem: un número (dígito o palabra) que inicia un producto nuevo
+  const NW = Object.keys(NUM_WORDS).join('|');
+  const numRe = new RegExp(`\\b(\\d+(?:[.,]\\d+)?|${NW})\\b`, 'gi');
+  const positions = [];
+  for (const m of norm.matchAll(numRe)) {
+    const pos = m.index;
+    const before = norm.slice(0, pos).trimEnd();
+    const after = norm.slice(pos + m[0].length);
+    // Saltar: número es dimensión del producto (precedido por "de", "del", "x")
+    if (/\b(?:de|del|x)\s*$/i.test(before) || /[\/\.]$/.test(before)) continue;
+    // Saltar: número seguido de fracción (1/2), porcentaje, o letra de unidad pegada
+    if (/^\s*[\/"%]/.test(after) || /^[a-záéíóúüñ]/.test(after)) continue;
+    positions.push(pos);
+  }
+
   let parts;
-  if (/[,;\n]/.test(text)) {
-    parts = text.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+  if (positions.length >= 1) {
+    // Si el texto empieza antes del primer número, incluir ese prefijo como parte del primer ítem
+    const firstStart = positions[0] === 0 ? 0 : (positions[0] > 0 && norm.slice(0, positions[0]).trim() ? 0 : positions[0]);
+    parts = positions.map((start, i) => {
+      const realStart = i === 0 ? firstStart : start;
+      const end = positions[i + 1] ?? norm.length;
+      return norm.slice(realStart, end).trim();
+    }).filter(Boolean);
   } else {
-    // No separators: auto-detect item boundaries where a number (digit or word) starts a new item
-    const NW = Object.keys(NUM_WORDS).join('|');
-    const numRe = new RegExp(`\\b(\\d+(?:[.,]\\d+)?|${NW})\\b`, 'gi');
-    const positions = [];
-    for (const m of text.matchAll(numRe)) {
-      const pos = m.index;
-      const before = text.slice(0, pos).trimEnd();
-      const after = text.slice(pos + m[0].length);
-      // Skip: number is a product dimension (preceded by "de", "x", "/", ".")
-      if (/\b(?:de|del|x)\s*$/i.test(before) || /[\/\.,]$/.test(before)) continue;
-      // Skip: number followed by "/" (fraction like 1/2, 3/4) or "%" or unit letter
-      if (/^\s*[\/"%]/.test(after) || /^[a-záéíóúüñ]/.test(after)) continue;
-      positions.push(pos);
-    }
-    if (positions.length > 1) {
-      parts = positions.map((start, i) => {
-        const end = positions[i + 1] ?? text.length;
-        return text.slice(start, end).trim();
-      }).filter(Boolean);
-    } else {
-      // Fallback: try splitting on "y" suelto, then treat whole text as one item
-      parts = text.split(/\s+y\s+/i).map(s => s.trim()).filter(Boolean);
-    }
+    parts = norm ? [norm] : [];
   }
 
   return parts.map(part => {
