@@ -12598,12 +12598,14 @@ function renderQuotePanel() {
 let _vqRecognition = null;
 let _vqItems = [];
 let _vqListening = false;
+let _vqAccumText = '';   // texto confirmado antes de la sesión actual
 
 function openVoiceQuote() {
   document.getElementById('voiceQuoteBackdrop').style.display = 'flex';
   document.getElementById('vqText').value = '';
   document.getElementById('vqPreview').innerHTML = '';
   _vqItems = [];
+  _vqAccumText = '';
   vqSetCreateBtn(false);
 }
 function closeVoiceQuote() {
@@ -12615,11 +12617,9 @@ function vqToggleMic() {
   if (_vqListening) { vqStopMic(); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { toast('Tu navegador no soporta voz. Escribe los ítems manualmente.'); return; }
-  _vqRecognition = new SR();
-  _vqRecognition.lang = 'es-PE';
-  _vqRecognition.continuous = false;
-  _vqRecognition.interimResults = true;
   _vqListening = true;
+  // Guardar el texto que ya había en el textarea como base acumulada
+  _vqAccumText = (document.getElementById('vqText').value || '').trim();
   const btn = document.getElementById('vqMicBtn');
   const status = document.getElementById('vqMicStatus');
   btn.style.background = 'rgba(255,107,107,0.18)';
@@ -12627,13 +12627,39 @@ function vqToggleMic() {
   btn.textContent = '⏹';
   btn.classList.add('vq-listening');
   status.textContent = '🔴 Escuchando... habla ahora';
+
+  _vqRecognition = new SR();
+  _vqRecognition.lang = 'es-PE';
+  _vqRecognition.continuous = false;
+  _vqRecognition.interimResults = true;
   _vqRecognition.onresult = e => {
-    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
-    document.getElementById('vqText').value = transcript;
+    let confirmed = '', interim = '';
+    for (const r of e.results) {
+      if (r.isFinal) confirmed += r[0].transcript + ' ';
+      else interim += r[0].transcript;
+    }
+    if (confirmed) _vqAccumText = (_vqAccumText ? _vqAccumText + ', ' : '') + confirmed.trim();
+    const full = (_vqAccumText || '') + (interim ? ((_vqAccumText ? ' ' : '') + interim) : '');
+    document.getElementById('vqText').value = full.trim();
     vqRenderPreview();
   };
-  _vqRecognition.onend = () => vqStopMic();
-  _vqRecognition.onerror = () => { vqStopMic(); toast('No se pudo escuchar. Intenta de nuevo o escribe.'); };
+  _vqRecognition.onend = () => {
+    // No reiniciar automáticamente (file:// pide permiso en cada start)
+    // Solo marcar como detenido y mostrar estado listo para continuar
+    if (_vqListening) {
+      _vqListening = false;
+      const btn = document.getElementById('vqMicBtn');
+      const sts = document.getElementById('vqMicStatus');
+      if (btn) { btn.style.background = ''; btn.style.color = ''; btn.textContent = '🎤'; btn.classList.remove('vq-listening'); }
+      if (sts) sts.textContent = _vqAccumText ? '✅ Toca para agregar más productos' : 'Toca el micrófono para hablar';
+      _vqRecognition = null;
+    }
+  };
+  _vqRecognition.onerror = e => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    vqStopMic();
+    toast('Error de micrófono: ' + e.error);
+  };
   _vqRecognition.start();
 }
 function vqStopMic() {
