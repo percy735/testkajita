@@ -4354,7 +4354,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.66</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.67</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4611,7 +4611,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.48</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.67</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -12620,8 +12620,7 @@ function vqToggleMic() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { toast('Tu navegador no soporta voz. Escribe los ítems manualmente.'); return; }
   _vqListening = true;
-  // Guardar el texto que ya había en el textarea como base acumulada
-  _vqAccumText = (document.getElementById('vqText').value || '').trim();
+  const txt = document.getElementById('vqText');
   const btn = document.getElementById('vqMicBtn');
   const status = document.getElementById('vqMicStatus');
   btn.style.background = 'rgba(255,107,107,0.18)';
@@ -12630,53 +12629,59 @@ function vqToggleMic() {
   btn.classList.add('vq-listening');
   status.textContent = '🔴 Escuchando... habla ahora';
 
-  _vqRecognition = new SR();
-  _vqRecognition.lang = 'es-PE';
-  _vqRecognition.continuous = true;       // escucha continua (https: el permiso se guarda)
-  _vqRecognition.interimResults = true;
-  _vqRecognition.onresult = e => {
-    // Reconstruir desde cero el texto de ESTA sesión (e.results es acumulativo)
+  // Base congelada: todo lo que ya estaba confirmado en el textarea al empezar a escuchar.
+  // Crece (myBase) en cada reinicio automático con lo finalizado de cada sub-sesión.
+  let myBase = (txt.value || '').trim();
+  let sessionFinal = '';
+  const rec = new SR();
+  _vqRecognition = rec;
+  rec.lang = 'es-PE';
+  rec.continuous = true;       // escucha continua (https: el permiso se guarda)
+  rec.interimResults = true;
+
+  rec.onresult = e => {
+    if (rec !== _vqRecognition) return;  // ignorar eventos de un reconocimiento ya descartado
     let finalT = '', interim = '';
     for (const r of e.results) {
       if (r.isFinal) finalT += r[0].transcript + ' ';
       else interim += r[0].transcript;
     }
-    _vqSessionFinal = finalT.trim();
-    const base = _vqAccumText ? _vqAccumText + ' ' : '';
-    const full = base + _vqSessionFinal + (interim ? (_vqSessionFinal || _vqAccumText ? ' ' : '') + interim : '');
-    document.getElementById('vqText').value = full.trim();
+    sessionFinal = finalT.trim();
+    const sess = (sessionFinal + (interim ? ' ' + interim : '')).trim();
+    txt.value = (myBase ? myBase + (sess ? ' ' : '') : '') + sess;
     vqRenderPreview();
   };
-  _vqRecognition.onend = () => {
-    // Solo se apaga si el usuario presionó ⏹ (_vqListening=false)
+  rec.onend = () => {
+    if (rec !== _vqRecognition) return;  // descartado por stop manual o reinicio
     if (_vqListening) {
-      // Confirmar el texto de esta sesión al acumulado antes de reiniciar
-      if (_vqSessionFinal) _vqAccumText = (_vqAccumText ? _vqAccumText + ' ' : '') + _vqSessionFinal;
-      _vqSessionFinal = '';
-      try { _vqRecognition.start(); } catch(e) { setTimeout(() => { if (_vqListening) try { _vqRecognition.start(); } catch(_){} }, 200); }
+      // Confirmar lo finalizado de esta sub-sesión a la base antes de reiniciar
+      if (sessionFinal) myBase = (myBase ? myBase + ' ' : '') + sessionFinal;
+      sessionFinal = '';
+      try { rec.start(); } catch(e) { setTimeout(() => { if (_vqListening && rec === _vqRecognition) try { rec.start(); } catch(_){} }, 200); }
     }
   };
-  _vqRecognition.onerror = e => {
-    if (e.error === 'no-speech' || e.error === 'aborted') return;  // ignorar: parte del flujo continuo
+  rec.onerror = e => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;  // parte del flujo continuo
     if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
       vqStopMic();
       toast('Permiso de micrófono denegado. Actívalo en el candado de la barra de direcciones.');
       return;
     }
-    // network u otros: reintentar una vez antes de rendirse
-    if (_vqListening) { setTimeout(() => { if (_vqListening) try { _vqRecognition.start(); } catch(_){} }, 300); }
+    if (_vqListening) { setTimeout(() => { if (_vqListening && rec === _vqRecognition) try { rec.start(); } catch(_){} }, 300); }
   };
-  _vqRecognition.start();
+  rec.start();
 }
 function vqStopMic() {
   _vqListening = false;
-  // Confirmar lo dictado en la sesión actual para que un nuevo toque lo conserve
-  if (_vqSessionFinal) { _vqAccumText = (_vqAccumText ? _vqAccumText + ' ' : '') + _vqSessionFinal; _vqSessionFinal = ''; }
-  if (_vqRecognition) { try { _vqRecognition.stop(); } catch(e){} _vqRecognition = null; }
+  // Descartar el reconocimiento: nulificar primero hace que eventos tardíos se ignoren (guard stale).
+  // El textarea ya contiene el texto correcto, así que no se pierde nada.
+  const rec = _vqRecognition;
+  _vqRecognition = null;
+  if (rec) { try { rec.stop(); } catch(e){} }
   const btn = document.getElementById('vqMicBtn');
   const status = document.getElementById('vqMicStatus');
   if (btn) { btn.style.background = ''; btn.style.color = ''; btn.textContent = '🎤'; btn.classList.remove('vq-listening'); }
-  if (status) status.textContent = 'Toca para hablar';
+  if (status) status.textContent = (document.getElementById('vqText').value || '').trim() ? '✅ Toca para agregar más productos' : 'Toca para hablar';
 }
 
 function vqParseText(text) {
