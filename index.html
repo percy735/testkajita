@@ -8685,8 +8685,13 @@ function renderEntries(){
         : isDebt
         ? '−'+fmt(e.pendiente > 0 ? e.pendiente : e.amount)
         : (e.type==='expense'?'−':'+')+fmt(e.amount);
+      const credNav = isCredit && e.client
+        ? `onclick="goToCredClient('${e.client.replace(/'/g,"\\'")}','cobrar')" style="cursor:pointer;"`
+        : isDebt && e.client
+        ? `onclick="goToCredClient('${e.client.replace(/'/g,"\\'")}','pagar')" style="cursor:pointer;"`
+        : '';
       return `
-        <div class="entry-item ${itemClass}" data-eid="${e.id}">
+        <div class="entry-item ${itemClass}" data-eid="${e.id}" ${credNav}>
           <span class="edot ${dotClass}"></span>
           <div class="einfo">
             <div class="edesc">${e.desc}</div>
@@ -8742,32 +8747,28 @@ function renderDayOrders() {
       : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);">🏪 Recojo en local</span>`;
     const dateBadge = o.date?`<span class="pbadge" style="background:rgba(255,255,255,0.05);color:var(--k-text-3);">${fmtDate(o.date)}</span>`:'';
     const noteBadge = o.note?`<span class="pbadge" style="background:rgba(255,255,255,0.04);color:var(--k-text-3);">📝 ${o.note}</span>`:'';
+    const payBadge = o.paid
+      ? `<span class="pbadge" style="background:rgba(196,240,66,0.12);color:var(--k-accent);">✓ Pagado</span>`
+      : `<span class="pbadge" style="background:rgba(251,191,36,0.12);color:var(--k-credit);">Falta pagar</span>`;
+    const statusBg = o.status==='pending'?'rgba(251,191,36,0.12)':o.status==='ready'?'rgba(52,211,153,0.12)':'rgba(255,255,255,0.05)';
+    const statusColor = o.status==='pending'?'var(--k-credit)':o.status==='ready'?'var(--k-order)':'var(--k-text-3)';
     const d = new Date(o.createdAt);
     const tStr = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
     return `
-      <div class="entry-item ${sc}" data-oid="${o.id}">
+      <div class="entry-item ${sc}" data-oid="${o.id}" onclick="goToOrder(${o.id})" title="Clic para ver en Pedidos" style="cursor:pointer;">
         <span class="edot" style="background:${o.status==='done'?'var(--k-text-3)':'var(--k-order)'};"></span>
         <div class="einfo">
           <div class="edesc"><strong>${o.client}</strong> <span style="font-weight:400;color:var(--k-text-2);">— ${itemsText}</span></div>
           <div class="emeta">
             <span class="etime">${tStr}</span>
-            <span class="pbadge" style="background:${o.status==='pending'?'var(--k-credit-l)':o.status==='ready'?'var(--k-order-l)':'rgba(255,255,255,0.05)'};color:${o.status==='pending'?'var(--k-credit)':o.status==='ready'?'var(--k-order)':'var(--k-text-3)'};">${statusLabel[o.status]}</span>
+            <span class="pbadge" style="background:${statusBg};color:${statusColor};">${statusLabel[o.status]}</span>
+            ${payBadge}
             ${deliveryBadge}
             ${dateBadge}
             ${noteBadge}
           </div>
         </div>
-        <div class="eamt" style="color:var(--k-order);">S/ ${(o.total||0).toFixed(2)}</div>
-        <div class="eactions">
-          <button class="abtn-menu" onclick="toggleOrderEntryMenu(event,${o.id})" title="Acciones">···</button>
-          <div class="entry-popover" id="oemenu-${o.id}">
-            ${o.status==='pending'?`<button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'ready');renderDayOrders()"><span class="ep-ic">✅</span>Marcar listo</button>`:''}
-            ${o.status==='ready'?`<button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'done');renderDayOrders()"><span class="ep-ic">📦</span>Entregado</button>`:''}
-            ${o.status!=='pending'?`<button class="ep-item" onclick="closeAllMenus();setOrderStatus(${o.id},'pending');renderDayOrders()"><span class="ep-ic">↩</span>Reabrir</button>`:''}
-            <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${o.id})"><span class="ep-ic">✎</span>Editar</button>
-            <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrder(${o.id});renderDayOrders()"><span class="ep-ic">×</span>Eliminar</button>
-          </div>
-        </div>
+        <div class="eamt" style="color:${o.paid?'var(--k-accent)':'var(--k-order)'};">S/ ${(o.total||0).toFixed(2)}</div>
       </div>`;
   }).join('');
 }
@@ -8779,6 +8780,21 @@ function toggleOrderEntryMenu(e, id) {
   const isOpen = menu.classList.contains('open');
   closeAllMenus();
   if(!isOpen) menu.classList.add('open');
+}
+
+function goToOrder(id) {
+  sbPanel('ord');
+  setTimeout(() => {
+    const row = document.querySelector(`.pl-row[data-oid="${id}"]`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      row.style.transition = 'background 0.3s, box-shadow 0.3s';
+      row.style.background = 'rgba(52,211,153,0.12)';
+      row.style.boxShadow = '0 0 0 2px var(--k-order), 0 4px 20px rgba(52,211,153,0.25)';
+      row.style.borderRadius = '10px';
+      setTimeout(() => { row.style.background = ''; row.style.boxShadow = ''; }, 2000);
+    }
+  }, 350);
 }
 
 function toast(msg){
@@ -11317,6 +11333,7 @@ function switchView(view) {
     const el = document.getElementById('view-' + view);
     if (el) el.style.display = 'block';
     if (view === 'dashboard') renderDashboard();
+    if (view === 'registrar') render();
 
   } else if (PANEL_VIEWS.includes(view)) {
     // Mover el panel al host de página y activar modo página
