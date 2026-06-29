@@ -12598,7 +12598,8 @@ function renderQuotePanel() {
 let _vqRecognition = null;
 let _vqItems = [];
 let _vqListening = false;
-let _vqAccumText = '';   // texto confirmado antes de la sesión actual
+let _vqAccumText = '';     // texto confirmado de sesiones anteriores (ya reiniciadas)
+let _vqSessionFinal = '';  // texto final de la sesión de escucha actual
 
 function openVoiceQuote() {
   document.getElementById('voiceQuoteBackdrop').style.display = 'flex';
@@ -12606,6 +12607,7 @@ function openVoiceQuote() {
   document.getElementById('vqPreview').innerHTML = '';
   _vqItems = [];
   _vqAccumText = '';
+  _vqSessionFinal = '';
   vqSetCreateBtn(false);
 }
 function closeVoiceQuote() {
@@ -12633,19 +12635,24 @@ function vqToggleMic() {
   _vqRecognition.continuous = true;       // escucha continua (https: el permiso se guarda)
   _vqRecognition.interimResults = true;
   _vqRecognition.onresult = e => {
-    let confirmed = '', interim = '';
+    // Reconstruir desde cero el texto de ESTA sesión (e.results es acumulativo)
+    let finalT = '', interim = '';
     for (const r of e.results) {
-      if (r.isFinal) confirmed += r[0].transcript + ' ';
+      if (r.isFinal) finalT += r[0].transcript + ' ';
       else interim += r[0].transcript;
     }
-    if (confirmed) _vqAccumText = (_vqAccumText ? _vqAccumText + ' ' : '') + confirmed.trim();
-    const full = (_vqAccumText || '') + (interim ? ((_vqAccumText ? ' ' : '') + interim) : '');
+    _vqSessionFinal = finalT.trim();
+    const base = _vqAccumText ? _vqAccumText + ' ' : '';
+    const full = base + _vqSessionFinal + (interim ? (_vqSessionFinal || _vqAccumText ? ' ' : '') + interim : '');
     document.getElementById('vqText').value = full.trim();
     vqRenderPreview();
   };
   _vqRecognition.onend = () => {
-    // Reiniciar automáticamente: solo se apaga si el usuario presionó ⏹ (_vqListening=false)
+    // Solo se apaga si el usuario presionó ⏹ (_vqListening=false)
     if (_vqListening) {
+      // Confirmar el texto de esta sesión al acumulado antes de reiniciar
+      if (_vqSessionFinal) _vqAccumText = (_vqAccumText ? _vqAccumText + ' ' : '') + _vqSessionFinal;
+      _vqSessionFinal = '';
       try { _vqRecognition.start(); } catch(e) { setTimeout(() => { if (_vqListening) try { _vqRecognition.start(); } catch(_){} }, 200); }
     }
   };
@@ -12663,6 +12670,8 @@ function vqToggleMic() {
 }
 function vqStopMic() {
   _vqListening = false;
+  // Confirmar lo dictado en la sesión actual para que un nuevo toque lo conserve
+  if (_vqSessionFinal) { _vqAccumText = (_vqAccumText ? _vqAccumText + ' ' : '') + _vqSessionFinal; _vqSessionFinal = ''; }
   if (_vqRecognition) { try { _vqRecognition.stop(); } catch(e){} _vqRecognition = null; }
   const btn = document.getElementById('vqMicBtn');
   const status = document.getElementById('vqMicStatus');
