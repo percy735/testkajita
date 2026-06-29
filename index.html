@@ -473,7 +473,7 @@ body::before {
   .sb-brand-wordmark .sb-wm-ka,
   .sb-brand-wordmark .sb-wm-ita { display: inline !important; }
   .sb-wm-j { font-size: 25px !important; }
-  .sb-brand { padding: 28px 20px 20px !important; }
+  .sb-brand { padding: 28px 20px 20px !important; text-align: left !important; }
   .sb-item { justify-content: flex-start !important; padding: 10px 14px !important; font-size: 13px !important; font-family: var(--sans) !important; }
   .sb-footer { display: flex !important; }
 
@@ -739,6 +739,28 @@ body::before {
 
 /* Modal de settings */
 /* ── Settings modal (3-section layout) ── */
+@media (max-width: 600px) {
+  .cfg-overlay { align-items: stretch; }
+  .cfg-overlay > div { /* cfg-sheet */
+    max-width: 100% !important; width: 100% !important;
+    max-height: 100dvh !important; border-radius: 0 !important;
+    flex: 1;
+  }
+  /* Body: nav + content → stacked */
+  .cfg-overlay > div > div[style*="display:flex;flex:1"] {
+    flex-direction: column !important;
+  }
+  /* Nav lateral → tabs horizontales */
+  .cfg-overlay div[style*="width:180px"] {
+    width: 100% !important; flex-shrink: 0 !important;
+    flex-direction: row !important; border-right: none !important;
+    border-bottom: 1px solid var(--k-line) !important;
+    padding: 8px 12px !important; gap: 4px; overflow-x: auto;
+  }
+  .cfg-nav-item { padding: 8px 14px !important; border-radius: 10px !important; white-space: nowrap; flex-shrink: 0; }
+  /* Contenido con scroll propio */
+  .cfg-overlay div[style*="flex:1;overflow-y:auto"] { padding: 16px !important; }
+}
 .cfg-nav-item {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px; border-radius: 12px; cursor: pointer;
@@ -767,7 +789,7 @@ body::before {
 .cfg-pay-status.ok { background: rgba(196,240,66,0.1); color: var(--k-accent); }
 .cfg-pay-status.pending { background: rgba(251,191,36,0.12); color: var(--k-credit); }
 .cfg-overlay {
-  display: none; position: fixed; inset: 0; z-index: 9500;
+  display: none; position: fixed; inset: 0; z-index: 10100;
   background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
   align-items: flex-end; justify-content: center;
   padding: 0;
@@ -4617,6 +4639,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <div class="dash-goal-tabs">
               <button class="dash-goal-tab active" id="dgTabMes" onclick="dashGoalSetPeriod('mes')">Mes</button>
               <button class="dash-goal-tab" id="dgTabSem" onclick="dashGoalSetPeriod('sem')">Semana</button>
+              <button class="dash-goal-tab" id="dgTabDia" onclick="dashGoalSetPeriod('dia')">Día</button>
             </div>
             <button class="dash-goal-edit-btn" onclick="dashGoalToggleEdit()">✏ editar</button>
           </div>
@@ -4684,27 +4707,17 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <div class="dash-mini-title">📦 Top Productos <span id="dashTopProdLbl"></span></div>
         <div class="dash-top-list" id="dashTopProducts"></div>
       </div>
-      <div class="dash-bottom-col">
-        <div class="dash-mini-title">⚡ Últimos <span id="dashFeedPeriodLbl"></span></div>
-        <div class="dash-top-list" id="dashFeedRows"></div>
-      </div>
     </div>
     <div id="dashBalanceCard" style="display:none;"></div>
     <div id="dashTxCard" style="display:none;"></div>
 
-    <!-- ROW 5: Gráfica + Créditos -->
-    <div class="dash-chart-cred-row">
-      <div class="dash-chart" style="margin-bottom:0;flex:1;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <span style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-text-3);" id="dashChartTitle">Ventas diarias</span>
-          <span style="font-family:var(--mono);font-size:10px;color:var(--k-text-3);" id="dashChartMonth"></span>
-        </div>
-        <div class="dash-chart-bars" id="dashChartBars" style="height:60px;"></div>
+    <!-- ROW 5: Gráfica -->
+    <div class="dash-chart" style="margin-bottom:0;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--k-text-3);" id="dashChartTitle">Ventas diarias</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--k-text-3);" id="dashChartMonth"></span>
       </div>
-      <div style="flex:0 0 200px;">
-        <div class="dash-mini-title" style="margin-bottom:6px;">⏳ Créditos pendientes</div>
-        <div class="dash-top-list" id="dashCredits"></div>
-      </div>
+      <div class="dash-chart-bars" id="dashChartBars" style="height:60px;"></div>
     </div>
 
     <!-- oculto: el dashKpis original sigue siendo llenado por el JS pero lo usamos internamente -->
@@ -11390,6 +11403,7 @@ function dashGoalSetPeriod(p) {
   _dashGoalPeriod = p;
   document.getElementById('dgTabMes').classList.toggle('active', p === 'mes');
   document.getElementById('dgTabSem').classList.toggle('active', p === 'sem');
+  document.getElementById('dgTabDia').classList.toggle('active', p === 'dia');
   renderDashboard();
 }
 function dashGoalToggleEdit() {
@@ -11550,6 +11564,10 @@ function renderDashboard() {
     const monthStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
     goalIncome = (entries || []).filter(e => e.type === 'income' && !e.credit && e.date && e.date.startsWith(monthStr))
       .reduce((s, e) => s + (e.amount || 0), 0);
+  } else if (_dashGoalPeriod === 'dia') {
+    const todayStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+    goalIncome = (entries || []).filter(e => e.type === 'income' && !e.credit && e.date === todayStr)
+      .reduce((s, e) => s + (e.amount || 0), 0);
   } else {
     // current week (Mon–today)
     const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7)); mon.setHours(0,0,0,0);
@@ -11567,7 +11585,7 @@ function renderDashboard() {
   document.getElementById('dashGoalCurrent').textContent = 'S/ ' + goalIncome.toLocaleString('es-PE', {minimumFractionDigits:0, maximumFractionDigits:0});
   document.getElementById('dashGoalTarget').textContent = goalTarget > 0 ? 'S/ ' + goalTarget.toLocaleString('es-PE') : 'sin meta';
   document.getElementById('dashGoalFill').style.width = goalPct + '%';
-  const periodName = _dashGoalPeriod === 'mes' ? 'del mes' : 'de la semana';
+  const periodName = _dashGoalPeriod === 'mes' ? 'del mes' : _dashGoalPeriod === 'dia' ? 'del día' : 'de la semana';
   let msg = '';
   if (!goalTarget) msg = 'Toca "✏ editar" para establecer tu meta ' + periodName;
   else if (goalPct >= 100) msg = '🎉 ¡Meta alcanzada! Sigue vendiendo.';
