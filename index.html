@@ -401,12 +401,11 @@ body::before {
 .ctb-logo-mobile {
   display: none;
   align-items: baseline;
-  font-family: var(--serif); font-size: 20px; font-weight: 700;
-  letter-spacing: -0.5px; line-height: 1; flex-shrink: 0;
+  font-family: var(--serif); font-size: 22px; font-weight: 700;
+  letter-spacing: -1px; line-height: 1; flex-shrink: 0;
 }
-.ctb-logo-ka  { color: var(--k-text); }
-.ctb-logo-j   { color: var(--k-accent); font-size: 23px; display: inline-block; transform: translateY(1px); }
-.ctb-logo-ita { color: var(--k-text); }
+.ctb-logo-k { color: var(--k-text); }
+.ctb-logo-j { color: var(--k-accent); font-size: 26px; display: inline-block; transform: translateY(2px); }
 
 .content-body {
   padding: 32px 40px 60px;
@@ -515,15 +514,15 @@ body::before {
     align-self: center;
     margin-right: 14px;
   }
-  /* Fila 2: título de área, span completo */
+  /* Fila 2: título de área, span completo — tipografía serif igual a desktop */
   .ctb-title {
     display: flex;
     grid-column: 1 / -1; grid-row: 2;
     align-items: center;
     padding: 8px 16px 10px;
-    font-family: var(--sans);
-    font-size: 19px;
-    font-weight: 700;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
     color: var(--k-text);
     letter-spacing: -0.3px;
     border-top: 1px solid var(--k-line);
@@ -1475,7 +1474,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   overflow: hidden; transition: all 0.2s;
 }
 .input-with-toggle:focus-within { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accent-l); background: rgba(0,0,0,0.4); }
-.input-with-toggle input { flex: 1; border: none; background: transparent; box-shadow: none; border-radius: 0; padding: 10px 10px 10px 14px; }
+.input-with-toggle input { flex: 1; border: none; background: transparent; box-shadow: none; border-radius: 0; padding: 10px 10px 10px 14px; color: var(--k-text); }
+.input-with-toggle select { flex: 1; border: none; background: transparent; box-shadow: none; border-radius: 0; padding: 10px 10px 10px 14px; color: var(--k-text); font-size: 13px; font-family: var(--sans); outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; width: 100%; }
 .input-with-toggle input:focus { box-shadow: none; border-color: transparent; }
 .field-toggle-btn {
   flex-shrink: 0; width: 40px; height: 100%; min-height: 40px;
@@ -2228,7 +2228,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   background: #1a1c22; border: 1px solid rgba(255,255,255,0.1);
   border-radius: 20px; width: 480px; max-width: calc(100vw - 40px);
   box-shadow: 0 24px 60px rgba(0,0,0,0.6);
-  overflow: hidden; display: flex; flex-direction: column;
+  overflow: visible; display: flex; flex-direction: column;
 }
 .kj-modal-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2266,6 +2266,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   border-radius: 12px; outline: none; font-family: var(--sans);
   font-size: 13px; color: var(--k-text); transition: border .18s;
 }
+.kj-modal-inp option { background: #1e2022; color: #e8e8e8; }
 .kj-modal-inp:focus { border-color: var(--k-accent); background: rgba(196,240,66,0.04); }
 .kj-modal-inp::placeholder { color: var(--k-text-3); }
 .kj-modal-row { display: flex; gap: 10px; }
@@ -2289,11 +2290,11 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .kj-modal-btn-save:hover { background: #d0ff4d; }
 .kj-cat-add-btn {
   width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px;
-  border: 1.5px dashed rgba(196,240,66,0.4); background: transparent;
+  border: none; background: rgba(196,240,66,0.15);
   color: var(--k-accent); font-size: 18px; line-height: 1; cursor: pointer;
   display: flex; align-items: center; justify-content: center; transition: all .15s;
 }
-.kj-cat-add-btn:hover { background: var(--k-accent-l); border-style: solid; }
+.kj-cat-add-btn:hover { background: rgba(196,240,66,0.28); }
 /* Desplegable de categorías guardadas */
 .kj-cat-dropdown {
   display: none; position: absolute; left: 0; right: 0; top: 100%; z-index: 50;
@@ -2314,6 +2315,38 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .kj-cat-del:hover { background: var(--k-expense-l); color: var(--k-expense); }
 .kj-cat-empty { font-size: 12px; color: var(--k-text-3); padding: 10px; text-align: center; }
+
+/* ── Unidades de medida (Configuración + modal búsqueda) ── */
+.cfg-unit-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.cfg-unit-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 8px; background: rgba(255,255,255,0.04);
+}
+.cfg-unit-default-btn {
+  border: none; background: transparent; color: var(--k-text-3);
+  font-size: 15px; cursor: pointer; padding: 0; line-height: 1; transition: color .15s;
+}
+.cfg-unit-default-btn.active { color: var(--k-accent); }
+.cfg-unit-default-btn:hover { color: var(--k-accent); }
+.cfg-unit-label { flex: 1; font-size: 13px; color: var(--k-text); font-family: var(--sans); }
+.cfg-unit-add-btn {
+  width: 100%; padding: 9px; background: transparent; border: 1.5px dashed var(--k-line);
+  border-radius: 10px; color: var(--k-text-2); font-size: 13px; cursor: pointer;
+  font-family: var(--sans); transition: all .15s;
+}
+.cfg-unit-add-btn:hover { border-color: var(--k-accent); color: var(--k-accent); }
+.unit-search-row {
+  display: flex; align-items: center; gap: 10px; padding: 9px 10px;
+  border-radius: 8px; transition: background .12s;
+}
+.unit-search-row:not(.added):hover { background: rgba(255,255,255,0.07); }
+.unit-s-code {
+  font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--k-accent);
+  background: rgba(196,240,66,0.12); padding: 2px 6px; border-radius: 5px; min-width: 38px; text-align: center;
+}
+.unit-s-name { flex: 1; font-size: 13px; color: var(--k-text); }
+.unit-s-check { font-size: 13px; color: var(--k-text-3); }
+
 
 /* Lista del panel */
 .panel-list { flex: 1; overflow-y: auto; padding: 0; }
@@ -3955,6 +3988,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   }
   /* Sin grab handle */
   .panel-sheet::before { display: none !important; }
+  /* Mostrar botón cerrar en modo as-page en móvil */
+  .panel-overlay.as-page .panel-close { display: flex !important; }
   .panel-head   { padding: 14px 16px 12px; flex-direction: row; align-items: center; gap: 8px; }
   .panel-ttl    { font-size: 18px; font-family: var(--sans); font-weight: 700; flex: 1; }
   .panel-sub    { display: none; }
@@ -3967,6 +4002,29 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   .panel-form-inp.w-sm { width: 100%; flex: 1; }
   .panel-totals { padding: 10px 16px; gap: 12px; }
   .panel-total-val { font-size: 15px; }
+
+  /* ── Proveedores: columnas con espacio suficiente ── */
+  .pl-prov { grid-template-columns: 160px 105px 130px 110px 105px 80px; }
+
+  /* ── Créditos: layout 2-col en móvil, sin truncar descripción ── */
+  .cred-child-row {
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto;
+  }
+  .cred-child-desc {
+    grid-column: 1; grid-row: 1;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+  .cred-child-date { grid-column: 1; grid-row: 2; }
+  .cred-child-actions {
+    grid-column: 2; grid-row: 1 / 3;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 6px;
+  }
 
   /* ── MODAL PEDIDO: bottom sheet en móvil ── */
   .ord-modal-backdrop { align-items: flex-end; padding: 0; }
@@ -4266,7 +4324,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.58</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.66</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4516,9 +4574,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
       </div>
-      <!-- Logo visible solo en móvil — al final = derecha -->
+      <!-- Logo isotipo móvil -->
       <div class="ctb-logo-mobile" aria-hidden="true">
-        <span class="ctb-logo-ka">Ka</span><span class="ctb-logo-j">j</span><span class="ctb-logo-ita">ita</span>
+        <span class="ctb-logo-k">K</span><span class="ctb-logo-j">j</span>
       </div>
     </div>
 
@@ -5340,6 +5398,52 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <label class="cfg-label" style="font-size:11px;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.04em;">Token API</label>
             <input class="cfg-input" id="cfgApiToken" type="password" placeholder="Pega aquí tu token de apiperu.dev" maxlength="200" autocomplete="off">
             <div id="cfgApiTokenStatus" style="font-size:11px;margin-top:6px;color:var(--k-text-3);"></div>
+          </div>
+
+          <div class="cfg-divider"></div>
+
+          <!-- Datos del negocio para documentos -->
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Datos para documentos impresos</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:12px;line-height:1.6;">Aparecen en cotizaciones y pedidos impresos.</div>
+            <label class="cfg-label">RUC / DNI del negocio</label>
+            <input class="cfg-input" id="cfgBizRuc" type="text" placeholder="Ej: 20123456789" maxlength="11">
+            <label class="cfg-label" style="margin-top:10px;">Dirección</label>
+            <input class="cfg-input" id="cfgBizAddress" type="text" placeholder="Ej: Av. Los Olivos 123, Lima" maxlength="120">
+          </div>
+
+          <div class="cfg-divider"></div>
+
+          <!-- Logo -->
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Logo del negocio</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Aparece en cotizaciones impresas. PNG o JPG, máx. 1 MB.</div>
+            <div id="cfgLogoPreview" style="display:none;margin-bottom:10px;display:flex;align-items:center;gap:10px;">
+              <img id="cfgLogoImg" style="max-height:56px;max-width:160px;border-radius:6px;border:1px solid var(--k-line);padding:4px;background:#fff;object-fit:contain;">
+              <button onclick="clearBizLogo()" style="font-size:11px;color:var(--k-expense);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid var(--k-expense);">Quitar</button>
+            </div>
+            <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;background:var(--k-input);border:1px solid var(--k-line);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--k-text);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Seleccionar imagen
+              <input type="file" id="cfgBizLogoFile" accept="image/*" style="display:none;" onchange="previewBizLogo(this)">
+            </label>
+          </div>
+
+          <div class="cfg-divider"></div>
+
+          <!-- Pie de página / Observaciones -->
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Observaciones / Pie de página</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Aparece al final de tus cotizaciones. Ideal para cuentas bancarias, condiciones, email, etc.</div>
+            <textarea class="cfg-input" id="cfgBizFooter" rows="4" placeholder="Ej: Cuentas de cobro:&#10;BCP S/ 123-456-789&#10;Correo: negocio@gmail.com" style="resize:vertical;min-height:90px;font-family:var(--mono);font-size:12px;"></textarea>
+          </div>
+
+          <div class="cfg-divider"></div>
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Unidades de medida</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Las unidades que usa tu negocio. Aparecerán al crear productos. Puedes marcar una por defecto (★).</div>
+            <div class="cfg-unit-list" id="cfgUnitList"></div>
+            <button type="button" class="cfg-unit-add-btn" onclick="openUnitSearch('settings')">+ Agregar unidad</button>
           </div>
 
           <div class="cfg-divider"></div>
@@ -6240,12 +6344,154 @@ function kjDeleteCat(name) {
   saveCategories(cats);
   renderCatChips();
 }
-// Cerrar el desplegable de categorías al hacer clic fuera
+
+/* ── Unidades de medida (Catálogo N°03 SUNAT) ── */
+const UNIT_STORE = 'kajita_units';
+const SUNAT_UNITS = [
+  {code:'NIU',name:'Unidad (bienes)'},{code:'ZZ',name:'Servicio'},
+  {code:'KGM',name:'Kilogramo'},{code:'GRM',name:'Gramo'},{code:'MGM',name:'Miligramo'},
+  {code:'TNE',name:'Tonelada métrica'},{code:'LBR',name:'Libra'},{code:'ONZ',name:'Onza'},{code:'APZ',name:'Onza troy'},
+  {code:'LTR',name:'Litro'},{code:'MLT',name:'Mililitro'},{code:'HLT',name:'Hectolitro'},
+  {code:'GLL',name:'Galón (US)'},{code:'GLI',name:'Galón inglés'},{code:'BLL',name:'Barril'},
+  {code:'MTR',name:'Metro'},{code:'CMT',name:'Centímetro lineal'},{code:'MMT',name:'Milímetro'},{code:'KTM',name:'Kilómetro'},
+  {code:'MTK',name:'Metro cuadrado'},{code:'CMK',name:'Centímetro cuadrado'},{code:'MMK',name:'Milímetro cuadrado'},
+  {code:'MTQ',name:'Metro cúbico'},{code:'CMQ',name:'Centímetro cúbico'},{code:'MMQ',name:'Milímetro cúbico'},
+  {code:'FOT',name:'Pie'},{code:'INH',name:'Pulgada'},{code:'YRD',name:'Yarda'},{code:'ACR',name:'Acre'},
+  {code:'MIL',name:'Millar'},{code:'DZN',name:'Docena'},{code:'CEN',name:'Ciento de unidades'},{code:'GRO',name:'Gruesa'},{code:'UM',name:'Millón de unidades'},
+  {code:'BG',name:'Bolsa'},{code:'BX',name:'Caja'},{code:'BO',name:'Botella'},{code:'CT',name:'Cartón'},
+  {code:'RO',name:'Rollo'},{code:'TB',name:'Tubo'},{code:'PK',name:'Paquete'},{code:'PAR',name:'Par'},
+  {code:'SET',name:'Juego / Set'},{code:'KT',name:'Kit'},{code:'BJ',name:'Balde'},{code:'CA',name:'Lata'},
+  {code:'CY',name:'Cilindro'},{code:'BE',name:'Fardo'},{code:'LEF',name:'Hoja'},{code:'PG',name:'Placa'},
+  {code:'CJ',name:'Cono'},{code:'ARJ',name:'Arroba'},{code:'4A',name:'Bobina'},
+  {code:'HUR',name:'Hora'},{code:'KWH',name:'Kilovatio hora'},{code:'MWH',name:'Megawatt hora'},{code:'AMH',name:'Amperio hora'},
+];
+function getUnits() {
+  try { return JSON.parse(localStorage.getItem(UNIT_STORE)) || []; } catch(e) { return []; }
+}
+function saveUnits(arr) { localStorage.setItem(UNIT_STORE, JSON.stringify(arr)); }
+function getDefaultUnit() {
+  const u = getUnits();
+  return u.find(x => x.isDefault) || u[0] || {code:'NIU', name:'Unidad (bienes)'};
+}
+function kjInitUnits() {
+  if (getUnits().length === 0) {
+    saveUnits([
+      {code:'NIU', name:'Unidad (bienes)', isDefault:true},
+      {code:'ZZ',  name:'Servicio',        isDefault:false},
+      {code:'KGM', name:'Kilogramo',       isDefault:false},
+    ]);
+  }
+}
+function renderUnitChips() {
+  const el = document.getElementById('cfgUnitList');
+  if (!el) return;
+  const units = getUnits();
+  if (!units.length) { el.innerHTML = '<div class="kj-cat-empty">Sin unidades guardadas</div>'; return; }
+  el.innerHTML = units.map(u => `
+    <div class="cfg-unit-item">
+      <button type="button" class="cfg-unit-default-btn ${u.isDefault?'active':''}" onclick="kjSetDefaultUnit('${u.code}')" title="${u.isDefault?'Unidad por defecto':'Marcar como defecto'}">★</button>
+      <span class="cfg-unit-label">${u.code} — ${u.name}</span>
+      <button type="button" class="kj-cat-del" onclick="kjDeleteUnit('${u.code.replace(/'/g,"\\'")}')">×</button>
+    </div>`).join('');
+}
+function renderUnitSelect(currentCode) {
+  const code = currentCode || getDefaultUnit().code;
+  const hidden = document.getElementById('kjProdUnit');
+  const display = document.getElementById('kjProdUnitDisplay');
+  const drop = document.getElementById('kjUnitDrop');
+  if (hidden) hidden.value = code;
+  const units = getUnits();
+  const found = units.find(u => u.code === code);
+  if (display) display.value = found ? `${found.code} — ${found.name}` : '';
+  if (drop) {
+    drop.innerHTML = units.length
+      ? units.map(u => `<div class="kj-cat-item" onclick="kjSetUnitFromDrop('${u.code}','${u.name.replace(/'/g,"\\'")}')">
+          <span class="kj-cat-item-name">${u.code} — ${u.name}</span>
+        </div>`).join('')
+      : '<div class="kj-cat-empty">Sin unidades. Agrega en Configuración.</div>';
+  }
+}
+function kjToggleUnitDrop(e) {
+  if (e) e.stopPropagation();
+  const drop = document.getElementById('kjUnitDrop');
+  if (!drop) return;
+  const isOpen = drop.classList.contains('open');
+  if (isOpen) { drop.classList.remove('open'); }
+  else { renderUnitSelect(document.getElementById('kjProdUnit')?.value); drop.classList.add('open'); }
+}
+function kjSetUnitFromDrop(code, name) {
+  const hidden = document.getElementById('kjProdUnit');
+  const display = document.getElementById('kjProdUnitDisplay');
+  if (hidden) hidden.value = code;
+  if (display) display.value = `${code} — ${name}`;
+  document.getElementById('kjUnitDrop')?.classList.remove('open');
+}
+function kjSetDefaultUnit(code) {
+  const units = getUnits().map(u => ({...u, isDefault: u.code === code}));
+  saveUnits(units);
+  renderUnitChips();
+}
+function kjDeleteUnit(code) {
+  const units = getUnits().filter(u => u.code !== code);
+  saveUnits(units);
+  renderUnitChips();
+  renderUnitSelect();
+}
+let _unitSearchCtx = 'settings';
+function openUnitSearch(ctx) {
+  _unitSearchCtx = ctx || 'settings';
+  const inp = document.getElementById('unitSearchInp');
+  if (inp) inp.value = '';
+  renderUnitSearchResults();
+  document.getElementById('unitSearchBackdrop').style.display = 'flex';
+  setTimeout(() => inp && inp.focus(), 100);
+}
+function closeUnitSearch() {
+  document.getElementById('unitSearchBackdrop').style.display = 'none';
+}
+function renderUnitSearchResults() {
+  const q = (document.getElementById('unitSearchInp')?.value || '').toLowerCase().trim();
+  const existing = new Set(getUnits().map(u => u.code));
+  const filtered = SUNAT_UNITS.filter(u =>
+    !q || u.code.toLowerCase().includes(q) || u.name.toLowerCase().includes(q)
+  );
+  const el = document.getElementById('unitSearchResults');
+  if (!el) return;
+  if (!filtered.length) { el.innerHTML = '<div class="kj-cat-empty">Sin resultados</div>'; return; }
+  el.innerHTML = filtered.map(u => {
+    const added = existing.has(u.code);
+    return `<div class="unit-search-row ${added?'added':''}" onclick="${added?'':'kjPickUnit(\''+u.code+'\',\''+u.name.replace(/'/g,"\\'")+'\')'}" style="${added?'opacity:.45;cursor:default':'cursor:pointer'}">
+      <span class="unit-s-code">${u.code}</span>
+      <span class="unit-s-name">${u.name}</span>
+      ${added?'<span class="unit-s-check">✓</span>':''}
+    </div>`;
+  }).join('');
+}
+function kjPickUnit(code, name) {
+  const units = getUnits();
+  if (!units.find(u => u.code === code)) {
+    units.push({code, name, isDefault: false});
+    saveUnits(units);
+  }
+  if (_unitSearchCtx === 'product') {
+    kjSetUnitFromDrop(code, name);
+    renderUnitSelect(code);
+  }
+  renderUnitChips();
+  closeUnitSearch();
+  renderUnitSearchResults();
+}
+
+// Cerrar dropdowns de categoría y unidad al hacer clic fuera
 document.addEventListener('click', function(e) {
-  const drop = document.getElementById('kjCatChips');
-  if (drop && drop.classList.contains('open') && !e.target.closest('.kj-cat-field')) {
-    drop.classList.remove('open');
+  const catDrop = document.getElementById('kjCatChips');
+  if (catDrop && catDrop.classList.contains('open') && !e.target.closest('.kj-cat-field')) {
+    catDrop.classList.remove('open');
     document.getElementById('kjCatChevron')?.classList.remove('open');
+  }
+  const unitDrop = document.getElementById('kjUnitDrop');
+  if (unitDrop && unitDrop.classList.contains('open') && !e.target.closest('#kjUnitDrop') && !e.target.closest('[onclick*="kjToggleUnitDrop"]') && !e.target.closest('#kjProdUnitDisplay')) {
+    unitDrop.classList.remove('open');
   }
 });
 
@@ -6274,10 +6520,12 @@ function openKjModal(type, editId) {
         document.getElementById('kjProdPrice').value = p.price   || '';
         document.getElementById('kjProdQty').value   = p.qty     || '';
         document.getElementById('kjProdCat').value   = p.category || '';
+        renderUnitSelect(p.unit || getDefaultUnit().code);
         document.getElementById('kjProdLoc').value   = p.location || '';
       }
     } else {
       ['kjProdName','kjProdCode','kjProdPrice','kjProdQty','kjProdCat','kjProdLoc'].forEach(id=>document.getElementById(id).value='');
+      renderUnitSelect();
     }
     renderCatChips();
     setTimeout(()=>document.getElementById('kjProdName').focus(), 80);
@@ -6902,12 +7150,55 @@ function openSettings() {
   if (tokenEl) tokenEl.value = savedToken;
   if (tokenStatus) tokenStatus.textContent = savedToken ? '✓ Token configurado' : '';
 
+  // Cargar datos de documentos
+  const rucEl = document.getElementById('cfgBizRuc');
+  const addrEl = document.getElementById('cfgBizAddress');
+  const footerEl = document.getElementById('cfgBizFooter');
+  if (rucEl) rucEl.value = bizProfile?.ruc || '';
+  if (addrEl) addrEl.value = bizProfile?.address || '';
+  if (footerEl) footerEl.value = bizProfile?.footerText || '';
+
+  // Cargar logo
+  const savedLogo = localStorage.getItem('kajita_logo');
+  const logoPreview = document.getElementById('cfgLogoPreview');
+  const logoImg = document.getElementById('cfgLogoImg');
+  if (logoPreview && logoImg) {
+    if (savedLogo) { logoImg.src = savedLogo; logoPreview.style.display = 'flex'; }
+    else { logoPreview.style.display = 'none'; }
+  }
+
+  renderUnitChips();
   document.getElementById('cfgOverlay').classList.add('open');
   setTimeout(() => document.getElementById('cfgBizName').focus(), 350);
 }
 
 function closeSettings() {
   document.getElementById('cfgOverlay').classList.remove('open');
+}
+
+function previewBizLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 1048576) { toast('Logo muy grande (máx 1 MB)'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    localStorage.setItem('kajita_logo', e.target.result);
+    const img = document.getElementById('cfgLogoImg');
+    const prev = document.getElementById('cfgLogoPreview');
+    if (img) img.src = e.target.result;
+    if (prev) prev.style.display = 'flex';
+    toast('Logo guardado');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearBizLogo() {
+  localStorage.removeItem('kajita_logo');
+  const prev = document.getElementById('cfgLogoPreview');
+  const file = document.getElementById('cfgBizLogoFile');
+  if (prev) prev.style.display = 'none';
+  if (file) file.value = '';
+  toast('Logo quitado');
 }
 
 function cfgSelectRubro(btn, rubro) {
@@ -6943,7 +7234,10 @@ async function saveSettings() {
     return;
   }
 
-  bizProfile = { ...bizProfile, name, rubro };
+  const ruc = (document.getElementById('cfgBizRuc')?.value || '').trim();
+  const address = (document.getElementById('cfgBizAddress')?.value || '').trim();
+  const footerText = (document.getElementById('cfgBizFooter')?.value || '').trim();
+  bizProfile = { ...bizProfile, name, rubro, ruc, address, footerText };
   localStorage.setItem('kajita_biz', JSON.stringify(bizProfile));
 
   // Guardar en Supabase
@@ -6971,6 +7265,7 @@ async function saveSettings() {
    ONBOARDING
 ══════════════════════════════════════════ */
 var bizProfile = JSON.parse(localStorage.getItem('kajita_biz') || 'null');
+kjInitUnits();
 let onbSelectedRubro = '';
 let onbType = 'business';
 
@@ -9613,6 +9908,7 @@ async function savePanelProduct(){
   const price   = parseFloat(document.getElementById('kjProdPrice').value)||0;
   const qty     = parseFloat(document.getElementById('kjProdQty').value)||0;
   const category= document.getElementById('kjProdCat').value.trim();
+  const unit    = document.getElementById('kjProdUnit').value || 'Unidad';
   const location= document.getElementById('kjProdLoc').value.trim();
   if(!name){ document.getElementById('kjProdName').focus(); toast('Escribe el nombre'); return; }
   // auto-save category if new
@@ -9621,7 +9917,7 @@ async function savePanelProduct(){
   if(id!==null){
     const p=products.find(x=>String(x.id)===String(id));
     if(p){
-      p.name=name; p.code=code; p.price=price; p.qty=qty; p.category=category; p.location=location;
+      p.name=name; p.code=code; p.price=price; p.qty=qty; p.category=category; p.unit=unit; p.location=location;
       if(currentUser && !currentUser.id?.includes('demo-user')){
         try{ await sb.from('products').update({name,price}).eq('id',id).eq('user_id',currentUser.id); }
         catch(e){ console.error('update product panel:',e); }
@@ -9637,7 +9933,7 @@ async function savePanelProduct(){
         newId=data.id;
       }catch(e){ toast('✗ Error al guardar'); return; }
     }
-    products.unshift({id:newId,name,code,price,qty,category,location});
+    products.unshift({id:newId,name,code,price,qty,category,unit,location});
     toast('✓ Producto agregado');
   }
   try{saveProducts();}catch(e){}
@@ -11873,9 +12169,9 @@ function ordWhatsApp(id) {
   const bizName = biz.name || 'Kajita';
 
   let lines = [`*Pedido - ${bizName}*`];
-  if (o.date || o.time) lines.push(`📅 Entrega: ${[o.date, o.time].filter(Boolean).join(' ')}`);
-  lines.push(`👤 Cliente: ${o.client||'Sin nombre'}`);
-  if (o.phone) lines.push(`📞 ${o.phone}`);
+  if (o.date || o.time) lines.push(`Entrega: ${[o.date, o.time].filter(Boolean).join(' ')}`);
+  lines.push(`Cliente: ${o.client||'Sin nombre'}`);
+  if (o.phone) lines.push(`Tel: ${o.phone}`);
   lines.push('');
   lines.push('*Detalle:*');
   (o.items||[]).forEach(it => {
@@ -11883,7 +12179,7 @@ function ordWhatsApp(id) {
   });
   lines.push('');
   lines.push(`*Total: S/ ${(o.total||0).toFixed(2)}*`);
-  if (o.note) lines.push(`\n📝 Nota: ${o.note}`);
+  if (o.note) lines.push(`\nNota: ${o.note}`);
 
   const text = encodeURIComponent(lines.join('\n'));
   const phoneDigits = (o.phone || '').replace(/[^0-9]/g, '');
@@ -12012,7 +12308,7 @@ function _qtReset() {
   _qtItems = [];
   _qtEditId = null;
   _qtValidDays = 15;
-  ['pfQtClient','pfQtPhone','pfQtDesc','pfQtUnit','pfQtAmt','pfQtNote'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; });
+  ['pfQtClient','pfQtPhone','pfQtDoc','pfQtAddress','pfQtDesc','pfQtUnit','pfQtAmt','pfQtNote'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; });
   document.getElementById('pfQtQty').value = '1';
   setQtValidity(15);
   qtRenderItems();
@@ -12080,6 +12376,10 @@ function qtSelectClient(id) {
   if (!c) return;
   document.getElementById('pfQtClient').value = c.name;
   document.getElementById('pfQtPhone').value = c.phone || '';
+  const docEl = document.getElementById('pfQtDoc');
+  const addrEl = document.getElementById('pfQtAddress');
+  if (docEl) docEl.value = c.doc || '';
+  if (addrEl) addrEl.value = c.address || '';
   qtHideDrop('qtClientDrop');
 }
 function qtFilterProducts() {
@@ -12155,7 +12455,9 @@ function saveQuote() {
   const validUntil = document.getElementById('pfQtValidDisplay').dataset.iso || '';
   const quoteData = {
     client,
-    phone: document.getElementById('pfQtPhone').value.trim(),
+    phone:   document.getElementById('pfQtPhone').value.trim(),
+    doc:     document.getElementById('pfQtDoc')?.value.trim() || '',
+    address: document.getElementById('pfQtAddress')?.value.trim() || '',
     items, total, validUntil,
     note: document.getElementById('pfQtNote').value.trim(),
   };
@@ -12318,9 +12620,7 @@ function openQuoteModal(id) {
       <span class="ord-modal-total-val">S/ ${(qt.total||0).toFixed(2)}</span>
     </div>
     <div class="ord-modal-actions">
-      <div class="ord-modal-actions-label">Estado de la cotización</div>
-      <div class="ord-status-row">${statusBtns}</div>
-      <button class="ord-pay-toggle is-unpaid" onclick="convertQuoteToOrder(${qt.id})">📋 Convertir a pedido</button>
+      <button class="ord-pay-toggle is-unpaid" onclick="convertQuoteToOrder(${qt.id})">Convertir a pedido</button>
       <div class="ord-modal-actions-divider"></div>
       <div class="ord-modal-actions-row">
         <button class="ord-btn ord-btn-print" onclick="generateQuoteReceipt(${qt.id})">${ORD_SVG.receipt} Imprimir</button>
@@ -12352,8 +12652,12 @@ function openEditQuoteModal(id) {
   _qtReset();
   _qtEditId = id;
   _qtItems = (qt.items||[]).map(it => ({ desc:it.desc, qty:it.qty||1, price:(it.unit!=null?it.unit:it.price)||0, total:it.total||it.price||0 }));
-  document.getElementById('pfQtClient').value = qt.client || '';
-  document.getElementById('pfQtPhone').value  = qt.phone  || '';
+  document.getElementById('pfQtClient').value  = qt.client  || '';
+  document.getElementById('pfQtPhone').value   = qt.phone   || '';
+  const _docEl  = document.getElementById('pfQtDoc');
+  const _addrEl = document.getElementById('pfQtAddress');
+  if (_docEl)  _docEl.value  = qt.doc     || '';
+  if (_addrEl) _addrEl.value = qt.address || '';
   document.getElementById('pfQtNote').value   = qt.note   || '';
   // validez: calcular días restantes aproximados desde hoy
   if (qt.validUntil) {
@@ -12405,58 +12709,217 @@ function convertQuoteToOrder(id) {
 }
 
 // ── PDF / Recibo ──
+function _numToWordsES(n) {
+  const u=['','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez','once','doce','trece','catorce','quince','dieciséis','diecisiete','dieciocho','diecinueve'];
+  const d=['','','veinte','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa'];
+  const c=['','cien','doscientos','trescientos','cuatrocientos','quinientos','seiscientos','setecientos','ochocientos','novecientos'];
+  if(n===0) return 'cero';
+  if(n<0) return 'menos '+_numToWordsES(-n);
+  let w='';
+  if(n>=1000){const m=Math.floor(n/1000);w+=(m===1?'mil':_numToWordsES(m)+' mil')+' ';n%=1000;}
+  if(n>=100){if(n===100)return w+'cien';w+=c[Math.floor(n/100)]+' ';n%=100;}
+  if(n>=20){w+=d[Math.floor(n/10)]+(n%10?' y '+u[n%10]:'')+' ';}
+  else if(n>0){w+=u[n]+' ';}
+  return w.trim();
+}
+function _totalToLetras(total) {
+  const entero=Math.floor(total);
+  const cents=Math.round((total-entero)*100);
+  return _numToWordsES(entero).toUpperCase()+' CON '+String(cents).padStart(2,'0')+'/100 SOLES';
+}
+
 function generateQuoteReceipt(id) {
   const qt = _quotes.find(x => x.id === id);
-  if (!qt) { toast('⚠️ Cotización no encontrada'); return; }
+  if (!qt) { toast('Cotización no encontrada'); return; }
   const biz = bizProfile || {};
-  const C = { accent:'#7aaa1e', accentL:'#eef7d4', ink:'#1F2937', line:'#E5E7EB', muted:'#6B7280', light:'#F8FAFC', qt:'#7c3aed', qtL:'#f5f3ff' };
-  const today = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' });
-  const nowStr = new Date().toLocaleTimeString('es-PE', { hour:'2-digit', minute:'2-digit' });
-  const recNum = String(qt.num||'').padStart(4,'0');
-  const validTxt = qt.validUntil ? new Date(qt.validUntil+'T12:00:00').toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : '—';
-  const itemsRows = (qt.items||[]).map(i => {
-    const qty = i.qty || 1;
-    const unit = (i.unit != null ? i.unit : (i.price/(qty||1))) || 0;
-    const lineTotal = (i.total != null ? i.total : i.price) || 0;
-    return `<tr>
-      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.muted};font-size:13px;font-weight:700;text-align:center;width:34px;">${qty}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;">${i.desc}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.muted};font-size:12px;text-align:right;white-space:nowrap;">S/ ${unit.toFixed(2)}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid ${C.line};color:${C.ink};font-size:13px;text-align:right;white-space:nowrap;font-weight:600;">S/ ${lineTotal.toFixed(2)}</td>
+  const logo = localStorage.getItem('kajita_logo') || '';
+
+  /* Colores Kajita-print: claros, cálidos, con acento verde */
+  const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = '#5f8f10';
+
+  const today = new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'long',year:'numeric'});
+  const recNum = String(qt.num||'').padStart(5,'0');
+  const validTxt = qt.validUntil
+    ? new Date(qt.validUntil+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'})
+    : '—';
+  const total = qt.total || 0;
+  const letras = _totalToLetras(total);
+  const footerTxt = (biz.footerText||'').split('\n').filter(Boolean).join('<br>')
+    || 'BCP Cuenta Corriente S/ 123-456-789-0-12 · CCI 00212300456789012345<br>Interbank Cuenta Ahorros S/ 200-3001234567 · CCI 00320013001234567890<br>Correo: ventas@ferreteria.com · WhatsApp: +51 999 888 777';
+
+  /* Logo o isotipo placeholder */
+  const logoBlock = logo
+    ? `<img src="${logo}" style="max-height:68px;max-width:150px;object-fit:contain;display:block;" alt="logo">`
+    : `<svg width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+        <rect width="52" height="52" rx="12" fill="#18181b"/>
+        <text x="10" y="38" font-family="Georgia,serif" font-size="28" font-weight="800" fill="white">K</text>
+        <text x="30" y="40" font-family="Georgia,serif" font-size="30" font-weight="800" fill="#a3e635">j</text>
+       </svg>`;
+
+  /* Nombre del negocio con Fraunces */
+  const bizName  = biz.name    || 'Mi Negocio';
+  const bizRuc   = biz.ruc     || '20123456789';
+  const bizAddr  = biz.address || 'Av. Los Olivos 456, Lima';
+  const bizPhone = biz.phone   || '(01) 234-5678';
+
+  /* Filas de items */
+  const itemsRows = (qt.items||[]).map((i,idx) => {
+    const qty = i.qty||1;
+    const unitP = parseFloat(i.price||0);
+    const lineTotal = parseFloat(i.total!=null?i.total:i.price)||0;
+    const bg = idx%2===0 ? '#fff' : soft;
+    return `<tr style="background:${bg};">
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${qty}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${i.desc||'—'}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">S/${unitP.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">S/${lineTotal.toFixed(2)}</td>
     </tr>`;
   }).join('');
-  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cotización #${recNum} — ${qt.client}</title>
-<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-*{box-sizing:border-box;margin:0;padding:0;} body{font-family:'Inter',sans-serif;background:#f3f4f6;display:flex;justify-content:center;padding:32px 16px;}
-.doc{background:#fff;width:100%;max-width:480px;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);overflow:hidden;}
-.doc-head{background:${C.qtL};border-bottom:3px solid ${C.qt};padding:22px 24px 18px;}
-.doc-type{font-size:11px;font-weight:700;letter-spacing:.12em;color:${C.qt};text-transform:uppercase;margin-bottom:6px;}
-.doc-biz{font-size:20px;font-weight:700;color:${C.ink};} .doc-num{font-size:11px;color:${C.muted};margin-top:2px;}
-.doc-body{padding:20px 24px;} .doc-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;}
-.doc-lbl{color:${C.muted};} .doc-val{color:${C.ink};font-weight:600;text-align:right;}
-.items-table{width:100%;border-collapse:collapse;margin:14px 0;}
-.items-table th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${C.muted};padding:6px 8px;border-bottom:2px solid ${C.line};}
-.items-table th:last-child,.items-table th:nth-child(3){text-align:right;}
-.total-row{display:flex;justify-content:space-between;align-items:center;background:${C.accentL};border:1px solid ${C.accent};border-radius:10px;padding:12px 14px;margin:14px 0;}
-.total-lbl{font-size:12px;font-weight:700;color:#3f6009;text-transform:uppercase;letter-spacing:.06em;} .total-val{font-size:22px;font-weight:800;color:#3f6009;}
-.doc-footer{background:${C.light};border-top:1px solid ${C.line};padding:14px 24px;font-size:10.5px;color:${C.muted};text-align:center;}
-@media print{body{background:#fff;padding:0;} .doc{border-radius:0;box-shadow:none;}}</style></head><body>
-<div class="doc">
-  <div class="doc-head"><div class="doc-type">Cotización</div><div class="doc-biz">${biz.name || 'Mi Negocio'}</div><div class="doc-num">N° ${recNum} · Emitida: ${today} ${nowStr}</div></div>
-  <div class="doc-body">
-    <div class="doc-row"><span class="doc-lbl">Cliente</span><span class="doc-val">${qt.client}</span></div>
-    ${qt.phone ? `<div class="doc-row"><span class="doc-lbl">Teléfono</span><span class="doc-val">${qt.phone}</span></div>` : ''}
-    <div class="doc-row"><span class="doc-lbl">Válida hasta</span><span class="doc-val">${validTxt}</span></div>
-    ${qt.note ? `<div class="doc-row"><span class="doc-lbl">Condiciones</span><span class="doc-val">${qt.note}</span></div>` : ''}
-    <table class="items-table"><thead><tr><th style="text-align:center;width:34px;">Cant.</th><th>Descripción</th><th>P.Unit</th><th>Importe</th></tr></thead><tbody>${itemsRows}</tbody></table>
-    <div class="total-row"><span class="total-lbl">Total</span><div class="total-val">S/ ${(qt.total||0).toFixed(2)}</div></div>
-    <div style="font-size:10.5px;color:${C.muted};text-align:center;margin-top:6px;">Esta cotización no constituye comprobante de pago.</div>
+
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Cotización #${recNum} — ${bizName}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+@page { size: A4; margin: 16mm 18mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.5px; color: ${ink}; background: #f0f0f0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { background: #fff; width: 100%; max-width: 740px; margin: 24px auto; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,.13); }
+
+/* ── CABECERA ── */
+.hd { display: flex; justify-content: space-between; align-items: flex-start; padding: 28px 32px 22px; border-bottom: 1px solid ${line}; gap: 24px; }
+.hd-left { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.hd-bizname { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: ${ink}; margin-top: 8px; }
+.hd-meta { font-size: 11px; color: ${gray}; line-height: 1.8; }
+.hd-right { text-align: right; flex-shrink: 0; }
+.hd-doc-badge { display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: ${accent}; border: 1.5px solid ${accent}; border-radius: 6px; padding: 3px 10px; margin-bottom: 8px; }
+.hd-num { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 800; color: ${ink}; letter-spacing: -1px; }
+.hd-date { font-size: 11px; color: ${gray}; margin-top: 4px; }
+
+/* ── BLOQUE NOSOTROS / CLIENTE ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid ${line}; }
+.col-us { padding: 16px 20px 16px 32px; border-right: 1px solid ${line}; background: ${soft}; }
+.col-cli { padding: 16px 32px 16px 20px; background: #fff; }
+.col-title { font-size: 8.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: ${accent}; margin-bottom: 10px; border-bottom: 1.5px solid ${accent}; padding-bottom: 4px; display: inline-block; }
+.info-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: baseline; }
+.info-lbl { font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: ${gray}; width: 72px; flex-shrink: 0; }
+.info-val { font-size: 12px; color: ${ink}; font-weight: 500; line-height: 1.4; }
+.info-val.big { font-size: 13.5px; font-weight: 700; }
+
+/* ── TABLA ITEMS ── */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: ${ink}; }
+thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.9); }
+thead th:first-child { text-align: center; width: 52px; border-radius: 0; }
+thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
+
+/* ── TOTALES ── */
+.totals-wrap { padding: 0 32px 4px; display: flex; justify-content: flex-end; }
+.totals-card { width: 220px; border: 1px solid ${line}; border-radius: 10px; overflow: hidden; margin-top: 16px; }
+.tot-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; font-size: 12.5px; border-bottom: 1px solid ${line}; color: ${gray}; }
+.tot-row.is-total { background: ${ink}; color: #fff; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; }
+
+/* ── LETRAS ── */
+.letras-wrap { padding: 16px 32px; }
+.letras-card { background: ${soft}; border-radius: 10px; border: 1px solid ${line}; padding: 10px 14px; }
+.letras-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 5px; }
+.letras-val { font-family: 'Fraunces', Georgia, serif; font-size: 13px; font-weight: 700; color: ${ink}; }
+
+/* ── OBSERVACIONES ── */
+.obs-wrap { padding: 0 32px 20px; }
+.obs-card { border: 1px solid ${line}; border-radius: 10px; padding: 12px 14px; }
+.obs-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 6px; }
+.obs-val { font-size: 11.5px; color: ${gray}; line-height: 1.9; }
+
+/* ── PIE ── */
+.footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; }
+.footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
+.footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
+.kj { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -.5px; color: #888; }
+.kj-j { color: ${accent}; }
+
+@media print {
+  body { background: #fff; }
+  .page { border-radius: 0; box-shadow: none; margin: 0; }
+}
+</style></head><body>
+<div class="page">
+
+  <!-- CABECERA -->
+  <div class="hd">
+    <div class="hd-left">
+      ${logoBlock}
+      <div class="hd-bizname">${bizName}</div>
+    </div>
+    <div class="hd-right">
+      <div class="hd-doc-badge">Cotización</div>
+      <div class="hd-num">#${recNum}</div>
+      <div class="hd-date">Emitida el ${today}</div>
+      <div class="hd-date">Válida hasta ${validTxt}</div>
+    </div>
   </div>
-  <div class="doc-footer">${biz.name || 'Kajita'} · Generado con Kajita · kajita.pe</div>
-</div></body></html>`;
-  const w = window.open('', '_blank', 'width=600,height=800');
+
+  <!-- NOSOTROS / CLIENTE — 2 columnas -->
+  <div class="two-col">
+    <!-- Columna izquierda: datos del emisor -->
+    <div class="col-us">
+      <div class="info-row"><span class="info-lbl">Negocio</span><span class="info-val big">${bizName}</span></div>
+      <div class="info-row"><span class="info-lbl">RUC</span><span class="info-val">${bizRuc}</span></div>
+      <div class="info-row"><span class="info-lbl">Dirección</span><span class="info-val">${bizAddr}</span></div>
+      <div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${bizPhone}</span></div>
+    </div>
+    <!-- Columna derecha: datos del cliente -->
+    <div class="col-cli">
+
+      <div class="info-row"><span class="info-lbl">Cliente</span><span class="info-val big">${qt.client||'Sin nombre'}</span></div>
+      <div class="info-row"><span class="info-lbl">DNI / RUC</span><span class="info-val">${qt.doc||'12345678'}</span></div>
+      <div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${qt.phone||'999 888 777'}</span></div>
+      <div class="info-row"><span class="info-lbl">Dirección</span><span class="info-val">${qt.address||'Av. San Martín 789, Surco, Lima'}</span></div>
+      ${qt.note ? `<div class="info-row"><span class="info-lbl">Condiciones</span><span class="info-val">${qt.note}</span></div>` : ''}
+    </div>
+  </div>
+
+  <!-- ITEMS -->
+  <table>
+    <thead><tr>
+      <th>Cant.</th>
+      <th style="text-align:left;">Descripción</th>
+      <th>P.U.</th>
+      <th>Total</th>
+    </tr></thead>
+    <tbody>${itemsRows}</tbody>
+  </table>
+
+  <!-- TOTALES -->
+  <div class="totals-wrap">
+    <div class="totals-card">
+      <div class="tot-row"><span>Subtotal</span><span>S/ ${total.toFixed(2)}</span></div>
+      <div class="tot-row is-total"><span>Total</span><span>S/ ${total.toFixed(2)}</span></div>
+    </div>
+  </div>
+
+  <!-- LETRAS -->
+  <div class="letras-wrap">
+    <div class="letras-card">
+      <div class="letras-lbl">Son</div>
+      <div class="letras-val">${letras}</div>
+    </div>
+  </div>
+
+  <!-- OBSERVACIONES -->
+  ${footerTxt ? `<div class="obs-wrap"><div class="obs-card"><div class="obs-lbl">Observaciones</div><div class="obs-val">${footerTxt}</div></div></div>` : ''}
+
+  <!-- PIE -->
+  <div class="footer">
+    <div class="footer-thanks">¡Gracias por su preferencia!</div>
+    <div class="footer-brand">Generado con <span class="kj">Ka<span class="kj-j">j</span>ita</span></div>
+  </div>
+
+</div>
+<script>setTimeout(()=>{window.focus();window.print();},400);<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank', 'width=820,height=1000');
   w.document.write(html); w.document.close();
-  setTimeout(() => { w.focus(); w.print(); }, 400);
 }
 
 function quoteWhatsApp(id) {
@@ -12465,23 +12928,37 @@ function quoteWhatsApp(id) {
   const biz = bizProfile || {};
   const recNum = String(qt.num||'').padStart(4,'0');
   let lines = [`*Cotización N° ${recNum} - ${biz.name||'Kajita'}*`];
-  lines.push(`👤 Cliente: ${qt.client||'Sin nombre'}`);
-  if (qt.validUntil) lines.push(`⏳ Válida hasta: ${_fmtDateDisplay(qt.validUntil).replace('📅 ','')}`);
+  lines.push(`Cliente: ${qt.client||'Sin nombre'}`);
+  if (qt.validUntil) lines.push(`Válida hasta: ${_fmtDateDisplay(qt.validUntil).replace('📅 ','')}`);
   lines.push('');
   lines.push('*Detalle:*');
   (qt.items||[]).forEach(it => {
-    const qty = it.qty && it.qty>1 ? `${it.qty}× ` : '';
+    const qty = it.qty && it.qty>1 ? `${it.qty}x ` : '';
     lines.push(`• ${qty}${it.desc} — S/ ${parseFloat(it.price||0).toFixed(2)}`);
   });
   lines.push('');
   lines.push(`*Total: S/ ${(qt.total||0).toFixed(2)}*`);
-  if (qt.note) lines.push(`\n📝 ${qt.note}`);
+  if (qt.note) lines.push(`\nNota: ${qt.note}`);
   const text = encodeURIComponent(lines.join('\n'));
   const phoneDigits = (qt.phone || '').replace(/[^0-9]/g, '');
   const waUrl = phoneDigits ? `https://wa.me/${phoneDigits}?text=${text}` : `https://wa.me/?text=${text}`;
   window.open(waUrl, '_blank');
 }
 </script>
+
+<!-- ══ MODAL: BÚSQUEDA DE UNIDAD SUNAT ══ -->
+<div class="kj-modal-backdrop" id="unitSearchBackdrop" style="display:none;z-index:99990;" onclick="if(event.target===this)closeUnitSearch()">
+  <div class="kj-modal" style="max-width:420px;">
+    <div class="kj-modal-head">
+      <div class="kj-modal-title">Unidades SUNAT</div>
+      <button class="kj-modal-close" onclick="closeUnitSearch()">✕</button>
+    </div>
+    <div style="padding:12px 16px 0;">
+      <input id="unitSearchInp" class="kj-modal-inp" placeholder="Buscar por código o nombre..." oninput="renderUnitSearchResults()" autocomplete="off">
+    </div>
+    <div id="unitSearchResults" style="max-height:360px;overflow-y:auto;padding:8px 16px 16px;"></div>
+  </div>
+</div>
 
 <!-- ══ MODAL: CREAR / EDITAR REGISTRO ══ -->
 <div class="kj-modal-backdrop" id="kjModalBackdrop" onclick="if(event.target===this)closeKjModal()">
@@ -12536,9 +13013,13 @@ function quoteWhatsApp(id) {
         <div class="kj-modal-field kj-cat-field" style="position:relative;">
           <label>Categoría</label>
           <div style="display:flex;gap:6px;align-items:center;">
-            <input class="kj-modal-inp" id="kjProdCat" placeholder="Ej: Ferretería" maxlength="40" list="kjCatList" autocomplete="off" style="flex:1;">
-            <datalist id="kjCatList"></datalist>
-            <button type="button" class="kj-cat-add-btn" onclick="kjToggleCatList(event)" title="Ver categorías"><span class="ftb-icon" id="kjCatChevron">⌄</span></button>
+            <div class="input-with-toggle" style="flex:1;">
+              <input id="kjProdCat" placeholder="Ej: Ferretería" maxlength="40" list="kjCatList" autocomplete="off" oninput="renderCatChips()">
+              <datalist id="kjCatList"></datalist>
+              <button type="button" class="field-toggle-btn" onclick="kjToggleCatList(event)" title="Ver categorías">
+                <span id="kjCatChevron" style="font-size:14px;color:var(--k-text-2);">⌄</span>
+              </button>
+            </div>
             <button type="button" class="kj-cat-add-btn" onclick="kjSaveCategory()" title="Guardar categoría">+</button>
           </div>
           <div id="kjCatChips" class="kj-cat-dropdown"></div>
@@ -12555,6 +13036,20 @@ function quoteWhatsApp(id) {
         </div>
       </div>
       <div class="kj-modal-row">
+        <div class="kj-modal-field kj-cat-field" style="position:relative;">
+          <label>Unidad de medida</label>
+          <input type="hidden" id="kjProdUnit" value="">
+          <div style="display:flex;gap:6px;align-items:center;">
+            <div class="input-with-toggle" style="flex:1;">
+              <input id="kjProdUnitDisplay" placeholder="Selecciona unidad..." readonly style="cursor:pointer;" onclick="kjToggleUnitDrop(event)">
+              <button type="button" class="field-toggle-btn" onclick="kjToggleUnitDrop(event)" title="Ver unidades">
+                <span id="kjUnitChevron" style="font-size:14px;color:var(--k-text-2);">⌄</span>
+              </button>
+            </div>
+            <button type="button" class="kj-cat-add-btn" onclick="openUnitSearch('product')" title="Buscar en catálogo SUNAT">⌕</button>
+          </div>
+          <div id="kjUnitDrop" class="kj-cat-dropdown"></div>
+        </div>
         <div class="kj-modal-field">
           <label>Ubicación</label>
           <input class="kj-modal-inp" id="kjProdLoc" placeholder="Ej: A2, Estante 3, Bodega B" maxlength="40">
@@ -12745,10 +13240,22 @@ function quoteWhatsApp(id) {
         <div class="picker-panel" id="qtClientDrop" style="display:none;position:fixed;z-index:99999;"></div>
       </div>
 
-      <!-- Teléfono -->
+      <!-- Teléfono + DNI/RUC en fila -->
+      <div class="panel-form-row">
+        <div class="fld" style="flex:1;">
+          <label>Teléfono</label>
+          <input class="panel-form-inp" id="pfQtPhone" type="tel" inputmode="tel" placeholder="Ej: 999 888 777" maxlength="20" autocomplete="off" style="width:100%;box-sizing:border-box;">
+        </div>
+        <div class="fld" style="flex:1;">
+          <label>DNI / RUC</label>
+          <input class="panel-form-inp" id="pfQtDoc" type="text" inputmode="numeric" placeholder="8 u 11 dígitos" maxlength="11" autocomplete="off" style="width:100%;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <!-- Dirección del cliente -->
       <div class="fld">
-        <label>Teléfono del cliente</label>
-        <input class="panel-form-inp" id="pfQtPhone" type="tel" inputmode="tel" placeholder="Ej: 999 888 777" maxlength="20" autocomplete="off" style="width:100%;box-sizing:border-box;">
+        <label>Dirección del cliente</label>
+        <input class="panel-form-inp" id="pfQtAddress" type="text" placeholder="Ej: Av. Los Olivos 123, Lima" maxlength="120" autocomplete="off" style="width:100%;box-sizing:border-box;">
       </div>
 
       <!-- Descripción / Producto -->
