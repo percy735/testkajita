@@ -4354,7 +4354,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.67</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.69</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4611,7 +4611,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.67</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.69</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -12721,7 +12721,7 @@ function vqParseText(text) {
     parts = norm ? [norm] : [];
   }
 
-  return parts.map(part => {
+  const raw = parts.map(part => {
     let qty = 1, desc = part.trim();
     const dMatch = part.match(/^(\d+(?:[.,]\d+)?)\s+(.+)$/);
     if (dMatch) { qty = parseFloat(dMatch[1].replace(',','.')); desc = dMatch[2].trim(); }
@@ -12734,6 +12734,22 @@ function vqParseText(text) {
     const unit = matched ? matched.price : 0;
     return { qty, desc: matched ? matched.name : desc, unit, total: qty * unit, matched: !!matched };
   }).filter(x => x.desc);
+
+  // Consolidar ítems idénticos: mismo producto (por nombre) → sumar cantidades en una sola línea
+  const merged = [];
+  const byKey = {};
+  for (const it of raw) {
+    const key = it.desc.toLowerCase();
+    if (byKey[key] != null) {
+      const ex = merged[byKey[key]];
+      ex.qty += it.qty;
+      ex.total = ex.qty * ex.unit;
+    } else {
+      byKey[key] = merged.length;
+      merged.push({ ...it });
+    }
+  }
+  return merged;
 }
 
 function vqFindProduct(text) {
@@ -12812,9 +12828,12 @@ function vqCreateQuote() {
   qtRenderItems();
   document.getElementById('newQuoteModal').querySelector('.ord-modal-client').textContent = '📋 Nueva Cotización';
   document.getElementById('pfQtSaveBtn').textContent = 'Guardar cotización';
+  // Cliente por defecto para emitir rápido (el usuario puede personalizarlo)
+  const cli = document.getElementById('pfQtClient');
+  if (cli) cli.value = 'Clientes Varios';
   document.getElementById('newQuoteBackdrop').classList.add('open');
-  setTimeout(() => document.getElementById('pfQtClient').focus(), 80);
-  toast('¡Ítems cargados! Completa cliente y datos.');
+  setTimeout(() => { const c = document.getElementById('pfQtClient'); if (c) c.select(); }, 80);
+  toast('¡Listo para guardar! Edita el cliente si lo necesitas.');
 }
 
 // ── Menú contextual (···) ──
