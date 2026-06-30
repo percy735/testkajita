@@ -2411,7 +2411,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 /* columnas para cada panel */
 .pl-cli  { grid-template-columns: 1.4fr 100px 1fr 120px 110px 80px; }
 .pl-prov { grid-template-columns: 1.4fr 100px 1fr 120px 110px 80px; }
-.pl-inv  { grid-template-columns: 1.2fr 80px 90px 60px 60px 50px 64px; }
+.pl-inv  { grid-template-columns: 1.2fr 80px 90px 55px 60px 60px 50px 64px; }
 
 /* Acciones CRUD en fila */
 .pca-btn {
@@ -4354,7 +4354,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.73</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.77</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4611,7 +4611,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.73</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.77</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5316,7 +5316,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <div class="panel-type-tabs">
       <button class="panel-type-tab active" id="qtF-all"      onclick="setQuoteFilter('all')">Todas</button>
       <button class="panel-type-tab"        id="qtF-vigente"  onclick="setQuoteFilter('vigente')">Vigentes</button>
-      <button class="panel-type-tab"        id="qtF-aceptada" onclick="setQuoteFilter('aceptada')">Aceptadas</button>
+
       <button class="panel-type-tab"        id="qtF-vencida"  onclick="setQuoteFilter('vencida')">Vencidas</button>
     </div>
     <div class="panel-list" id="panelQuoteList"></div>
@@ -6789,6 +6789,7 @@ function renderInvPanel() {
       </div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--k-text-3);font-weight:600;">${p.code||'—'}</div>
       <div class="pl-price">S/ ${p.price.toFixed(2)}</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--k-text-3);">${p.unit||'—'}</div>
       <div style="font-family:var(--mono);font-size:12px;${stockColor}">${stock}</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--k-blue);">${p.location||'—'}</div>
       <div style="font-size:11px;color:var(--k-text-3);">${cnt} vta${cnt!==1?'s':''}</div>
@@ -6797,7 +6798,7 @@ function renderInvPanel() {
   }).join('');
   list.innerHTML=`
     <div class="pl-head-row pl-inv">
-      <div>Producto</div><div>Código</div><div>Precio</div><div>Stock</div><div>Ubic.</div><div>Ventas</div><div></div>
+      <div>Producto</div><div>Código</div><div>Precio</div><div>Unidad</div><div>Stock</div><div>Ubic.</div><div>Ventas</div><div></div>
     </div>${rows}`;
   document.getElementById('panelInvSub').textContent=filtered.length+' producto'+(filtered.length!==1?'s':'');
   document.getElementById('panelInvTotal').textContent=fmt(grand);
@@ -8974,10 +8975,10 @@ function shareProvWhatsapp(name, totalDebt, key){
   const debts = entries.filter(e => e.debt && !e.paid && e.client && e.client.toLowerCase() === key);
   const biz = bizProfile?.name || 'Kajita';
   const today = new Date().toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'});
-  let msg = `📋 *Estado de cuenta — ${biz}*\n`;
+  let msg = `*Estado de cuenta - ${biz}*\n`;
   msg += `Fecha: ${today}\n\n`;
-  msg += `Estimado/a *${name}*,\n`;
-  msg += `Le informamos que tiene las siguientes deudas pendientes:\n\n`;
+  msg += `Estimado/a *${name}*,\n\n`;
+  msg += `Le informamos que tenemos las siguientes deudas pendientes con ustedes:\n\n`;
   debts.forEach(d => {
     const pend = d.pendiente > 0 ? d.pendiente : d.amount;
     const fecha = new Date(d.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
@@ -8985,8 +8986,8 @@ function shareProvWhatsapp(name, totalDebt, key){
     if(d.acuenta > 0) msg += ` (abonado S/ ${d.acuenta.toFixed(2)})`;
     msg += '\n';
   });
-  msg += `\n💰 *Total por pagar: S/ ${totalDebt.toFixed(2)}*\n`;
-  msg += `\nGracias por su preferencia. 🙏`;
+  msg += `\n💰 *Total que debemos: S/ ${totalDebt.toFixed(2)}*\n`;
+  msg += `\nQuedaremos en comunicación para coordinar el pago. 🙏`;
   window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
 }
 
@@ -8994,19 +8995,19 @@ function shareCliWhatsapp(name, totalDebt, key){
   const debts = entries.filter(e => e.credit && e.client && e.client.toLowerCase() === key);
   const biz = bizProfile?.name || 'Kajita';
   const today = new Date().toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'});
-  let msg = `📋 *Estado de cuenta — ${biz}*\n`;
+  let msg = `*Estado de cuenta - ${biz}*\n`;
   msg += `Fecha: ${today}\n\n`;
-  msg += `Estimado/a *${name}*,\n`;
-  msg += `Le recordamos que tiene los siguientes créditos pendientes:\n\n`;
+  msg += `Estimado/a *${name}*,\n\n`;
+  msg += `Le informamos que tiene el siguiente saldo pendiente con nosotros:\n\n`;
   debts.forEach(d => {
     const pend = d.pendiente > 0 ? d.pendiente : d.amount;
     const fecha = new Date(d.date+'T12:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short'});
-    msg += `• ${d.desc} (${fecha}): *S/ ${pend.toFixed(2)}*`;
+    msg += `- ${d.desc} (${fecha}): *S/ ${pend.toFixed(2)}*`;
     if(d.acuenta > 0) msg += ` (abonado S/ ${d.acuenta.toFixed(2)})`;
     msg += '\n';
   });
-  msg += `\n💰 *Total pendiente: S/ ${totalDebt.toFixed(2)}*\n`;
-  msg += `\nAgradecemos su puntualidad. 🙏`;
+  msg += `\n*Total por cancelar: S/ ${totalDebt.toFixed(2)}*\n\n`;
+  msg += `Quedamos a su disposicion para cualquier consulta.\nGracias por confiar en nosotros.`;
   window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
 }
 
