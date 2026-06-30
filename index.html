@@ -1941,7 +1941,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 /* ══ ORDER DETAIL MODAL ══ */
 .ord-modal-backdrop {
-  position: fixed; inset: 0; z-index: 9600;
+  position: fixed; inset: 0; z-index: 10000;  /* por encima del topbar (9999) para que la "✕" no quede tapada en móvil */
   background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
   display: none; align-items: center; justify-content: center; padding: 20px;
 }
@@ -2241,7 +2241,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 /* ── Modal de formulario (crear/editar) ── */
 .kj-modal-backdrop {
-  position: fixed; inset: 0; z-index: 9500;
+  position: fixed; inset: 0; z-index: 10000;  /* por encima del topbar (9999) para que la "✕" sea accesible en móvil */
   background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
   display: none; align-items: center; justify-content: center;
 }
@@ -4069,6 +4069,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   }
   .ord-modal .fld-amt { display: none; }
 
+  /* Formularios crear/editar: apilar columnas en móvil para que no se corten campos */
+  .kj-modal-row { flex-direction: column; gap: 14px; }
+  .kj-modal-row .kj-modal-field { min-width: 0; }
+
   .pca-btn { width: 24px; height: 24px; font-size: 11px; border-radius: 6px; }
   .debt-summary { padding: 8px 12px; }
   .debt-summary-lbl { font-size: 8px; }
@@ -4354,7 +4358,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.91</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.92</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4611,7 +4615,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.91</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.92</div>
 
     <div class="main-body-row">
     <div class="content-body">
