@@ -4354,7 +4354,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.71</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.73</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4611,7 +4611,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.71</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.73</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -13296,11 +13296,14 @@ function quoteWhatsApp(id) {
   lines.push('');
   lines.push('*Detalle:*');
   (qt.items||[]).forEach(it => {
-    const qty = it.qty && it.qty>1 ? `${it.qty}x ` : '';
-    lines.push(`• ${qty}${it.desc} — S/ ${parseFloat(it.price||0).toFixed(2)}`);
+    const qty = it.qty || 1;
+    const unit = parseFloat(it.price || 0);
+    const lineTotal = it.total != null ? parseFloat(it.total) : qty * unit;
+    lines.push(`• ${qty} ${it.desc}`);
+    lines.push(`   S/ ${unit.toFixed(2)} c/u  =  *S/ ${lineTotal.toFixed(2)}*`);
   });
   lines.push('');
-  lines.push(`*Total: S/ ${(qt.total||0).toFixed(2)}*`);
+  lines.push(`*TOTAL: S/ ${(qt.total||0).toFixed(2)}*`);
   if (qt.note) lines.push(`\nNota: ${qt.note}`);
   const text = encodeURIComponent(lines.join('\n'));
   const phoneDigits = (qt.phone || '').replace(/[^0-9]/g, '');
