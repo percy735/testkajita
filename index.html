@@ -4359,7 +4359,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.98</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.99</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4612,7 +4612,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.98</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.99</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -10560,8 +10560,6 @@ function editItem(idx) {
   document.getElementById('iUnitPrice').value = it.unit || '';
   document.getElementById('iAmt').value       = it.price || '';
   _editingIdx = idx;
-  // Remover temporalmente de la lista
-  _items.splice(idx, 1);
   renderItemsList();
   document.getElementById('iDesc').focus();
   document.getElementById('iDesc').select();
@@ -10596,7 +10594,9 @@ function renderItemsList() {
 
   wrap.style.display = '';
 
-  rows.innerHTML = _items.map((it, i) => `
+  rows.innerHTML = _items.map((it, i) => {
+    if (i === _editingIdx) return '';
+    return `
     <div ondblclick="editItem(${i})" title="Doble clic para editar"
       style="display:flex;align-items:center;gap:8px;padding:8px 12px;
              background:rgba(255,255,255,0.03);border:1px solid var(--k-line);
@@ -10618,9 +10618,10 @@ function renderItemsList() {
                align-items:center;justify-content:center;flex-shrink:0;transition:color .15s;"
         onmouseenter="this.style.color='var(--k-expense)'"
         onmouseleave="this.style.color='var(--k-text-3)'">×</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
-  const total = _items.reduce((s,i) => s+i.price, 0);
+  const total = _items.reduce((s,it,i) => i===_editingIdx ? s : s+it.price, 0);
   totalEl.textContent = 'S/ '+total.toFixed(2);
 }
 
