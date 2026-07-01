@@ -1192,6 +1192,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .reminder-arrow { font-size: 13px; color: var(--k-text-3); flex-shrink: 0; transition: transform 0.15s; }
 .reminder-item:hover .reminder-arrow,
 .debt-item:hover .reminder-arrow { transform: translateX(3px); color: var(--k-text); }
+.ord-day-arrow { font-size: 14px; color: var(--k-text-3); flex-shrink: 0; margin-left: 8px; transition: transform 0.15s, color 0.15s; }
+.entry-item:hover .ord-day-arrow { transform: translateX(3px); color: var(--k-order); }
 .reminder-abonar:hover { border-color: var(--k-credit); color: var(--k-credit); background: rgba(251,191,36,0.08); }
 .reminder-abonar.active { border-color: var(--k-credit); color: var(--k-credit); background: rgba(251,191,36,0.08); }
 
@@ -2472,6 +2474,11 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .cred-group:hover { border-color: rgba(255,255,255,0.12); }
 .cred-group-highlight {
+  border-color: rgba(196,240,66,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(196,240,66,0.12);
+  animation: credGroupFlash 1.8s ease-out forwards;
+}
+.order-card-highlight {
   border-color: rgba(196,240,66,0.5) !important;
   box-shadow: 0 0 0 3px rgba(196,240,66,0.12);
   animation: credGroupFlash 1.8s ease-out forwards;
@@ -4353,7 +4360,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.105</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.110</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4569,10 +4576,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>Configuración</span>
       </button>
-      <button class="sb-item" onclick="showPDFPreview()" title="Imprimir">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        <span>Imprimir</span>
-      </button>
       <button class="sb-item" onclick="handleLogout()" style="color:rgba(239,68,68,0.7);" title="Salir">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         <span>Salir</span>
@@ -4606,7 +4609,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.105</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.110</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -4931,6 +4934,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="entries-hdr">
     <div class="entries-ttl">Movimientos del día</div>
     <div style="display:flex;align-items:center;gap:10px;">
+      <button class="btn-search" onclick="showPDFPreview()" title="Imprimir movimientos del día">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      </button>
       <button class="btn-search" onclick="toggleSearch()" title="Buscar movimientos">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
@@ -5351,6 +5357,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Mi cuenta
         </button>
+        <button class="cfg-nav-item" id="cfgNavSistema" onclick="cfgShowSection('sistema')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          Configuración
+        </button>
         <button class="cfg-nav-item" id="cfgNavSoporte" onclick="cfgShowSection('soporte')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           Soporte
@@ -5487,15 +5497,31 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           </div>
 
           <div class="cfg-divider"></div>
+          <button class="cfg-save-btn" onclick="saveSettings()">Guardar cambios</button>
+        </div>
+
+        <!-- CONFIGURACIÓN (SISTEMA) -->
+        <div class="cfg-content-panel" id="cfgPanelSistema">
+          <div class="cfg-panel-title">Configuración</div>
+          <div class="cfg-panel-sub">Ajustes de cómo funciona la app</div>
+
           <div class="cfg-section">
-            <div class="cfg-section-lbl">Unidades de medida</div>
-            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Las unidades que usa tu negocio. Aparecerán al crear productos. Puedes marcar una por defecto (★).</div>
-            <div class="cfg-unit-list" id="cfgUnitList"></div>
-            <button type="button" class="cfg-unit-add-btn" onclick="openUnitSearch('settings')">+ Agregar unidad</button>
+            <div class="cfg-section-lbl">Moneda</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Moneda que usa tu negocio en toda la app y documentos.</div>
+            <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--k-line);border-radius:10px;padding:12px 14px;background:var(--k-input);">
+              <span style="font-family:var(--mono);font-size:16px;font-weight:700;color:var(--k-text);">S/</span>
+              <span style="font-size:13px;color:var(--k-text-2);">Soles peruanos (PEN)</span>
+            </div>
           </div>
 
           <div class="cfg-divider"></div>
-          <button class="cfg-save-btn" onclick="saveSettings()">Guardar cambios</button>
+
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Unidades de medida</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Las unidades que usa tu negocio. Aparecerán al crear productos. Puedes marcar una por defecto (★). Se guardan al instante.</div>
+            <div class="cfg-unit-list" id="cfgUnitList"></div>
+            <button type="button" class="cfg-unit-add-btn" onclick="openUnitSearch('settings')">+ Agregar unidad</button>
+          </div>
         </div>
 
         <!-- SOPORTE -->
@@ -7146,13 +7172,15 @@ function credDeleteAbono(entryId, abonoId, isCobrar) {
 let cfgSelectedRubro = '';
 
 function cfgShowSection(sec) {
-  ['cuenta','soporte','pagos'].forEach(s => {
+  ['cuenta','sistema','soporte','pagos'].forEach(s => {
     document.getElementById('cfgNav'+s.charAt(0).toUpperCase()+s.slice(1)).classList.toggle('active', s===sec);
     document.getElementById('cfgPanel'+s.charAt(0).toUpperCase()+s.slice(1)).classList.toggle('active', s===sec);
   });
 }
 
 function openSettings() {
+  // Siempre abrir en la primera pestaña
+  cfgShowSection('cuenta');
   // Mostrar info del usuario
   if(currentUser){
     document.getElementById('cfgUserEmail').textContent=currentUser.email||'—';
@@ -8886,6 +8914,7 @@ function renderDayOrders() {
           </div>
         </div>
         <div class="eamt" style="color:${o.paid?'var(--k-accent)':'var(--k-order)'};">S/ ${(o.total||0).toFixed(2)}</div>
+        <div class="ord-day-arrow">→</div>
       </div>`;
   }).join('');
 }
@@ -8902,14 +8931,11 @@ function toggleOrderEntryMenu(e, id) {
 function goToOrder(id) {
   sbPanel('ord');
   setTimeout(() => {
-    const row = document.querySelector(`.pl-row[data-oid="${id}"]`);
-    if (row) {
-      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      row.style.transition = 'background 0.3s, box-shadow 0.3s';
-      row.style.background = 'rgba(52,211,153,0.12)';
-      row.style.boxShadow = '0 0 0 2px var(--k-order), 0 4px 20px rgba(52,211,153,0.25)';
-      row.style.borderRadius = '10px';
-      setTimeout(() => { row.style.background = ''; row.style.boxShadow = ''; }, 2000);
+    const card = document.querySelector(`.order-card[data-ord-id="${id}"]`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('order-card-highlight');
+      setTimeout(() => card.classList.remove('order-card-highlight'), 1800);
     }
   }, 350);
 }
@@ -14033,6 +14059,7 @@ function quoteWhatsApp(id) {
     </div>
   </div>
 </div>
+
 
 <!-- ══ MODAL: DETALLE DE COTIZACIÓN ══ -->
 <div class="ord-modal-backdrop" id="quoteModalBackdrop" onclick="if(event.target===this)closeQuoteModal()">
