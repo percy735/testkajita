@@ -4359,7 +4359,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.99</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.101</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4612,7 +4612,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.99</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.101</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -4746,15 +4746,18 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="form-wrap">
     <div class="form-title-row">
       <div class="form-ttl" id="formTtl">Registrar movimiento</div>
-      <button class="date-chip" id="dateChip" onclick="openCalendar()" title="Cambiar fecha">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-        <span id="dateChipLabel">HOY</span>
-      </button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="date-chip" id="voiceEntryBtn" onclick="openVoiceEntry()" title="Registrar por voz" style="background:transparent;border:1px solid var(--k-line);color:var(--k-text-3);">🎤</button>
+        <button class="date-chip" id="dateChip" onclick="openCalendar()" title="Cambiar fecha">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span id="dateChipLabel">HOY</span>
+        </button>
+      </div>
     </div>
     <div class="form-row s1">
       <div class="fld">
@@ -4940,14 +4943,13 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <div class="entries-cnt" id="entCnt"></div>
     </div>
   </div>
-  <div class="filter-bar">
-    <span class="filter-lbl">Ver:</span>
-    <button class="fpill fa"   data-f="all"      onclick="setFilter('all',this)">Todos</button>
-    <button class="fpill"      data-f="income"   onclick="setFilter('income',this)">Cobrados</button>
-    <button class="fpill"      data-f="expense"  onclick="setFilter('expense',this)">Egresos</button>
-    <button class="fpill"      data-f="credit"   onclick="setFilter('credit',this)">⏳ Créditos</button>
-    <button class="fpill"      data-f="cash"     onclick="setFilter('cash',this)">Efectivo</button>
-    <button class="fpill"      data-f="digital"  onclick="setFilter('digital',this)">Digital</button>
+  <div class="panel-type-tabs" style="padding:0;margin-bottom:16px;">
+    <button class="panel-type-tab active" data-f="all"      onclick="setFilter('all',this)">Todos</button>
+    <button class="panel-type-tab"        data-f="income"   onclick="setFilter('income',this)">Cobrados</button>
+    <button class="panel-type-tab"        data-f="expense"  onclick="setFilter('expense',this)">Egresos</button>
+    <button class="panel-type-tab"        data-f="credit"   onclick="setFilter('credit',this)">⏳ Créditos</button>
+    <button class="panel-type-tab"        data-f="cash"     onclick="setFilter('cash',this)">Efectivo</button>
+    <button class="panel-type-tab"        data-f="digital"  onclick="setFilter('digital',this)">Digital</button>
   </div>
   <div id="entList"></div>
 
@@ -7858,8 +7860,8 @@ function calcPendiente(){
 }
 function setFilter(f,el) {
   cFilter=f;
-  document.querySelectorAll('.fpill').forEach(p=>{ p.className='fpill'; });
-  if(el) { el.className='fpill '+(f==='income'?'fi':f==='expense'?'fe':f==='credit'?'fcred':'fa'); }
+  document.querySelectorAll('.panel-type-tab[data-f]').forEach(p=>{ p.classList.remove('active'); });
+  if(el) { el.classList.add('active'); }
   renderEntries();
 }
 
@@ -9882,7 +9884,7 @@ async function submitEntry(){
     toast(isDebt?'⏳ Deuda registrada':(isCredit?'⏳ Crédito registrado':(isIncome?'✓ Ingreso registrado':'✓ Egreso registrado')));
   }
   // Reset filter a "Todos" para que el nuevo movimiento sea visible
-  const allPill = document.querySelector('.fpill[data-f="all"]');
+  const allPill = document.querySelector('.panel-type-tab[data-f="all"]');
   setFilter('all', allPill);
   save(); buildDayBar(); render();
 }
@@ -9896,7 +9898,7 @@ async function cobrarEntry(id){
   }
   save();
   // Reset filtro para ver el movimiento cobrado
-  const allPill=document.querySelector('.fpill[data-f="all"]');
+  const allPill=document.querySelector('.panel-type-tab[data-f="all"]');
   setFilter('all', allPill);
   buildDayBar(); render();
   if (typeof renderCredPanel === 'function') renderCredPanel();
@@ -13063,6 +13065,152 @@ function vqCreateQuote() {
   toast('¡Listo para guardar! Edita el cliente si lo necesitas.');
 }
 
+/* ══ REGISTRO RÁPIDO POR VOZ (área Registrar) — reutiliza el motor de voz de cotizaciones ══ */
+let _veItems = [];
+let _veRecognition = null;
+let _veListening = false;
+
+function openVoiceEntry() {
+  document.getElementById('voiceEntryBackdrop').style.display = 'flex';
+  document.getElementById('veText').value = '';
+  document.getElementById('vePreview').innerHTML = '';
+  _veItems = [];
+  veSetCreateBtn(false);
+}
+function closeVoiceEntry() {
+  veStopMic();
+  document.getElementById('voiceEntryBackdrop').style.display = 'none';
+}
+
+function veToggleMic() {
+  if (_veListening) { veStopMic(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { toast('Tu navegador no soporta voz. Escribe los ítems manualmente.'); return; }
+  _veListening = true;
+  const txt = document.getElementById('veText');
+  const btn = document.getElementById('veMicBtn');
+  const status = document.getElementById('veMicStatus');
+  btn.style.background = 'rgba(255,107,107,0.18)';
+  btn.style.color = 'var(--k-expense)';
+  btn.textContent = '⏹';
+  status.textContent = '🔴 Escuchando... habla ahora';
+
+  let myBase = (txt.value || '').trim();
+  let sessionFinal = '';
+  const rec = new SR();
+  _veRecognition = rec;
+  rec.lang = 'es-PE';
+  rec.continuous = true;
+  rec.interimResults = true;
+
+  rec.onresult = e => {
+    if (rec !== _veRecognition) return;
+    let finalT = '', interim = '';
+    for (const r of e.results) {
+      if (r.isFinal) finalT += r[0].transcript + ' ';
+      else interim += r[0].transcript;
+    }
+    sessionFinal = finalT.trim();
+    const sess = (sessionFinal + (interim ? ' ' + interim : '')).trim();
+    txt.value = (myBase ? myBase + (sess ? ' ' : '') : '') + sess;
+    veRenderPreview();
+  };
+  rec.onend = () => {
+    if (rec !== _veRecognition) return;
+    if (_veListening) {
+      if (sessionFinal) myBase = (myBase ? myBase + ' ' : '') + sessionFinal;
+      sessionFinal = '';
+      try { rec.start(); } catch(e) { setTimeout(() => { if (_veListening && rec === _veRecognition) try { rec.start(); } catch(_){} }, 200); }
+    }
+  };
+  rec.onerror = e => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+      veStopMic();
+      toast('Permiso de micrófono denegado. Actívalo en el candado de la barra de direcciones.');
+      return;
+    }
+    if (_veListening) { setTimeout(() => { if (_veListening && rec === _veRecognition) try { rec.start(); } catch(_){} }, 300); }
+  };
+  rec.start();
+}
+function veStopMic() {
+  _veListening = false;
+  const rec = _veRecognition;
+  _veRecognition = null;
+  if (rec) { try { rec.stop(); } catch(e){} }
+  const btn = document.getElementById('veMicBtn');
+  const status = document.getElementById('veMicStatus');
+  if (btn) { btn.style.background = ''; btn.style.color = ''; btn.textContent = '🎤'; }
+  if (status) status.textContent = (document.getElementById('veText').value || '').trim() ? '✅ Toca para agregar más productos' : 'Toca para hablar';
+}
+
+function veRenderPreview() {
+  const text = document.getElementById('veText').value.trim();
+  const preview = document.getElementById('vePreview');
+  if (!text) { preview.innerHTML = ''; _veItems = []; veSetCreateBtn(false); return; }
+  _veItems = vqParseText(text);
+  veRenderPreviewFromItems();
+}
+
+function veRenderPreviewFromItems() {
+  const preview = document.getElementById('vePreview');
+  if (!_veItems.length) { preview.innerHTML = '<div style="padding:8px 0;font-size:12px;color:var(--k-text-3);">No se detectaron ítems</div>'; veSetCreateBtn(false); return; }
+  const rows = _veItems.map((it, i) => `
+    <div style="display:grid;grid-template-columns:34px 1fr 66px 66px 26px;gap:5px;align-items:center;
+      padding:6px 8px;border-radius:8px;margin-bottom:4px;font-size:12px;
+      background:${it.matched ? 'rgba(196,240,66,0.06)' : 'rgba(255,255,255,0.03)'};">
+      <span style="font-family:var(--mono);color:var(--k-text-2);text-align:center;">${it.qty}</span>
+      <span style="color:${it.matched ? 'var(--k-text)' : 'var(--k-credit)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.desc}">
+        ${it.desc}${!it.matched ? ' <span style="font-size:10px;opacity:.55;">(nuevo)</span>' : ''}
+      </span>
+      <span style="font-family:var(--mono);font-size:11px;color:${it.matched ? 'var(--k-text-3)' : 'var(--k-expense)'};text-align:right;">
+        ${it.unit > 0 ? 'S/'+it.unit.toFixed(2) : '—'}</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--k-accent);text-align:right;font-weight:600;">
+        ${it.total > 0 ? 'S/'+it.total.toFixed(2) : '—'}</span>
+      <button onclick="veRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:14px;padding:0;line-height:1;">×</button>
+    </div>`).join('');
+  const total = _veItems.reduce((s, it) => s + it.total, 0);
+  preview.innerHTML = `
+    <div style="font-size:9.5px;font-family:var(--mono);color:var(--k-text-3);letter-spacing:.07em;text-transform:uppercase;
+      padding:2px 8px 6px;display:grid;grid-template-columns:34px 1fr 66px 66px 26px;gap:5px;">
+      <span style="text-align:center;">Cant</span><span>Producto</span>
+      <span style="text-align:right;">P.U.</span><span style="text-align:right;">Total</span><span></span>
+    </div>
+    ${rows}
+    <div style="text-align:right;padding:8px 8px 4px;font-family:var(--mono);font-size:13px;font-weight:700;
+      color:var(--k-accent);border-top:1px solid var(--k-line);margin-top:4px;">
+      Total: S/ ${total.toFixed(2)}
+    </div>`;
+  veSetCreateBtn(true);
+}
+
+function veRemoveItem(idx) {
+  _veItems.splice(idx, 1);
+  veRenderPreviewFromItems();
+}
+
+function veSetCreateBtn(enabled) {
+  const btn = document.getElementById('veCreateBtn');
+  if (!btn) return;
+  btn.disabled = !enabled;
+  btn.style.opacity = enabled ? '1' : '.45';
+  btn.style.cursor = enabled ? 'pointer' : 'default';
+}
+
+function veCreateEntry() {
+  if (!_veItems.length) return;
+  closeVoiceEntry();
+  _items = _veItems.map(it => ({ desc: it.desc, qty: it.qty, unit: it.unit, price: it.total }));
+  _editingIdx = null;
+  renderItemsList();
+  document.getElementById('iDesc').value = '';
+  document.getElementById('iAmt').value = '';
+  document.getElementById('iQty').value = '';
+  document.getElementById('iUnitPrice').value = '';
+  toast('¡Listo! Revisa los ítems y presiona "Registrar Movimiento".');
+}
+
 // ── Menú contextual (···) ──
 function toggleQuoteMenu(event, id) {
   event.stopPropagation();
@@ -13862,6 +14010,32 @@ function quoteWhatsApp(id) {
     <div style="display:flex;gap:8px;padding:14px 20px 18px;">
       <button onclick="closeVoiceQuote()" style="flex:0 0 auto;padding:10px 16px;border-radius:10px;border:1px solid var(--k-line);background:transparent;color:var(--k-text-3);font-size:13px;cursor:pointer;">Cancelar</button>
       <button id="vqCreateBtn" onclick="vqCreateQuote()" disabled style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--k-accent);color:#000;font-size:13px;font-weight:700;cursor:default;opacity:.45;transition:opacity .2s;">Crear cotización →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: REGISTRO RÁPIDO POR VOZ ══ -->
+<div class="kj-modal-backdrop" id="voiceEntryBackdrop" style="display:none;z-index:99980;"
+     onclick="if(event.target===this)closeVoiceEntry()">
+  <div class="kj-modal" style="max-width:480px;gap:0;padding:0;">
+    <div class="kj-modal-head">
+      <span class="kj-modal-title">🎤 Registro rápido</span>
+      <button class="kj-modal-close" onclick="closeVoiceEntry()">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 20px 10px;">
+      <button id="veMicBtn" onclick="veToggleMic()" style="width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;background:var(--k-accent-l);color:var(--k-accent);font-size:26px;transition:all .2s;display:flex;align-items:center;justify-content:center;">🎤</button>
+      <div id="veMicStatus" style="font-size:12px;color:var(--k-text-3);">Toca para hablar</div>
+    </div>
+    <div style="padding:0 20px 10px;">
+      <textarea id="veText" rows="3"
+        placeholder='Ej: "2 bolsas cemento sol, 1 galón pintura látex, 3 focos LED"'
+        oninput="veRenderPreview()" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--k-line);border-radius:10px;padding:10px 12px;color:var(--k-text);font-family:var(--sans);font-size:13px;resize:none;outline:none;line-height:1.5;"></textarea>
+      <div style="font-size:11px;color:var(--k-text-3);margin-top:5px;">Separa los productos con comas. También puedes escribir directamente.</div>
+    </div>
+    <div id="vePreview" style="padding:0 20px;max-height:220px;overflow-y:auto;"></div>
+    <div style="display:flex;gap:8px;padding:14px 20px 18px;">
+      <button onclick="closeVoiceEntry()" style="flex:0 0 auto;padding:10px 16px;border-radius:10px;border:1px solid var(--k-line);background:transparent;color:var(--k-text-3);font-size:13px;cursor:pointer;">Cancelar</button>
+      <button id="veCreateBtn" onclick="veCreateEntry()" disabled style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--k-accent);color:#000;font-size:13px;font-weight:700;cursor:default;opacity:.45;transition:opacity .2s;">Agregar a la venta →</button>
     </div>
   </div>
 </div>
