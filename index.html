@@ -478,17 +478,18 @@ body::before {
   .sb-item { justify-content: flex-start !important; padding: 10px 14px !important; font-size: 13px !important; font-family: var(--sans) !important; }
   .sb-footer { display: flex !important; }
 
-  .main-content { margin-left: 0; }
+  .main-content { margin-left: 0; min-width: 0; }
   .content-body { padding: 14px 14px 40px; }
 
   /* ── Topbar móvil: 2 filas fijas ── */
   .content-topbar {
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto minmax(0,1fr) auto auto;
     grid-template-rows: 48px auto;
     padding: 0;
     gap: 0;
     min-height: unset;
+    min-width: 0;
     border-bottom: 1px solid var(--k-line);
     position: sticky;
     top: 0;
@@ -520,6 +521,7 @@ body::before {
     display: flex;
     grid-column: 1 / -1; grid-row: 2;
     align-items: center;
+    min-width: 0;
     padding: 8px 16px 10px;
     font-family: var(--serif);
     font-size: 20px;
@@ -527,6 +529,8 @@ body::before {
     color: var(--k-text);
     letter-spacing: -0.3px;
     border-top: 1px solid var(--k-line);
+    white-space: normal;
+    line-height: 1.15;
   }
   .ctb-biz { display: none; }
 
@@ -4359,7 +4363,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.101</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.102</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4612,7 +4616,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.101</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.102</div>
 
     <div class="main-body-row">
     <div class="content-body">
