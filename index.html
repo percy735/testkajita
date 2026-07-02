@@ -4522,20 +4522,25 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   #view-registrar .sub-row { grid-template-columns:1fr; }
   #view-registrar .pay-tgl { grid-template-columns:1fr 1fr; }
 
-  /* Formulario compacto */
-  #view-registrar .form-wrap { padding:18px 16px; }
+  /* Ganar ancho: la tarjeta sangra sobre el padding del contenedor
+     y los paddings internos se reducen */
+  #view-registrar .app-layout { margin-left:-14px; margin-right:-14px; }
+  #view-registrar .form-wrap { padding:18px 12px; }
   #view-registrar .form-ttl { font-size:19px; }
-  #view-registrar .form-row-main { padding:14px; gap:14px; }
+  #view-registrar .form-row-main { padding:12px 10px; gap:14px; }
 
-  /* Fila Cant/P.Unit/Monto: 2 columnas cómodas; el "+" ocupa fila completa
+  /* Fila Cant/P.Unit/Monto: fila 1 = Cant | P.Unit; fila 2 = Monto ancho + botón "+" al lado
      (!important porque el elemento trae grid-template-columns inline) */
-  #view-registrar .num-fields-row { grid-template-columns:1fr 1fr !important; gap:10px; }
-  #view-registrar .num-fields-row .fld-amt { grid-column:1 / -1; }
-  #view-registrar .num-fields-row .push-item-btn { grid-column:1 / -1; width:100%; height:46px; }
+  #view-registrar .num-fields-row { grid-template-columns:1fr 1fr auto !important; gap:10px; }
+  #view-registrar .num-fields-row .fld-qty  { grid-column:1; }
+  #view-registrar .num-fields-row .fld-unit { grid-column:2 / 4; }
+  #view-registrar .num-fields-row .fld-amt  { grid-column:1 / 3; grid-row:2; }
+  #view-registrar .num-fields-row .push-item-btn { grid-column:3; grid-row:2; width:48px; height:48px; align-self:end; }
   #view-registrar .fld label { font-size:10px; letter-spacing:.08em; white-space:nowrap; }
 
-  /* Toggle y botones un poco más compactos */
-  #view-registrar .tgl-btn { height:48px; font-size:14px; }
+  /* Toggle Ingreso/Egreso más delgado */
+  #view-registrar .type-tgl { padding:4px; }
+  #view-registrar .tgl-btn { height:40px; font-size:14px; }
   #view-registrar .pay-btn { height:46px; font-size:12.5px; }
   #view-registrar .credit-pill { height:46px; font-size:12.5px; }
   #view-registrar input[type="text"], #view-registrar input[type="number"] { height:48px; font-size:14px; }
@@ -4562,7 +4567,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.113</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.115</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4811,7 +4816,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.113</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.115</div>
 
     <div class="main-body-row">
     <div class="content-body">
