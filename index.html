@@ -821,7 +821,7 @@ body::before {
 .cfg-overlay.open { display: flex; }
 .cfg-sheet {
   width: 100%; max-width: 480px;
-  background: #111318; border: 1px solid var(--k-line);
+  background: linear-gradient(180deg, var(--k-panel-2), var(--k-panel)); border: 1px solid var(--k-line);
   border-radius: 28px 28px 0 0;
   padding: 10px 24px 40px;
   animation: sheetUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
@@ -1425,9 +1425,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .entry-popover {
   display: none; position: absolute; right: 0; top: calc(100% + 6px);
   z-index: 8000;
-  background: #1a1d24; border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 14px; overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 2px 10px rgba(0,0,0,0.5);
+  background: var(--k-panel-2); border: 1px solid var(--k-line);
+  border-radius: var(--r-md, 14px); overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.35);
   min-width: 160px;
   animation: pickerIn 0.15s cubic-bezier(0.175,0.885,0.32,1);
   transform-origin: top right;
@@ -1465,7 +1465,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .confirm-overlay.open { display: flex; }
 .confirm-sheet {
-  background: #111318; border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(180deg, var(--k-panel-2), var(--k-panel)); border: 1px solid var(--k-line);
   border-radius: 24px 24px 0 0; width: 100%; max-width: 480px;
   padding: 10px 24px 36px;
   animation: sheetUp 0.28s cubic-bezier(0.34,1.1,0.64,1);
@@ -1537,10 +1537,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .picker-panel {
   position: absolute;
   z-index: 99999;
-  background: #16191F;
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.95), 0 4px 20px rgba(0,0,0,0.8);
+  background: var(--k-panel-2);
+  border: 1px solid var(--k-line);
+  border-radius: var(--r-md, 14px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 4px 20px rgba(0,0,0,0.4);
   overflow: hidden; max-height: 260px; overflow-y: auto;
   animation: pickerIn 0.16s cubic-bezier(0.175, 0.885, 0.32, 1);
   transform-origin: top center;
@@ -1970,9 +1970,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .ord-modal-backdrop.open { display: flex; }
 .ord-modal {
-  background: #14161B; border: 1px solid var(--k-line);
-  border-radius: 22px; width: 100%; max-width: 440px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg, var(--k-panel-2), var(--k-panel)); border: 1px solid var(--k-line);
+  border-radius: var(--r-lg, 18px); width: 100%; max-width: 440px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
   overflow-y: auto; max-height: 92vh;
   animation: ordModalIn .2s cubic-bezier(.34,1.36,.64,1);
 }
@@ -2076,7 +2076,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0 2px;
 }
 .ord-btn {
-  flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--k-line);
+  flex: 1; padding: 12px 14px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line);
   background: rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
   font-weight: 600; color: var(--k-text-2); cursor: pointer; transition: all .15s;
   display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -2200,7 +2200,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .panel-head-right { display: flex; align-items: center; gap: 8px; }
 .panel-add-btn {
-  padding: 9px 16px; border-radius: 99px;
+  padding: 9px 16px; border-radius: var(--r-md, 14px);
   background: var(--k-accent); border: none; color: var(--k-bg);
   font-family: var(--sans); font-size: 13px; font-weight: 700;
   cursor: pointer; transition: all 0.18s;
@@ -2225,9 +2225,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .panel-search-wrap .panel-search-inp {
   width: 200px; padding: 7px 12px 7px 30px;
-  background: rgba(255,255,255,0.06);
+  background: var(--k-inset);
   border: 1.5px solid var(--k-line);
-  border-radius: 20px; outline: none;
+  border-radius: var(--r-sm, 10px); outline: none;
   font-family: var(--sans); font-size: 12px;
   color: var(--k-text); transition: all 0.2s;
   display: block;
@@ -2244,22 +2244,22 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .panel-form {
   margin: 0 24px 12px; padding: 16px;
   background: rgba(255,255,255,0.03); border: 1px solid var(--k-line);
-  border-radius: 14px; display: none; flex-direction: column; gap: 10px;
+  border-radius: var(--r-md, 14px); display: none; flex-direction: column; gap: 10px;
 }
 .panel-form.open { display: flex; }
 .panel-form-row { display: flex; gap: 8px; }
 .panel-form-inp {
   flex: 1; padding: 10px 12px;
-  background: rgba(255,255,255,0.06); border: 1.5px solid var(--k-line);
-  border-radius: 12px; outline: none; font-family: var(--sans);
+  background: var(--k-inset); border: 1.5px solid var(--k-line);
+  border-radius: var(--r-sm, 10px); outline: none; font-family: var(--sans);
   font-size: 13px; color: var(--k-text); transition: border .2s;
 }
 .panel-form-inp:focus { border-color: var(--k-accent); }
 .panel-form-inp::placeholder { color: var(--k-text-3); }
 .panel-form-inp.w-sm { width: 110px; flex: none; }
 .panel-form-actions { display: flex; gap: 6px; justify-content: flex-end; }
-.pf-save { padding: 8px 18px; border-radius: 99px; background: var(--k-accent); border: none; color: var(--k-bg); font-family: var(--sans); font-size: 12px; font-weight: 700; cursor: pointer; }
-.pf-cancel { padding: 8px 14px; border-radius: 99px; background: transparent; border: 1px solid var(--k-line); color: var(--k-text-3); font-family: var(--sans); font-size: 12px; cursor: pointer; }
+.pf-save { padding: 8px 18px; border-radius: var(--r-sm, 10px); background: var(--k-accent); border: none; color: var(--k-bg); font-family: var(--sans); font-size: 12px; font-weight: 700; cursor: pointer; }
+.pf-cancel { padding: 8px 14px; border-radius: var(--r-sm, 10px); background: transparent; border: 1px solid var(--k-line); color: var(--k-text-3); font-family: var(--sans); font-size: 12px; cursor: pointer; }
 .pf-cancel:hover { color: var(--k-text); }
 
 /* ── Modal de formulario (crear/editar) ── */
@@ -2270,15 +2270,15 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .kj-modal-backdrop.open { display: flex; }
 .kj-modal {
-  background: #1a1c22; border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px; width: 480px; max-width: calc(100vw - 40px);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg, var(--k-panel-2), var(--k-panel)); border: 1px solid var(--k-line);
+  border-radius: var(--r-lg, 18px); width: 480px; max-width: calc(100vw - 40px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
   overflow: visible; display: flex; flex-direction: column;
 }
 .kj-modal-head {
   display: flex; align-items: center; justify-content: space-between;
   padding: 22px 24px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid var(--k-line);
 }
 .kj-modal-title { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--k-text); }
 .kj-modal-close {
@@ -2306,12 +2306,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .kj-modal-field label { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--k-text-3); font-family: var(--mono); }
 .kj-modal-field label span.req { color: var(--k-accent); margin-left: 2px; }
 .kj-modal-inp {
-  width: 100%; padding: 11px 14px;
-  background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1);
-  border-radius: 12px; outline: none; font-family: var(--sans);
-  font-size: 13px; color: var(--k-text); transition: border .18s;
+  width: 100%; padding: 13px 14px;
+  background: var(--k-inset); border: 1.5px solid var(--k-line);
+  border-radius: var(--r-sm, 10px); outline: none; font-family: var(--sans);
+  font-size: 14px; color: var(--k-text); transition: border .18s;
 }
-.kj-modal-inp option { background: #1e2022; color: #e8e8e8; }
+.kj-modal-inp option { background: var(--k-panel-2); color: var(--k-text); }
 .kj-modal-inp:focus { border-color: var(--k-accent); background: rgba(196,240,66,0.04); }
 .kj-modal-inp::placeholder { color: var(--k-text-3); }
 .kj-modal-row { display: flex; gap: 10px; }
@@ -2321,13 +2321,13 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   padding: 20px 24px 24px;
 }
 .kj-modal-btn-cancel {
-  padding: 10px 20px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.1);
+  padding: 10px 20px; border-radius: var(--r-md, 14px); border: 1.5px solid var(--k-line);
   background: transparent; color: var(--k-text-3); font-family: var(--sans);
   font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s;
 }
 .kj-modal-btn-cancel:hover { border-color: rgba(255,255,255,0.2); color: var(--k-text); }
 .kj-modal-btn-save {
-  padding: 10px 24px; border-radius: 99px; border: none;
+  padding: 10px 24px; border-radius: var(--r-md, 14px); border: none;
   background: var(--k-accent); color: var(--k-bg);
   font-family: var(--sans); font-size: 13px; font-weight: 700;
   cursor: pointer; transition: background .15s;
@@ -2344,7 +2344,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .kj-cat-dropdown {
   display: none; position: absolute; left: 0; right: 0; top: 100%; z-index: 50;
   margin-top: 4px; max-height: 184px; overflow-y: auto;
-  background: #1B1E25; border: 1px solid var(--k-line); border-radius: 12px;
+  background: var(--k-panel-2); border: 1px solid var(--k-line); border-radius: var(--r-md, 14px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.55); padding: 5px;
 }
 .kj-cat-dropdown.open { display: block; }
@@ -2438,7 +2438,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 /* Acciones CRUD en fila */
 .pca-btn {
-  width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--k-line);
+  width: 26px; height: 26px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line);
   background: transparent; color: var(--k-text-3); font-size: 12px;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all .15s;
@@ -2894,7 +2894,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .search-overlay.open { display: flex; }
 .search-sheet {
-  background: #111318; border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(180deg, var(--k-panel-2), var(--k-panel)); border: 1px solid var(--k-line);
   border-radius: 28px 28px 0 0;
   width: 100%; max-width: 600px;
   box-shadow: 0 -8px 60px rgba(0,0,0,0.5);
@@ -3184,7 +3184,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-card {
   background: var(--k-panel);
   border: 1px solid var(--k-line);
-  border-radius: 14px; padding: 12px 14px;
+  border-radius: var(--r-md, 14px); padding: 12px 14px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .dash-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
@@ -3355,7 +3355,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-hero {
   display: flex; align-items: center; justify-content: space-between;
   background: var(--k-panel); border: 1px solid var(--k-line);
-  border-radius: 16px; padding: 16px 20px;
+  border-radius: var(--r-lg, 18px); padding: 16px 20px;
   gap: 12px;
 }
 .dash-hero-greeting {
@@ -3372,7 +3372,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-streak-badge {
   display: flex; align-items: center; gap: 8px;
   background: rgba(196,240,66,0.08); border: 1px solid rgba(196,240,66,0.18);
-  border-radius: 12px; padding: 10px 14px; flex-shrink: 0;
+  border-radius: var(--r-sm, 10px); padding: 10px 14px; flex-shrink: 0;
 }
 .dash-streak-num {
   font-family: var(--mono); font-size: 24px; font-weight: 700;
@@ -4442,7 +4442,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 #view-registrar .field-toggle-btn { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:38px; height:38px; border:none; border-radius:9px; background:rgba(255,255,255,.05); color:var(--k-text-2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.16s; }
 #view-registrar .field-toggle-btn:hover { background:var(--k-accent-soft); color:var(--k-accent); }
 #view-registrar .ftb-icon { font-size:14px; line-height:1; }
-#view-registrar .picker-panel { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:30; background:var(--k-panel-2); border:1px solid var(--k-line); border-radius:var(--r-md); padding:8px; box-shadow:0 18px 40px rgba(0,0,0,.55); max-height:230px; overflow:auto; }
 
 #view-registrar .num-fields-row { display:grid; gap:12px; }
 #view-registrar .num-stepper { display:flex; align-items:center; gap:8px; background:var(--k-inset); border:1px solid var(--k-line); border-radius:var(--r-sm); height:52px; padding:0 6px; overflow:visible; }
@@ -4603,7 +4602,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.129</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.131</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4852,7 +4851,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.129</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.131</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5557,7 +5556,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <input class="panel-search-inp" id="panelQuoteSearch" type="text" placeholder="Buscar..." oninput="renderQuotePanel()">
           </div>
         </div>
-        <button class="panel-add-btn" onclick="openVoiceQuote()" title="Cotización por voz" style="background:transparent;border:1px solid var(--k-line);color:var(--k-text-3);padding:0 10px;font-size:16px;">🎤</button>
+        <button class="panel-add-btn" onclick="openVoiceQuote()" title="Cotización por voz" style="background:transparent;border:1px solid var(--k-line);color:var(--k-text-3);padding:0 10px;display:flex;align-items:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
         <button class="panel-add-btn" onclick="toggleQuoteForm()">+ Nueva</button>
         <button class="panel-close" onclick="closePanel('quote')">×</button>
       </div>
@@ -13053,6 +13052,10 @@ function closeVoiceQuote() {
   document.getElementById('voiceQuoteBackdrop').style.display = 'none';
 }
 
+/* Íconos SVG unificados para los botones de micrófono (voz) */
+const KA_MIC_ICON  = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>';
+const KA_STOP_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="3"/></svg>';
+
 function vqToggleMic() {
   if (_vqListening) { vqStopMic(); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -13063,7 +13066,7 @@ function vqToggleMic() {
   const status = document.getElementById('vqMicStatus');
   btn.style.background = 'rgba(255,107,107,0.18)';
   btn.style.color = 'var(--k-expense)';
-  btn.textContent = '⏹';
+  btn.innerHTML = KA_STOP_ICON;
   btn.classList.add('vq-listening');
   status.textContent = '🔴 Escuchando... habla ahora';
 
@@ -13118,7 +13121,7 @@ function vqStopMic() {
   if (rec) { try { rec.stop(); } catch(e){} }
   const btn = document.getElementById('vqMicBtn');
   const status = document.getElementById('vqMicStatus');
-  if (btn) { btn.style.background = ''; btn.style.color = ''; btn.textContent = '🎤'; btn.classList.remove('vq-listening'); }
+  if (btn) { btn.style.background = ''; btn.style.color = ''; btn.innerHTML = KA_MIC_ICON; btn.classList.remove('vq-listening'); }
   if (status) status.textContent = (document.getElementById('vqText').value || '').trim() ? '✅ Toca para agregar más productos' : 'Toca para hablar';
 }
 
@@ -13371,7 +13374,7 @@ function veToggleMic() {
   const status = document.getElementById('veMicStatus');
   btn.style.background = 'rgba(255,107,107,0.18)';
   btn.style.color = 'var(--k-expense)';
-  btn.textContent = '⏹';
+  btn.innerHTML = KA_STOP_ICON;
   status.textContent = '🔴 Escuchando... habla ahora';
 
   let myBase = (txt.value || '').trim();
@@ -13420,7 +13423,7 @@ function veStopMic() {
   if (rec) { try { rec.stop(); } catch(e){} }
   const btn = document.getElementById('veMicBtn');
   const status = document.getElementById('veMicStatus');
-  if (btn) { btn.style.background = ''; btn.style.color = ''; btn.textContent = '🎤'; }
+  if (btn) { btn.style.background = ''; btn.style.color = ''; btn.innerHTML = KA_MIC_ICON; }
   if (status) status.textContent = (document.getElementById('veText').value || '').trim() ? '✅ Toca para agregar más productos' : 'Toca para hablar';
 }
 
@@ -14272,11 +14275,11 @@ function quoteWhatsApp(id) {
      onclick="if(event.target===this)closeVoiceQuote()">
   <div class="kj-modal" style="max-width:480px;gap:0;padding:0;">
     <div class="kj-modal-head">
-      <span class="kj-modal-title">🎤 Cotización rápida</span>
+      <span class="kj-modal-title" style="display:flex;align-items:center;gap:8px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>Cotización rápida</span>
       <button class="kj-modal-close" onclick="closeVoiceQuote()">✕</button>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 20px 10px;">
-      <button id="vqMicBtn" onclick="vqToggleMic()" style="width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;background:var(--k-accent-l);color:var(--k-accent);font-size:26px;transition:all .2s;display:flex;align-items:center;justify-content:center;">🎤</button>
+      <button id="vqMicBtn" onclick="vqToggleMic()" style="width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;background:var(--k-accent-l);color:var(--k-accent);transition:all .2s;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
       <div id="vqMicStatus" style="font-size:12px;color:var(--k-text-3);">Toca para hablar</div>
     </div>
     <div style="padding:0 20px 10px;">
@@ -14298,11 +14301,11 @@ function quoteWhatsApp(id) {
      onclick="if(event.target===this)closeVoiceEntry()">
   <div class="kj-modal" style="max-width:480px;gap:0;padding:0;">
     <div class="kj-modal-head">
-      <span class="kj-modal-title">🎤 Registro rápido</span>
+      <span class="kj-modal-title" style="display:flex;align-items:center;gap:8px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>Registro rápido</span>
       <button class="kj-modal-close" onclick="closeVoiceEntry()">✕</button>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 20px 10px;">
-      <button id="veMicBtn" onclick="veToggleMic()" style="width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;background:var(--k-accent-l);color:var(--k-accent);font-size:26px;transition:all .2s;display:flex;align-items:center;justify-content:center;">🎤</button>
+      <button id="veMicBtn" onclick="veToggleMic()" style="width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;background:var(--k-accent-l);color:var(--k-accent);transition:all .2s;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
       <div id="veMicStatus" style="font-size:12px;color:var(--k-text-3);">Toca para hablar</div>
     </div>
     <div style="padding:0 20px 10px;">
