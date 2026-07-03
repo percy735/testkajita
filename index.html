@@ -1384,12 +1384,17 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .edot.income  { background: var(--k-accent); color: var(--k-accent); }
 .edot.expense { background: var(--k-expense); color: var(--k-expense); }
 .edot.credit  { background: transparent; border: 2px dashed var(--k-credit); box-shadow: none; }
+.edot-ic { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.edot-ic.credit { color: var(--k-credit); }
+.edot-ic svg { width: 15px; height: 15px; display: block; }
 
 .einfo { min-width: 0; }
 .edesc { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--k-text); }
 .emeta { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
 .etime { font-family: var(--mono); font-size: 10px; color: var(--k-text-3); }
-.pbadge { font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 99px; font-weight: 500; }
+.pbadge { font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 99px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+.pbadge-ic { display: inline-flex; align-items: center; flex-shrink: 0; opacity: .9; }
+.pbadge-ic svg { width: 11px; height: 11px; display: block; }
 .pbadge.cash     { background: var(--k-cash-l);   color: var(--k-cash); }
 .pbadge.yape     { background: var(--k-purple-l); color: var(--k-purple); }
 .pbadge.plin     { background: var(--k-blue-l);   color: var(--k-blue); }
@@ -4377,22 +4382,20 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 /* Luz ambiental ya la aporta .main-content globalmente; aquí solo el radio de la vista */
 #view-registrar { border-radius: var(--r-lg); }
 
-/* Card base — degradado con brillo de acento que emana del borde superior */
+/* Card base — el mismo tono oscuro del fondo general, con un lima muy sutil que la integra
+   (mismo panel/panel-2 de siempre + un toque de acento, no un gris desconectado) */
 #view-registrar .form-wrap,
 #view-registrar .stat-card,
-#view-registrar .sub-card,
 #view-registrar .reminders-bar,
 #view-registrar .debts-bar {
   background:
-    radial-gradient(130% 80% at 50% -25%, rgba(196,240,66,.09), transparent 55%),
+    radial-gradient(130% 80% at 50% -25%, rgba(196,240,66,.045), transparent 60%),
     linear-gradient(180deg,var(--k-panel-2),var(--k-panel));
   border:1px solid var(--k-line); border-radius:var(--r-lg);
 }
-/* Borde superior sutilmente iluminado (efecto vidrio) */
 #view-registrar .form-wrap,
 #view-registrar .stat-card {
-  border-top-color: rgba(196,240,66,.22);
-  box-shadow: 0 18px 44px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow: 0 18px 44px rgba(0,0,0,.35);
 }
 
 /* Formulario */
@@ -4423,7 +4426,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 #view-registrar input[type=number] { font-family:var(--mono); }
 
 /* Toggle Ingreso/Egreso */
-#view-registrar .type-tgl { display:grid; grid-template-columns:1fr 1fr; gap:8px; background:var(--k-inset); border:1px solid var(--k-line); border-radius:var(--r-md); padding:6px; }
+#view-registrar .type-tgl { display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  background: linear-gradient(180deg, var(--k-panel), var(--k-inset));
+  border:1px solid var(--k-line); border-radius:var(--r-md); padding:6px; }
 #view-registrar .tgl-btn { flex:none; height:52px; border:none; border-radius:10px; background:transparent; cursor:pointer; font-family:var(--sans); font-size:15px; font-weight:600; color:var(--k-text-2); transition:.16s; }
 #view-registrar .tgl-btn:hover { color:var(--k-text); background:transparent; }
 #view-registrar .tgl-btn.ai { background:var(--k-accent); color:var(--k-accent-ink); box-shadow:0 4px 14px rgba(196,240,66,.22); }
@@ -4482,9 +4487,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 #view-registrar .stat-card.s-bal {
   border-color:var(--k-accent-line);
   background:
-    radial-gradient(140% 110% at 50% -30%, rgba(196,240,66,.20), transparent 60%),
-    linear-gradient(180deg,rgba(196,240,66,.06),var(--k-panel));
-  box-shadow: 0 18px 44px rgba(0,0,0,.35), 0 0 34px rgba(196,240,66,.10), inset 0 1px 0 rgba(255,255,255,.05);
+    radial-gradient(140% 110% at 50% -30%, rgba(196,240,66,.09), transparent 60%),
+    linear-gradient(180deg,var(--k-panel-2),var(--k-panel));
+  box-shadow: 0 18px 44px rgba(0,0,0,.35);
 }
 #view-registrar .stat-label { font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--k-text-3); margin-bottom:12px; }
 #view-registrar .stat-value { font-family:var(--mono); font-size:clamp(21px,2.1vw,26px); font-weight:700; letter-spacing:-.02em; white-space:nowrap; }
@@ -4499,13 +4504,13 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 #view-registrar .sub-card.s-cash {
   border-left:2px solid var(--k-accent-line);
   background:
-    radial-gradient(120% 150% at 0% 50%, rgba(196,240,66,.13), transparent 55%),
+    radial-gradient(120% 150% at 0% 50%, rgba(196,240,66,.065), transparent 55%),
     linear-gradient(180deg,var(--k-panel-2),var(--k-panel));
 }
 #view-registrar .sub-card.s-dig {
   border-left:2px solid rgba(56,189,248,.35);
   background:
-    radial-gradient(120% 150% at 0% 50%, rgba(56,189,248,.12), transparent 55%),
+    radial-gradient(120% 150% at 0% 50%, rgba(56,189,248,.06), transparent 55%),
     linear-gradient(180deg,var(--k-panel-2),var(--k-panel));
 }
 #view-registrar .sub-lbl { font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--k-text-3); margin-bottom:4px; }
@@ -4598,7 +4603,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.121</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.129</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4769,11 +4774,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <nav class="sb-nav">
       <!-- Principal -->
       <div class="sb-section-lbl">Principal</div>
-      <button class="sb-item active" id="sbi-dashboard" onclick="switchView('dashboard')">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-        <span>Dashboard</span>
-      </button>
-      <button class="sb-item" id="sbi-registrar" onclick="switchView('registrar')">
+      <button class="sb-item active" id="sbi-registrar" onclick="switchView('registrar')">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         <span>Registrar</span>
       </button>
@@ -4810,6 +4811,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
     <!-- Footer del sidebar -->
     <div class="sb-footer">
+      <button class="sb-item" id="sbi-dashboard" onclick="switchView('dashboard')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Reportes</span>
+      </button>
       <button class="sb-item" onclick="openSettings()" title="Configuración">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>Configuración</span>
@@ -4837,7 +4842,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           <line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
-      <div class="ctb-title" id="ctbTitle">Dashboard</div>
+      <div class="ctb-title" id="ctbTitle">Registrar movimiento</div>
       <div class="ctb-biz" id="ctbBiz"></div>
       <div class="ctb-actions"></div>
       <!-- Logo isotipo móvil -->
@@ -4847,7 +4852,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.121</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.129</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5194,7 +5199,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <!-- ══ PEDIDOS DEL DÍA ══ -->
   <div id="ordDayWrap" style="display:none; margin-top:28px;">
     <div class="entries-hdr">
-      <div class="entries-ttl" style="color:var(--k-order);">📋 Pedidos del día</div>
+      <div class="entries-ttl" style="color:var(--k-order);display:flex;align-items:center;gap:8px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg>Pedidos del día</div>
       <div class="entries-cnt" id="ordDayCnt"></div>
     </div>
     <div id="ordDayList"></div>
@@ -6606,7 +6611,7 @@ function closePanel(type) {
     // En modo página: devolver al body y navegar al dashboard
     overlay.classList.remove('as-page');
     document.body.appendChild(overlay);
-    switchView('dashboard');
+    switchView('registrar');
   }
 }
 
@@ -9062,9 +9067,9 @@ function renderEntries(){
       const amtClass=isCredit?'credit':isDebt?'expense':e.type;
       const itemClass=isCredit?'pending-credit':isDebt?'pending-debt':'';
       const payBadge=isCredit
-        ? `<span class="pbadge credit">⏳ Crédito${e.client?' · '+e.client:''}</span>${e.pendiente>0?`<span class="pbadge" style="background:rgba(251,191,36,0.1);color:var(--k-credit);font-family:var(--mono);">S/${e.pendiente.toFixed(2)} pendiente</span>`:''}${e.acuenta>0?`<span class="pbadge" style="background:rgba(196,240,66,0.08);color:var(--k-accent);font-family:var(--mono);">S/${e.acuenta.toFixed(2)} a cuenta</span>`:''}`
+        ? `<span class="pbadge credit"><span class="pbadge-ic">${ORD_SVG.clock}</span>Crédito${e.client?' · '+e.client:''}</span>${e.pendiente>0?`<span class="pbadge" style="background:rgba(251,191,36,0.1);color:var(--k-credit);font-family:var(--mono);">S/${e.pendiente.toFixed(2)} pendiente</span>`:''}${e.acuenta>0?`<span class="pbadge" style="background:rgba(196,240,66,0.08);color:var(--k-accent);font-family:var(--mono);">S/${e.acuenta.toFixed(2)} a cuenta</span>`:''}`
         : isDebt
-        ? `<span class="pbadge" style="background:rgba(255,107,107,0.12);color:var(--k-expense);">🧾 A fiado${e.client?' · '+e.client:''}</span>${e.pendiente>0?`<span class="pbadge" style="background:rgba(255,107,107,0.08);color:var(--k-expense);font-family:var(--mono);">S/${e.pendiente.toFixed(2)} por pagar</span>`:''}${e.acuenta>0?`<span class="pbadge" style="background:rgba(196,240,66,0.08);color:var(--k-accent);font-family:var(--mono);">S/${e.acuenta.toFixed(2)} abonado</span>`:''}`
+        ? `<span class="pbadge" style="background:rgba(255,107,107,0.12);color:var(--k-expense);"><span class="pbadge-ic">${ORD_SVG.receipt}</span>A fiado${e.client?' · '+e.client:''}</span>${e.pendiente>0?`<span class="pbadge" style="background:rgba(255,107,107,0.08);color:var(--k-expense);font-family:var(--mono);">S/${e.pendiente.toFixed(2)} por pagar</span>`:''}${e.acuenta>0?`<span class="pbadge" style="background:rgba(196,240,66,0.08);color:var(--k-accent);font-family:var(--mono);">S/${e.acuenta.toFixed(2)} abonado</span>`:''}`
         : `<span class="pbadge ${e.pay||'cash'}">${PAY_LBL[e.pay]||'Efectivo'}</span>`;
       const amtStr=isCredit
         ? fmt(e.pendiente > 0 ? e.pendiente : e.amount)
@@ -9076,9 +9081,12 @@ function renderEntries(){
         : isDebt && e.client
         ? `onclick="goToCredClient('${e.client.replace(/'/g,"\\'")}','pagar')" style="cursor:pointer;"`
         : '';
+      const dotHtml = isCredit
+        ? `<span class="edot-ic credit">${ORD_SVG.clock}</span>`
+        : `<span class="edot ${dotClass}"></span>`;
       return `
         <div class="entry-item ${itemClass}" data-eid="${e.id}" ${credNav}>
-          <span class="edot ${dotClass}"></span>
+          ${dotHtml}
           <div class="einfo">
             <div class="edesc">${e.desc}</div>
             <div class="emeta">
@@ -9121,18 +9129,22 @@ function renderDayOrders() {
   if(!dayOrders.length){ wrap.style.display='none'; return; }
   wrap.style.display='';
   cnt.textContent = dayOrders.length+' pedido'+(dayOrders.length!==1?'s':'');
-  const statusLabel = { pending:'⏳ Pendiente', ready:'✅ Listo', done:'📦 Entregado' };
+  const statusLabel = {
+    pending:`<span class="pbadge-ic">${ORD_SVG.clock}</span>Pendiente`,
+    ready:`<span class="pbadge-ic">${ORD_SVG.check}</span>Listo`,
+    done:`<span class="pbadge-ic">${ORD_SVG.box}</span>Entregado`
+  };
   const fmtDate = d => { if(!d) return ''; const [y,m,day]=d.split('-'); return `Entrega ${day}/${m}`; };
   list.innerHTML = dayOrders.map(o => {
     const sc = o.status==='done'?'order-done':'order-item';
     const itemsText = o.items.map(i=>i.desc+(i.price?` (S/ ${i.price.toFixed(2)})`:'') ).join(' · ');
     const deliveryBadge = o.delivery==='delivery'
       ? (o.address
-          ? `<span class="order-address-badge">📍 ${o.address}</span>`
-          : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);">🚚 Delivery</span>`)
-      : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);">🏪 Recojo en local</span>`;
+          ? `<span class="order-address-badge"><span class="pbadge-ic">${ORD_SVG.pin}</span>${o.address}</span>`
+          : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);"><span class="pbadge-ic">${ORD_SVG.truck}</span>Delivery</span>`)
+      : `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);"><span class="pbadge-ic">${ORD_SVG.store}</span>Recojo en local</span>`;
     const dateBadge = o.date?`<span class="pbadge" style="background:rgba(255,255,255,0.05);color:var(--k-text-3);">${fmtDate(o.date)}</span>`:'';
-    const noteBadge = o.note?`<span class="pbadge" style="background:rgba(255,255,255,0.04);color:var(--k-text-3);">📝 ${o.note}</span>`:'';
+    const noteBadge = o.note?`<span class="pbadge" style="background:rgba(255,255,255,0.04);color:var(--k-text-3);"><span class="pbadge-ic">${ORD_SVG.note}</span>${o.note}</span>`:'';
     const payBadge = o.paid
       ? `<span class="pbadge" style="background:rgba(196,240,66,0.12);color:var(--k-accent);">✓ Pagado</span>`
       : `<span class="pbadge" style="background:rgba(251,191,36,0.12);color:var(--k-credit);">Falta pagar</span>`;
@@ -9617,7 +9629,7 @@ async function startApp(){
   render();
   applyBizProfile();
   checkOnboarding();
-  switchView('dashboard');
+  switchView('registrar');
 }
 
 // ── AUTH ERROR ──
@@ -9639,7 +9651,7 @@ async function handleDemoLogin(){
   seedDemoData();
   loadDayNoteLocal();
   buildDayBar();render();applyBizProfile();
-  switchView('dashboard');
+  switchView('registrar');
   toast('🚀 Modo Demo con datos de ejemplo');
 }
 
@@ -11591,6 +11603,9 @@ const ORD_SVG = {
   store: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 4 4h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/></svg>',
   truck: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="11" rx="1"/><path d="M14 9h4l3 3v5h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>',
   note: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
+  clock: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+  pin: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  list: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg>',
 };
 
 // ── Render ──
@@ -11725,7 +11740,7 @@ function renderOrdPanel() {
    ══════════════════════════════════════ */
 
 const VIEW_TITLES = {
-  dashboard: 'Dashboard',
+  dashboard: 'Reportes',
   registrar: 'Registrar movimiento',
   cli:  'Clientes',
   prov: 'Proveedores',
@@ -12085,12 +12100,14 @@ function renderDashboard() {
   }
 
   // ── FEED: últimas transacciones ──
-  document.getElementById('dashFeedPeriodLbl').textContent = periodLabel;
+  const dashFeedPeriodLblEl = document.getElementById('dashFeedPeriodLbl');
+  if (dashFeedPeriodLblEl) dashFeedPeriodLblEl.textContent = periodLabel;
   const feedEntries = [...filteredEntries].sort((a, b) => {
     const da = (a.date || '') + (a.time || ''); const db = (b.date || '') + (b.time || '');
     return db.localeCompare(da);
   }).slice(0, 4);
-  document.getElementById('dashFeedRows').innerHTML = feedEntries.length
+  const dashFeedRowsEl = document.getElementById('dashFeedRows');
+  if (dashFeedRowsEl) dashFeedRowsEl.innerHTML = feedEntries.length
     ? feedEntries.map(e => {
         const isInc = e.type === 'income';
         const timeStr = e.time ? e.time.slice(0,5) : '';
@@ -12216,7 +12233,8 @@ function renderDashboard() {
   });
   const topCreds = Object.entries(credMap).sort((a, b) => b[1].total - a[1].total).slice(0, 4);
   const maxCred = topCreds[0]?.[1].total || 1;
-  document.getElementById('dashCredits').innerHTML = topCreds.length ? topCreds.map(([name, d]) => `
+  const dashCreditsEl = document.getElementById('dashCredits');
+  if (dashCreditsEl) dashCreditsEl.innerHTML = topCreds.length ? topCreds.map(([name, d]) => `
     <div class="dash-top-row">
       <div class="dash-top-rank" style="color:var(--k-credit);">⏳</div>
       <div style="flex:1;min-width:0;">
