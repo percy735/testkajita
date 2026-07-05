@@ -1765,44 +1765,40 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 /* Order card timeline — barra horizontal en el pie del card */
 .ord-timeline {
-  display: flex; align-items: center; flex-direction: row;
+  grid-area: tml;
+  display: flex; flex-direction: column; gap: 7px;
   padding: 8px 14px 11px;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
-.ord-tml-step {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 4px 10px; border-radius: 10px;
-  border: 1px solid transparent;
-  background: none; cursor: pointer; flex-shrink: 0;
-  transition: background 0.15s, border-color 0.15s;
-}
+/* Fila de círculos + líneas conectoras — la línea toca el borde del círculo,
+   sin huecos, formando una sola pista continua (igual a la referencia). */
+.ord-tml-row { display: flex; align-items: center; }
 .ord-tml-dot {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-  border: 1.5px solid var(--k-text-3); background: transparent;
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; padding: 0;
+  border: 1.5px solid var(--k-line); background: var(--k-inset, var(--k-panel-2));
+  color: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
   transition: all 0.15s;
 }
-.ord-tml-label {
-  font-family: var(--sans); font-size: 10px; font-weight: 500;
-  color: var(--k-text-3); white-space: nowrap;
-}
-/* Paso completado */
-.ord-tml-step.done .ord-tml-dot   { background: rgba(196,240,66,0.6); border-color: var(--k-accent); }
-.ord-tml-step.done .ord-tml-label { color: var(--k-text-2); }
-/* Paso actual */
-.ord-tml-step.active {
-  background: rgba(196,240,66,0.08); border-color: rgba(196,240,66,0.3);
-}
-.ord-tml-step.active .ord-tml-dot   { background: var(--k-accent); border-color: var(--k-accent); }
-.ord-tml-step.active .ord-tml-label { color: var(--k-accent); font-weight: 700; }
-/* Hover */
-.ord-tml-step:not(.active):hover { background: rgba(255,255,255,0.05); }
-.ord-tml-step:not(.active):hover .ord-tml-label { color: var(--k-text); }
-/* Línea conectora horizontal entre pasos */
+.ord-tml-dot svg { width: 13px; height: 13px; }
+.ord-tml-dot.done,
+.ord-tml-dot.active { background: var(--k-accent); border-color: var(--k-accent); color: var(--k-bg, #0c0d09); }
+.ord-tml-dot:hover { border-color: var(--k-accent); }
 .ord-tml-line {
-  flex: 1; height: 2px; background: var(--k-line); border-radius: 1px; min-width: 16px;
-  transition: background 0.2s;
+  flex: 1; height: 3px; background: rgba(196,240,66,0.15); min-width: 16px;
+  margin: 0 -1px; transition: background 0.2s;
 }
-.ord-tml-line.filled { background: rgba(196,240,66,0.35); }
+.ord-tml-line.filled { background: var(--k-accent); }
+/* Fila de etiquetas, alineada bajo cada círculo */
+.ord-tml-labels { display: flex; justify-content: space-between; }
+.ord-tml-label {
+  border: none; background: none; cursor: pointer; padding: 0;
+  font-family: var(--sans); font-size: 10px; font-weight: 500;
+  color: var(--k-text-3); white-space: nowrap; transition: color 0.15s;
+}
+.ord-tml-label:hover { color: var(--k-text); }
+.ord-tml-label.done   { color: var(--k-text-2); }
+.ord-tml-label.active { color: var(--k-accent); font-weight: 700; }
 
 /* Swipe reveal hints */
 .swipe-hint-right,
@@ -1823,6 +1819,31 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   color: var(--k-credit);
 }
 .order-card:hover { border-color: rgba(255,255,255,0.12); }
+.order-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "body right" "tml tml";
+  align-items: start;
+}
+.order-card-body { grid-area: body; min-width: 0; }
+.order-card-right { grid-area: right; margin: 13px 14px 0 6px; }
+/* Escritorio: info → barra de pasos → precio/menú, en una sola fila */
+@media (min-width: 900px) {
+  .order-card {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "body tml right";
+    align-items: center;
+    column-gap: 18px;
+  }
+  .order-card-head   { padding-bottom: 8px; }
+  .order-card-footer { padding-top: 0; }
+  .order-card-right  { margin: 0 14px 0 0; }
+  .ord-timeline {
+    grid-area: tml;
+    border-top: none;
+    padding: 13px 0;
+  }
+}
 .order-card-head {
   display: flex; align-items: center;
   padding: 13px 14px 0; gap: 10px;
@@ -1852,6 +1873,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   font-family: var(--mono); font-size: 9.5px; color: var(--k-text-3);
   display: flex; gap: 8px; flex-wrap: wrap; min-width: 0;
 }
+.order-card-meta span { display: inline-flex; align-items: center; gap: 4px; }
 .order-card-right {
   display: flex; align-items: center; gap: 6px; flex-shrink: 0;
 }
@@ -1875,9 +1897,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .order-pay-badge.unpaid { background: var(--k-expense-l); color: var(--k-expense); }
 /* Botón alternar pago en el detalle */
 .ord-pay-toggle {
-  width: 100%; padding: 13px; border-radius: 12px; cursor: pointer;
+  width: 100%; padding: 13px; border-radius: var(--r-sm, 10px); cursor: pointer;
   font-family: var(--sans); font-size: 13px; font-weight: 700;
   transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .ord-pay-toggle.is-unpaid { background: var(--k-accent); border: 1px solid var(--k-accent); color: var(--k-bg); }
 .ord-pay-toggle.is-unpaid:hover { background: var(--k-accent-hover); }
@@ -2036,10 +2059,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .ord-modal-item-qty {
   font-family: var(--mono); font-size: 12px; font-weight: 700;
   color: var(--k-text-3); min-width: 30px; text-align: center; flex-shrink: 0;
-  background: rgba(255,255,255,0.05); border-radius: 7px; padding: 3px 0;
+  background: rgba(255,255,255,0.05); border-radius: var(--r-sm, 10px); padding: 3px 0;
 }
 .ord-modal-item-desc {
   font-family: var(--sans); font-size: 13px; color: var(--k-text); flex: 1; min-width: 0;
+}
+.ord-modal-item-unit {
+  font-family: var(--mono); font-size: 10.5px; color: var(--k-text-3);
+  margin-top: 3px;
 }
 .ord-modal-item-price {
   font-family: var(--mono); font-size: 13px; font-weight: 700;
@@ -2088,9 +2115,15 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .ord-btn.ord-btn-print { }
 .ord-btn.ord-btn-del { background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.25); color: var(--k-expense); }
 .ord-btn.ord-btn-del:hover { background: rgba(255,107,107,0.16); }
+/* Barra de progreso reutilizada dentro del modal de detalle (Pedidos) */
+.ord-timeline-modal {
+  border-top: none; padding: 6px 0 10px;
+  background: rgba(255,255,255,0.02); border-radius: var(--r-md, 14px);
+}
+/* Botones de estado tipo pill (aún usados por Cotizaciones) */
 .ord-status-row { display: flex; gap: 8px; }
 .ord-status-btn {
-  flex: 1; padding: 11px 10px; border-radius: 11px; border: 1px solid var(--k-line);
+  flex: 1; padding: 11px 10px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line);
   background: transparent; font-family: var(--sans); font-size: 11px; font-weight: 600;
   color: var(--k-text-3); cursor: pointer; transition: all .15s; text-align: center;
   display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -2288,19 +2321,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   align-items: center; justify-content: center; transition: all .15s;
 }
 .kj-modal-close:hover { background: rgba(255,255,255,0.12); color: var(--k-text); }
-.kj-modal-tabs {
-  display: flex; gap: 4px; padding: 14px 24px 0;
-}
-.kj-modal-tab {
-  padding: 7px 16px; border-radius: 99px; font-size: 12px; font-weight: 600;
-  font-family: var(--sans); cursor: pointer; border: 1.5px solid transparent;
-  color: var(--k-text-3); background: transparent; transition: all .15s;
-}
-.kj-modal-tab.active {
-  background: var(--k-accent-l); border-color: var(--k-accent);
-  color: var(--k-accent);
-}
-.kj-modal-tab:not(.active):hover { background: rgba(255,255,255,0.05); color: var(--k-text-2); }
 .kj-modal-body { padding: 20px 24px 0; display: flex; flex-direction: column; gap: 14px; }
 .kj-modal-field { display: flex; flex-direction: column; gap: 6px; }
 .kj-modal-field label { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--k-text-3); font-family: var(--mono); }
@@ -3478,14 +3498,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 @media (max-width: 700px) { .dash-kpi-small { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 440px) { .dash-kpi-small { grid-template-columns: 1fr; } }
 
-/* Heatmap grande */
-.dash-heatmap-big { padding: 16px 18px !important; }
-.dash-heatmap-big .dash-hm-cell { font-size: 10px !important; border-radius: 5px !important; }
-.dash-heatmap-big .dash-hm-dow-lbl { font-size: 10px !important; }
-.dash-heatmap-big .dash-hm-grid { gap: 4px !important; }
-.dash-heatmap-big .dash-hm-dow { gap: 4px !important; margin-bottom: 6px !important; }
-.dash-heatmap-big .dash-hm-legend-dot { width: 12px !important; height: 12px !important; }
-
 /* ══ ROW 4: Bottom 3 cols ══ */
 .dash-bottom-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;
@@ -3513,96 +3525,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   padding: 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .dash-mini-title span { color: var(--k-text-3); }
-
-/* ══ ROW 5: Chart + Credits ══ */
-.dash-chart-cred-row {
-  display: flex; gap: 10px; align-items: flex-start;
-}
-@media (max-width: 700px) { .dash-chart-cred-row { flex-direction: column; } }
-
-/* ══ HEATMAP CALENDAR ══ */
-.dash-heatmap {
-  background: var(--k-panel); border: 1px solid var(--k-line);
-  border-radius: 14px; padding: 12px 12px;
-}
-.dash-hm-title {
-  font-family: var(--mono); font-size: 8px; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--k-text-3); margin-bottom: 6px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.dash-hm-month-lbl { color: var(--k-text-2); font-size: 9px; }
-.dash-hm-dow {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 2px;
-}
-.dash-hm-dow-lbl {
-  font-family: var(--mono); font-size: 7px; color: var(--k-text-3);
-  text-align: center; padding-bottom: 1px;
-}
-.dash-hm-grid {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
-}
-.dash-hm-cell {
-  aspect-ratio: 1; border-radius: 3px; cursor: default;
-  transition: transform 0.1s; position: relative;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 7px;
-}
-.dash-hm-cell:not(.hm-empty):hover { transform: scale(1.3); z-index: 2; }
-.dash-hm-cell.hm-empty { background: transparent; color: transparent; }
-.dash-hm-cell.hm-0 { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.18); }
-.dash-hm-cell.hm-1 { background: rgba(196,240,66,0.15); color: rgba(255,255,255,0.4); }
-.dash-hm-cell.hm-2 { background: rgba(196,240,66,0.32); color: rgba(255,255,255,0.6); }
-.dash-hm-cell.hm-3 { background: rgba(196,240,66,0.55); color: rgba(0,0,0,0.7); }
-.dash-hm-cell.hm-4 { background: var(--k-accent); color: #000; font-weight: 700; }
-.dash-hm-cell.hm-today { outline: 1.5px solid var(--k-accent); outline-offset: 1px; }
-.dash-hm-legend {
-  display: flex; align-items: center; gap: 3px; margin-top: 6px; justify-content: flex-end;
-}
-.dash-hm-legend-lbl { font-family: var(--mono); font-size: 7px; color: var(--k-text-3); }
-.dash-hm-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
-
-/* ══ RECENT FEED ══ */
-.dash-feed {
-  background: var(--k-panel); border: 1px solid var(--k-line);
-  border-radius: 20px; overflow: hidden; margin-bottom: 16px;
-}
-.dash-feed-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 18px; border-bottom: 1px solid var(--k-line);
-}
-.dash-feed-title {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--k-text-3);
-}
-.dash-feed-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 18px; border-bottom: 1px solid var(--k-line);
-  transition: background .15s;
-}
-.dash-feed-row:last-child { border-bottom: none; }
-.dash-feed-row:hover { background: var(--k-panel-2); }
-.dash-feed-dot {
-  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-}
-.dash-feed-dot.income { background: var(--k-accent); box-shadow: 0 0 6px rgba(196,240,66,0.5); }
-.dash-feed-dot.expense { background: var(--k-expense); }
-.dash-feed-desc {
-  flex: 1; font-family: var(--sans); font-size: 12px; color: var(--k-text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.dash-feed-client { font-family: var(--sans); font-size: 10px; color: var(--k-text-3); }
-.dash-feed-time {
-  font-family: var(--mono); font-size: 9px; color: var(--k-text-3); flex-shrink: 0;
-}
-.dash-feed-amt {
-  font-family: var(--mono); font-size: 12px; font-weight: 700; flex-shrink: 0;
-}
-.dash-feed-amt.income { color: var(--k-accent); }
-.dash-feed-amt.expense { color: var(--k-expense); }
-.dash-feed-empty {
-  padding: 28px 18px; text-align: center;
-  font-family: var(--sans); font-size: 12px; color: var(--k-text-3);
-}
 
 /* ══════════════════════════════════════════
    DASHBOARD DESIGN POLISH
@@ -3677,32 +3599,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-kpi-small .dash-card-val { font-size: 18px; }
 .dash-kpi-small .dash-card-sub { font-size: 10px; margin-top: 3px; }
 
-/* — Heatmap: celdas más grandes, sin números, más visual — */
-.dash-heatmap-big {
-  border-radius: 14px !important;
-  padding: 14px 14px !important;
-  background: var(--k-panel);
-  border: 1px solid var(--k-line);
-}
-.dash-hm-title {
-  font-size: 9px !important; letter-spacing: .12em;
-  margin-bottom: 8px !important;
-}
-.dash-hm-month-lbl { font-size: 10px !important; font-weight: 600; letter-spacing: 0; text-transform: none; }
-.dash-heatmap-big .dash-hm-dow { gap: 5px !important; margin: 0 auto 5px !important; max-width: 300px; }
-.dash-heatmap-big .dash-hm-dow-lbl { font-size: 9px !important; color: var(--k-text-3); letter-spacing: .03em; }
-.dash-heatmap-big .dash-hm-grid { gap: 5px !important; max-width: 300px; margin: 0 auto; }
-.dash-heatmap-big .dash-hm-cell {
-  font-size: 0 !important;
-  border-radius: 5px !important;
-  transition: transform .12s, opacity .12s !important;
-}
-.dash-heatmap-big .dash-hm-cell:not(.hm-empty):hover { transform: scale(1.3) !important; }
-.dash-heatmap-big .dash-hm-cell.hm-today { outline: 2px solid var(--k-accent) !important; outline-offset: 1px !important; }
-.dash-hm-legend { margin: 9px auto 0 !important; max-width: 300px; }
-.dash-hm-legend-lbl { font-size: 8px !important; letter-spacing: .03em; }
-.dash-heatmap-big .dash-hm-legend-dot { width: 11px !important; height: 11px !important; border-radius: 3px !important; }
-
 /* — Mini titles: con línea de color — */
 .dash-mini-title {
   font-size: 9px !important; letter-spacing: .12em;
@@ -3725,21 +3621,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .dash-bottom-col .dash-top-rank { font-size: 10px !important; min-width: 16px !important; }
 .dash-bottom-col .dash-top-bar-wrap { height: 2px !important; margin-top: 3px !important; }
 
-/* — Feed dot glow — */
-.dash-feed-dot.income { width: 8px; height: 8px; box-shadow: 0 0 8px rgba(196,240,66,0.6); }
-
-/* — Chart row: mejor integración — */
-.dash-chart-cred-row { margin-top: 0; }
-.dash-chart-cred-row .dash-chart {
-  border-radius: 14px !important;
-  padding: 14px 16px !important;
-}
+/* — Chart: mejor integración — */
 #dashChartTitle {
   font-size: 9px !important; letter-spacing: .12em;
   text-transform: uppercase; color: var(--k-text-3) !important;
 }
 #dashChartMonth { font-size: 11px !important; font-weight: 600; color: var(--k-text-2) !important; }
-.dash-chart-cred-row .dash-mini-title { margin-bottom: 8px; }
 
 /* — Bar chart bars: bordes redondeados en ambos extremos — */
 .dcb-bar { border-radius: 3px !important; }
@@ -4602,7 +4489,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.131</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.136</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4851,7 +4738,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.131</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.136</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -6820,11 +6707,9 @@ function openKjModal(type, editId) {
   const bd = document.getElementById('kjModalBackdrop');
   const bodyPerson = document.getElementById('kjModalBodyPerson');
   const bodyProd   = document.getElementById('kjModalBodyProd');
-  const tabs       = document.getElementById('kjModalTabs');
   const title      = document.getElementById('kjModalTitle');
 
   if (type === 'inv') {
-    tabs.style.display = 'none';
     bodyPerson.style.display = 'none';
     bodyProd.style.display = 'flex';
     title.textContent = editId ? 'Editar producto' : 'Nuevo producto';
@@ -6846,7 +6731,6 @@ function openKjModal(type, editId) {
     renderCatChips();
     setTimeout(()=>document.getElementById('kjProdName').focus(), 80);
   } else {
-    tabs.style.display = 'none';
     bodyPerson.style.display = 'flex';
     bodyProd.style.display = 'none';
     title.textContent = editId ? (type==='cli'?'Editar cliente':'Editar proveedor') : (type==='cli'?'Nuevo cliente':'Nuevo proveedor');
@@ -6866,15 +6750,6 @@ function openKjModal(type, editId) {
     setTimeout(()=>document.getElementById('kjName').focus(), 80);
   }
   bd.classList.add('open');
-}
-
-function kjSetTipo(type, silent) {
-  _kjModalType = type;
-  document.getElementById('kjTabCliente').classList.toggle('active', type==='cli');
-  document.getElementById('kjTabProveedor').classList.toggle('active', type==='prov');
-  const isEdit = _panelEditId[type] !== null && _panelEditId[type] !== undefined;
-  const titleMap = { cli: isEdit?'Editar cliente':'Nuevo cliente', prov: isEdit?'Editar proveedor':'Nuevo proveedor' };
-  document.getElementById('kjModalTitle').textContent = titleMap[type] || 'Nuevo registro';
 }
 
 function closeKjModal() {
@@ -8947,7 +8822,7 @@ function showPDFPreview() {
   }, 400);
 }
 
-function render(){ renderHeader(); renderStats(); renderEntries(); renderPendingBar(); renderReminders(); renderDebts(); renderDayNote(); }
+function render(){ renderHeader(); renderStats(); renderEntries(); renderReminders(); renderDebts(); renderDayNote(); }
 
 function renderHeader(){
   if(!activeDay) return;
@@ -9030,10 +8905,6 @@ function renderStats(){
     if(cred>0){ pendEl.style.display='block'; pendEl.textContent='+ '+fmt(cred)+' pendiente'; }
     else { pendEl.style.display='none'; }
   }
-}
-
-function renderPendingBar(){
-  // La barra de pendientes fue removida — créditos ahora en panel lateral
 }
 
 function renderEntries(){
@@ -11604,8 +11475,27 @@ const ORD_SVG = {
   note: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
   clock: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
   pin: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  phone: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
   list: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg>',
 };
+
+/* Barra de progreso de pedido (círculos check + línea) — compartida entre
+   la lista de Pedidos y el modal de detalle, para que se vean idénticas. */
+function ordTimelineHtml(orderId, currentStatus, fnName) {
+  const steps  = ['pending', 'ready', 'done'];
+  const labels = { pending: 'Pendiente', ready: 'Listo', done: 'Entregado' };
+  const idx = steps.indexOf(currentStatus);
+  const clsFor = i => (i === idx ? 'active' : i < idx ? 'done' : '');
+  const dotsRow = steps.map((s, i) => {
+    const isChecked = i <= idx;
+    const lineFilled = i > 0 && i <= idx;
+    return `${i > 0 ? `<div class="ord-tml-line${lineFilled ? ' filled' : ''}"></div>` : ''}<button class="ord-tml-dot ${clsFor(i)}" onclick="${fnName}(${orderId},'${s}')" title="${labels[s]}">${isChecked ? ORD_SVG.check : ''}</button>`;
+  }).join('');
+  const labelsRow = steps.map((s, i) =>
+    `<button class="ord-tml-label ${clsFor(i)}" onclick="${fnName}(${orderId},'${s}')">${labels[s]}</button>`
+  ).join('');
+  return `<div class="ord-tml-row">${dotsRow}</div><div class="ord-tml-labels">${labelsRow}</div>`;
+}
 
 // ── Render ──
 function renderOrdPanel() {
@@ -11634,7 +11524,6 @@ function renderOrdPanel() {
     return;
   }
 
-  const statusLabel = { pending: '⏳ Pendiente', ready: '✅ Listo', done: '📦 Entregado' };
   const fmtDate = (d, t) => {
     if (!d && !t) return '';
     if (!d) return `Entrega: ${t}`;
@@ -11648,49 +11537,37 @@ function renderOrdPanel() {
     done:    { status:'pending', icon:'↩', svg:ORD_SVG.undo, label:'Reabrir pedido' }
   };
 
-  const tmlSteps = ['pending','ready','done'];
-  const tmlLabels = {pending:'Pendiente', ready:'Listo', done:'Entregado'};
-
   list.innerHTML = filtered.map(o => {
     const itemsText = o.items.map(i => {
       const q = i.qty && i.qty > 1 ? `${i.qty}× ` : '';
       return q + i.desc;
     }).join(' · ');
     const dateStr  = fmtDate(o.date, o.time);
-    const phoneStr = o.phone ? `📞 ${o.phone}` : '';
+    const phoneStr = o.phone ? `<span class="pbadge-ic">${ORD_SVG.phone}</span>${o.phone}` : '';
     const ns = nextStatusMap[o.status] || nextStatusMap.pending;
-    const tmlIdx = tmlSteps.indexOf(o.status);
-    const timelineHtml = tmlSteps.map((s, i) => {
-      const isDone   = i < tmlIdx;
-      const isActive = i === tmlIdx;
-      const cls = isActive ? 'active' : isDone ? 'done' : '';
-      const lineFilled = i > 0 && (i <= tmlIdx);
-      return `${i > 0 ? `<div class="ord-tml-line${lineFilled ? ' filled' : ''}"></div>` : ''}
-        <button class="ord-tml-step ${cls}" onclick="setOrderStatus(${o.id},'${s}')" title="${tmlLabels[s]}">
-          <span class="ord-tml-dot"></span>
-          <span class="ord-tml-label">${tmlLabels[s]}</span>
-        </button>`;
-    }).join('');
-    const metaParts = [dateStr, phoneStr, o.note ? `📝 ${o.note}` : ''].filter(Boolean);
+    const timelineHtml = ordTimelineHtml(o.id, o.status, 'setOrderStatus');
+    const metaParts = [dateStr, phoneStr, o.note ? `<span class="pbadge-ic">${ORD_SVG.note}</span>${o.note}` : ''].filter(Boolean);
     return `<div class="order-card" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
       <div class="swipe-hint-right">${ns.icon} ${ns.label}</div>
       <div class="swipe-hint-left">↩ Retroceder</div>
-      <div class="order-card-head">
-        <div class="order-card-dot ${o.status}"></div>
-        <div class="order-card-info">
-          <div class="order-card-client">${o.client}</div>
-          <div class="order-card-items">${itemsText}</div>
+      <div class="order-card-body">
+        <div class="order-card-head">
+          <div class="order-card-dot ${o.status}"></div>
+          <div class="order-card-info">
+            <div class="order-card-client">${o.client}</div>
+            <div class="order-card-items">${itemsText}</div>
+          </div>
         </div>
-        <div class="order-card-right" onclick="event.stopPropagation()">
-          <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
-          <button class="abtn-menu" data-ord-id="${o.id}" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
+        <div class="order-card-footer">
+          <div class="order-card-meta">${metaParts.map(p=>`<span>${p}</span>`).join('')}</div>
+          <span class="order-pay-badge ${o.paid?'paid':'unpaid'}">${o.paid?'✓ Pagado':'Falta pagar'}</span>
         </div>
-      </div>
-      <div class="order-card-footer">
-        <div class="order-card-meta">${metaParts.map(p=>`<span>${p}</span>`).join('')}</div>
-        <span class="order-pay-badge ${o.paid?'paid':'unpaid'}">${o.paid?'✓ Pagado':'Falta pagar'}</span>
       </div>
       <div class="ord-timeline" onclick="event.stopPropagation()">${timelineHtml}</div>
+      <div class="order-card-right" onclick="event.stopPropagation()">
+        <div class="order-card-price">S/ ${(o.total||0).toFixed(2)}</div>
+        <button class="abtn-menu" data-ord-id="${o.id}" onclick="toggleOrdMenu(event,${o.id})" title="Acciones">···</button>
+      </div>
     </div>`;
   }).join('');
 
@@ -12060,68 +11937,6 @@ function renderDashboard() {
   else msg = goalIncome > 0 ? 'Cada venta suma — ¡sigue registrando!' : '¡Registra tu primera venta del período!';
   document.getElementById('dashGoalMsg').textContent = msg;
 
-  // ── HEATMAP ── (panel de calendario eliminado del dashboard)
-  if (document.getElementById('dashHmGrid')) {
-  const hmYear = _dashYear, hmMonth = _dashMonth;
-  const daysInMonth = new Date(hmYear, hmMonth + 1, 0).getDate();
-  const firstDow = (new Date(hmYear, hmMonth, 1).getDay() + 6) % 7; // Mon=0
-  const isCurrentMonth = hmYear === now.getFullYear() && hmMonth === now.getMonth();
-  const todayD = now.getDate();
-  // Build daily income map for this month
-  const hmMonthStr = `${hmYear}-${pad(hmMonth + 1)}`;
-  const hmDailyMap = {};
-  (entries || []).filter(e => e.type === 'income' && !e.credit && e.date && e.date.startsWith(hmMonthStr))
-    .forEach(e => {
-      const d = parseInt(e.date.split('-')[2], 10);
-      if (d) hmDailyMap[d] = (hmDailyMap[d] || 0) + (e.amount || 0);
-    });
-  const hmMax = Math.max(1, ...Object.values(hmDailyMap));
-  const hmMonthName = new Date(hmYear, hmMonth, 1).toLocaleString('es-PE', { month:'long', year:'numeric' });
-  document.getElementById('dashHmMonthLbl').textContent = hmMonthName.charAt(0).toUpperCase() + hmMonthName.slice(1);
-  const dowLabels = ['L','M','X','J','V','S','D'];
-  document.getElementById('dashHmDow').innerHTML = dowLabels.map(l => `<div class="dash-hm-dow-lbl">${l}</div>`).join('');
-  let hmHtml = '';
-  for (let i = 0; i < firstDow; i++) hmHtml += `<div class="dash-hm-cell hm-empty"></div>`;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const val = hmDailyMap[d] || 0;
-    const isToday = isCurrentMonth && d === todayD;
-    const isFuture = isCurrentMonth && d > todayD;
-    let lvl = 0;
-    if (!isFuture && val > 0) {
-      const ratio = val / hmMax;
-      lvl = ratio > 0.75 ? 4 : ratio > 0.45 ? 3 : ratio > 0.2 ? 2 : 1;
-    }
-    const cls = isFuture ? 'hm-empty' : `hm-${lvl}${isToday ? ' hm-today' : ''}`;
-    const tip = isFuture ? '' : `title="${d}: ${val > 0 ? fmt(val) : 'sin ventas'}"`;
-    hmHtml += `<div class="dash-hm-cell ${cls}" ${tip}>${isFuture ? '' : d}</div>`;
-  }
-  document.getElementById('dashHmGrid').innerHTML = hmHtml;
-  }
-
-  // ── FEED: últimas transacciones ──
-  const dashFeedPeriodLblEl = document.getElementById('dashFeedPeriodLbl');
-  if (dashFeedPeriodLblEl) dashFeedPeriodLblEl.textContent = periodLabel;
-  const feedEntries = [...filteredEntries].sort((a, b) => {
-    const da = (a.date || '') + (a.time || ''); const db = (b.date || '') + (b.time || '');
-    return db.localeCompare(da);
-  }).slice(0, 4);
-  const dashFeedRowsEl = document.getElementById('dashFeedRows');
-  if (dashFeedRowsEl) dashFeedRowsEl.innerHTML = feedEntries.length
-    ? feedEntries.map(e => {
-        const isInc = e.type === 'income';
-        const timeStr = e.time ? e.time.slice(0,5) : '';
-        return `<div class="dash-top-row">
-          <div class="dash-feed-dot ${isInc ? 'income' : 'expense'}" style="flex-shrink:0;"></div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-family:var(--sans);font-size:12px;color:var(--k-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${e.desc || (isInc ? 'Ingreso' : 'Egreso')}</div>
-            ${e.client ? `<div style="font-family:var(--sans);font-size:10px;color:var(--k-text-3);">${e.client}</div>` : ''}
-          </div>
-          ${timeStr ? `<div style="font-family:var(--mono);font-size:9px;color:var(--k-text-3);flex-shrink:0;">${timeStr}</div>` : ''}
-          <div class="dash-feed-amt ${isInc ? 'income' : 'expense'}">${isInc ? '+' : '−'}${fmt(e.amount||0)}</div>
-        </div>`;
-      }).join('')
-    : `<div class="dash-empty" style="padding:16px;font-size:11px;">Sin movimientos ${periodLabel}</div>`;
-
   // ── GRÁFICA ──
   document.getElementById('dashTopCliLbl').textContent = periodLabel;
   document.getElementById('dashTopProdLbl').textContent = periodLabel;
@@ -12219,32 +12034,6 @@ function renderDashboard() {
       </div>
     </div>`).join('') : `<div class="dash-empty" style="padding:14px;font-size:11px;">Sin productos ${periodLabel}</div>`;
 
-  // ── CRÉDITOS PENDIENTES ──
-  const credMap = {};
-  (entries || []).filter(e => e.credit && e.client).forEach(e => {
-    const k = e.client.trim();
-    const pending = (e.amount || 0) - (e.acuenta || 0) - (e.cobrado || 0);
-    if (pending > 0.01) {
-      if (!credMap[k]) credMap[k] = { total: 0, count: 0 };
-      credMap[k].total += pending;
-      credMap[k].count++;
-    }
-  });
-  const topCreds = Object.entries(credMap).sort((a, b) => b[1].total - a[1].total).slice(0, 4);
-  const maxCred = topCreds[0]?.[1].total || 1;
-  const dashCreditsEl = document.getElementById('dashCredits');
-  if (dashCreditsEl) dashCreditsEl.innerHTML = topCreds.length ? topCreds.map(([name, d]) => `
-    <div class="dash-top-row">
-      <div class="dash-top-rank" style="color:var(--k-credit);">⏳</div>
-      <div style="flex:1;min-width:0;">
-        <div class="dash-top-name">${name}</div>
-        <div class="dash-top-bar-wrap"><div class="dash-top-bar-fill" style="width:${Math.round(d.total/maxCred*100)}%;background:var(--k-credit);"></div></div>
-      </div>
-      <div style="text-align:right;">
-        <div class="dash-top-amt" style="color:var(--k-credit);">${fmt(d.total)}</div>
-        <div class="dash-top-sub">${d.count}p</div>
-      </div>
-    </div>`).join('') : `<div class="dash-empty" style="padding:14px;font-size:11px;">✅ Sin pendientes</div>`;
 }
 </script>
 
@@ -12532,36 +12321,29 @@ function openOrderModal(id) {
     ? 'Recojo en local'
     : ('Delivery' + (o.address ? ` — ${o.address}` : ''));
 
-  // Items rows — cantidad · descripción · total de línea
+  // Items rows — cantidad · descripción · precio unitario · total de línea
   const itemsHtml = (o.items||[]).map(it => {
     const qty = it.qty || 1;
     const lineTotal = (it.total != null ? it.total : it.price) || 0;
+    const unit = it.unit != null ? it.unit : (qty ? lineTotal / qty : 0);
     return `<div class="ord-modal-item">
       <span class="ord-modal-item-qty">${qty}</span>
-      <div class="ord-modal-item-desc">${it.desc}</div>
+      <div class="ord-modal-item-desc">
+        ${it.desc}
+        ${unit > 0 ? `<div class="ord-modal-item-unit">S/ ${unit.toFixed(2)} c/u</div>` : ''}
+      </div>
       <div class="ord-modal-item-price">S/ ${lineTotal.toFixed(2)}</div>
     </div>`;
   }).join('');
 
-  // Status buttons (dot + label, coherente con las tarjetas)
-  const statuses = [
-    {key:'pending', label:'Pendiente'},
-    {key:'ready',   label:'Listo'},
-    {key:'done',    label:'Entregado'},
-  ];
-  const statusBtnsHtml = statuses.map(s =>
-    `<button class="ord-status-btn ${o.status===s.key?'active-'+s.key:''}"
-      onclick="ordModalSetStatus(${o.id},'${s.key}')"><span class="ord-status-dot ${s.key}"></span>${s.label}</button>`
-  ).join('');
-
   const paidChip = o.paid
     ? `<span class="order-pay-badge paid">✓ Pagado</span>`
-    : `<span class="order-pay-badge unpaid">⏳ Falta pagar</span>`;
+    : `<span class="order-pay-badge unpaid"><span class="pbadge-ic">${ORD_SVG.clock}</span>Falta pagar</span>`;
 
   const infoRows = `
     <div class="ord-modal-info">
       ${dateTxt ? `<div class="omi-row"><span class="omi-ic">${ORD_SVG.calendar}</span><span class="omi-val">${dateTxt}</span></div>` : ''}
-      ${o.phone ? `<div class="omi-row"><span class="omi-ic">📞</span><span class="omi-val">${o.phone}</span></div>` : ''}
+      ${o.phone ? `<div class="omi-row"><span class="omi-ic">${ORD_SVG.phone}</span><span class="omi-val">${o.phone}</span></div>` : ''}
       <div class="omi-row"><span class="omi-ic">${o.delivery==='local'?ORD_SVG.store:ORD_SVG.truck}</span><span class="omi-val">${deliveryTxt}</span></div>
     </div>`;
 
@@ -12588,9 +12370,9 @@ function openOrderModal(id) {
     </div>
     <div class="ord-modal-actions">
       <div class="ord-modal-actions-label">Estado del pedido</div>
-      <div class="ord-status-row">${statusBtnsHtml}</div>
+      <div class="ord-timeline ord-timeline-modal">${ordTimelineHtml(o.id, o.status, 'ordModalSetStatus')}</div>
       <button class="ord-pay-toggle ${o.paid?'is-paid':'is-unpaid'}" onclick="ordModalTogglePaid(${o.id})">
-        ${o.paid ? '⏳ Marcar como NO pagado' : '✓ Marcar como pagado'}
+        ${o.paid ? `<span class="pbadge-ic">${ORD_SVG.undo}</span>Marcar como NO pagado` : '✓ Marcar como pagado'}
       </button>
       <div class="ord-modal-actions-divider"></div>
       <div class="ord-modal-actions-row">
@@ -13909,12 +13691,6 @@ function quoteWhatsApp(id) {
     <div class="kj-modal-head">
       <div class="kj-modal-title" id="kjModalTitle">Nuevo cliente</div>
       <button class="kj-modal-close" onclick="closeKjModal()">×</button>
-    </div>
-
-    <!-- CLI / PROV: tab tipo -->
-    <div class="kj-modal-tabs" id="kjModalTabs" style="display:none">
-      <button class="kj-modal-tab active" id="kjTabCliente" onclick="kjSetTipo('cli')">Cliente</button>
-      <button class="kj-modal-tab" id="kjTabProveedor" onclick="kjSetTipo('prov')">Proveedor</button>
     </div>
 
     <!-- BODY: campos comunes persona -->
