@@ -1074,8 +1074,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 .type-tgl { display: flex; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); border-radius: 99px; padding: 4px; gap: 4px; }
 .tgl-btn { flex: 1; padding: 9px 12px; border: none; border-radius: 99px; font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--k-text-3); }
-.tgl-btn.ai { background: var(--k-accent); color: var(--k-bg); box-shadow: 0 2px 10px var(--k-accent-l); }
-.tgl-btn.ae { background: var(--k-expense); color: var(--k-text); box-shadow: 0 2px 10px var(--k-expense-l); }
+.tgl-btn.ai { background: var(--k-accent); color: var(--k-bg); }
+.tgl-btn.ae { background: var(--k-expense); color: var(--k-text); }
 .tgl-btn.ao { background: var(--k-order); color: var(--k-bg); box-shadow: 0 2px 10px var(--k-order-l); }
 
 /* Payment pills */
@@ -1117,10 +1117,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .client-field { display: none; }
 .client-field.visible { display: flex; }
 
-.btn-reg { width: 100%; margin-top: 20px; padding: 14px; background: var(--k-accent); color: var(--k-bg); border: none; border-radius: 99px; font-family: var(--sans); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px var(--k-accent-l); }
-.btn-reg:hover { background: var(--k-accent-hover); box-shadow: 0 6px 20px var(--k-accent-l); transform: translateY(-1px); }
+.btn-reg { width: 100%; margin-top: 20px; padding: 14px; background: var(--k-accent); color: var(--k-bg); border: none; border-radius: 99px; font-family: var(--sans); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-reg:hover { background: var(--k-accent-hover); transform: translateY(-1px); }
 .btn-reg:active { transform: scale(0.98); }
-.btn-reg.editing { background: var(--k-accent); color: var(--k-bg); box-shadow: 0 4px 15px var(--k-accent-l); border: 2px solid rgba(255,255,255,0.3); }
+.btn-reg.editing { background: var(--k-accent); color: var(--k-bg); border: 2px solid rgba(255,255,255,0.3); }
 .btn-cancel { width: 100%; margin-top: 10px; padding: 11px; background: transparent; border: 1px solid var(--k-line); border-radius: 99px; font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--k-text-3); cursor: pointer; transition: all 0.2s; }
 .btn-cancel:hover { background: rgba(255,255,255,0.05); color: var(--k-text); }
 
@@ -1380,7 +1380,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 @keyframes si { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 .entry-item { animation: si 0.2s ease; }
 
-.edot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 8px currentColor; }
+.edot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .edot.income  { background: var(--k-accent); color: var(--k-accent); }
 .edot.expense { background: var(--k-expense); color: var(--k-expense); }
 .edot.credit  { background: transparent; border: 2px dashed var(--k-credit); box-shadow: none; }
@@ -1480,6 +1480,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; margin: 0 auto 16px;
 }
+.confirm-icon svg { width: 22px; height: 22px; }
 .confirm-title {
   font-family: var(--serif); font-size: 20px; font-weight: 500;
   color: var(--k-text); text-align: center; margin-bottom: 8px;
@@ -1838,10 +1839,16 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   .order-card-head   { padding-bottom: 8px; }
   .order-card-footer { padding-top: 0; }
   .order-card-right  { margin: 0 14px 0 0; }
+  /* Tarjetas sin barra de progreso (Cotizaciones): 2 columnas, sin hueco central */
+  .order-card.order-card-notml {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "body right";
+  }
   .ord-timeline {
     grid-area: tml;
     border-top: none;
     padding: 13px 0;
+    min-width: 220px;
   }
 }
 .order-card-head {
@@ -4318,8 +4325,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   border:1px solid var(--k-line); border-radius:var(--r-md); padding:6px; }
 #view-registrar .tgl-btn { flex:none; height:52px; border:none; border-radius:10px; background:transparent; cursor:pointer; font-family:var(--sans); font-size:15px; font-weight:600; color:var(--k-text-2); transition:.16s; }
 #view-registrar .tgl-btn:hover { color:var(--k-text); background:transparent; }
-#view-registrar .tgl-btn.ai { background:var(--k-accent); color:var(--k-accent-ink); box-shadow:0 4px 14px rgba(196,240,66,.22); }
-#view-registrar .tgl-btn.ae { background:var(--k-exp); color:#fff; box-shadow:0 4px 14px rgba(242,105,92,.24); }
+#view-registrar .tgl-btn.ai { background:var(--k-accent); color:var(--k-accent-ink); }
+#view-registrar .tgl-btn.ae { background:var(--k-exp); color:#fff; }
 
 /* Grupo principal */
 #view-registrar .form-row-main { background:var(--k-bg-2); border:1px solid var(--k-line-2); border-radius:var(--r-md); padding:18px; display:flex; flex-direction:column; gap:18px; }
@@ -4362,8 +4369,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 #view-registrar #iPendiente { display:flex; align-items:center; height:52px; }
 
 /* Botones registrar */
-#view-registrar .btn-reg { width:100%; height:60px; margin-top:26px; border:none; border-radius:var(--r-md); background:var(--k-accent); color:var(--k-accent-ink); font-family:var(--sans); font-size:16px; font-weight:700; letter-spacing:.01em; cursor:pointer; transition:.16s; box-shadow:0 8px 22px rgba(196,240,66,.20); }
-#view-registrar .btn-reg:hover { background:var(--k-accent-2); transform:translateY(-1px); box-shadow:0 12px 28px rgba(196,240,66,.28); }
+#view-registrar .btn-reg { width:100%; height:60px; margin-top:26px; border:none; border-radius:var(--r-md); background:var(--k-accent); color:var(--k-accent-ink); font-family:var(--sans); font-size:16px; font-weight:700; letter-spacing:.01em; cursor:pointer; transition:.16s; }
+#view-registrar .btn-reg:hover { background:var(--k-accent-2); transform:translateY(-1px); }
 #view-registrar .btn-cancel { width:100%; height:48px; margin-top:10px; border:1px solid var(--k-line); border-radius:var(--r-md); background:transparent; color:var(--k-text-2); font-family:var(--sans); font-size:14px; font-weight:600; cursor:pointer; transition:.16s; }
 #view-registrar .btn-cancel:hover { border-color:var(--k-exp-line); color:var(--k-exp); }
 
@@ -4489,7 +4496,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.136</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.138</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4505,8 +4512,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
         <!-- Toggle Email / Celular -->
         <div class="login-method-toggle">
-          <button type="button" class="lmt-btn active" id="lmtEmail" onclick="switchLoginMethod('email')">📧 Email</button>
-          <button type="button" class="lmt-btn" id="lmtPhone" onclick="switchLoginMethod('phone')">📱 Celular</button>
+          <button type="button" class="lmt-btn active" id="lmtEmail" onclick="switchLoginMethod('email')" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</button>
+          <button type="button" class="lmt-btn" id="lmtPhone" onclick="switchLoginMethod('phone')" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Celular</button>
         </div>
 
         <!-- Email field -->
@@ -4549,8 +4556,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <div class="auth-field">
           <label>¿Quién va a usar Kajita?</label>
           <div class="login-method-toggle">
-            <button type="button" class="lmt-btn active" id="regTypeBusiness" onclick="switchRegType('business')">🏪 Negocio</button>
-            <button type="button" class="lmt-btn" id="regTypePerson" onclick="switchRegType('person')">🙋 Persona</button>
+            <button type="button" class="lmt-btn active" id="regTypeBusiness" onclick="switchRegType('business')" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 4 4h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/></svg>Negocio</button>
+            <button type="button" class="lmt-btn" id="regTypePerson" onclick="switchRegType('person')" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Persona</button>
           </div>
         </div>
         <div class="auth-field">
@@ -4560,8 +4567,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
         <!-- Toggle Email / Celular en registro -->
         <div class="login-method-toggle">
-          <button type="button" class="lmt-btn active" id="regLmtEmail" onclick="switchRegMethod('email')">📧 Email</button>
-          <button type="button" class="lmt-btn" id="regLmtPhone" onclick="switchRegMethod('phone')">📱 Celular</button>
+          <button type="button" class="lmt-btn active" id="regLmtEmail" onclick="switchRegMethod('email')" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</button>
+          <button type="button" class="lmt-btn" id="regLmtPhone" onclick="switchRegMethod('phone')" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Celular</button>
         </div>
 
         <div class="auth-field" id="regFieldEmail">
@@ -4738,7 +4745,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.136</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.138</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -4769,14 +4776,14 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <!-- Tarjeta 2: Meta -->
       <div class="dash-goal-card" id="dashGoalInlineWrap">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--k-text-3);">🎯 Meta de ventas</div>
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--k-text-3);display:inline-flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Meta de ventas</div>
           <div style="display:flex;align-items:center;gap:6px;">
             <div class="dash-goal-tabs">
               <button class="dash-goal-tab active" id="dgTabMes" onclick="dashGoalSetPeriod('mes')">Mes</button>
               <button class="dash-goal-tab" id="dgTabSem" onclick="dashGoalSetPeriod('sem')">Semana</button>
               <button class="dash-goal-tab" id="dgTabDia" onclick="dashGoalSetPeriod('dia')">Día</button>
             </div>
-            <button class="dash-goal-edit-btn" onclick="dashGoalToggleEdit()">✏ editar</button>
+            <button class="dash-goal-edit-btn" onclick="dashGoalToggleEdit()" style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>editar</button>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:14px;">
@@ -4835,11 +4842,11 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <!-- ROW 4: Top Clientes | Top Productos | Últimos movimientos -->
     <div class="dash-bottom-row">
       <div class="dash-bottom-col">
-        <div class="dash-mini-title">🏆 Top Clientes <span id="dashTopCliLbl"></span></div>
+        <div class="dash-mini-title" style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>Top Clientes <span id="dashTopCliLbl"></span></div>
         <div class="dash-top-list" id="dashTopClients"></div>
       </div>
       <div class="dash-bottom-col">
-        <div class="dash-mini-title">📦 Top Productos <span id="dashTopProdLbl"></span></div>
+        <div class="dash-mini-title" style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Top Productos <span id="dashTopProdLbl"></span></div>
         <div class="dash-top-list" id="dashTopProducts"></div>
       </div>
     </div>
@@ -5076,7 +5083,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <button class="panel-type-tab active" data-f="all"      onclick="setFilter('all',this)">Todos</button>
     <button class="panel-type-tab"        data-f="income"   onclick="setFilter('income',this)">Cobrados</button>
     <button class="panel-type-tab"        data-f="expense"  onclick="setFilter('expense',this)">Egresos</button>
-    <button class="panel-type-tab"        data-f="credit"   onclick="setFilter('credit',this)">⏳ Créditos</button>
+    <button class="panel-type-tab"        data-f="credit"   onclick="setFilter('credit',this)">Créditos</button>
     <button class="panel-type-tab"        data-f="cash"     onclick="setFilter('cash',this)">Efectivo</button>
     <button class="panel-type-tab"        data-f="digital"  onclick="setFilter('digital',this)">Digital</button>
   </div>
@@ -5192,7 +5199,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 <div class="cat-overlay" id="catOverlay" onclick="closeCatalogOutside(event)">
   <div class="cat-modal">
     <div class="cat-header">
-      <div class="cat-title">📦 Catálogo</div>
+      <div class="cat-title" style="display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Catálogo</div>
       <button class="cat-close" onclick="closeCatalog()">×</button>
     </div>
     <div class="cat-tabs">
@@ -5443,7 +5450,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <input class="panel-search-inp" id="panelQuoteSearch" type="text" placeholder="Buscar..." oninput="renderQuotePanel()">
           </div>
         </div>
-        <button class="panel-add-btn" onclick="openVoiceQuote()" title="Cotización por voz" style="background:transparent;border:1px solid var(--k-line);color:var(--k-text-3);padding:0 10px;display:flex;align-items:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
+        <button class="panel-add-btn" onclick="openVoiceQuote()" title="Cotización por voz" style="background:transparent;border:1px solid var(--k-line);color:var(--k-text-3);width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
         <button class="panel-add-btn" onclick="toggleQuoteForm()">+ Nueva</button>
         <button class="panel-close" onclick="closePanel('quote')">×</button>
       </div>
@@ -5509,7 +5516,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           <div class="cfg-panel-sub">Información de tu negocio en Kajita</div>
 
           <div class="cfg-info-row" style="margin-bottom:20px;">
-            <div class="cfg-avatar">👤</div>
+            <div class="cfg-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
             <div>
               <div id="cfgUserBusiness" style="font-size:15px;font-weight:600;color:var(--k-text);">—</div>
               <div id="cfgUserEmail" style="font-size:12px;color:var(--k-text-3);font-family:var(--mono);">—</div>
@@ -5517,7 +5524,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           </div>
 
           <div class="cfg-current" id="cfgCurrentChip" style="margin-bottom:20px;">
-            <span>🏪</span><span id="cfgCurrentName">—</span>
+            <span style="display:inline-flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 4 4h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/></svg></span><span id="cfgCurrentName">—</span>
           </div>
 
           <div class="cfg-section">
@@ -5672,8 +5679,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             </div>
           </div>
           <div class="cfg-support-hours">
-            🕐 Horario de atención con asesor: <strong>8:00 – 16:00 hrs</strong><br>
-            📩 Fuera de horario: por mensaje o email
+            <span style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>Horario de atención con asesor: <strong>8:00 – 16:00 hrs</strong></span><br>
+            <span style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8V7l-3 2-3-2-3 2-3-2-3 2v1"/><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Fuera de horario: por mensaje o email</span>
           </div>
         </div>
 
@@ -5726,12 +5733,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <p class="onb-desc">Esto adapta Kajita a ti. <strong>Puedes cambiarlo después.</strong></p>
       <div class="onb-typecards">
         <button class="onb-typecard" onclick="onbSelectType('business')">
-          <span class="otc-ic">🏪</span>
+          <span class="otc-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 4 4h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/></svg></span>
           <span class="otc-title">Soy un negocio</span>
           <span class="otc-desc">Ventas, clientes, proveedores y caja diaria</span>
         </button>
         <button class="onb-typecard" onclick="onbSelectType('person')">
-          <span class="otc-ic">🙋</span>
+          <span class="otc-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
           <span class="otc-title">Soy una persona</span>
           <span class="otc-desc">Gastos personales, deudas y pagos</span>
         </button>
@@ -5921,7 +5928,7 @@ function cancelEditSupplier() {
 function delSupplier(id) {
   const s = suppliers.find(x=>String(x.id)===String(id)); if(!s) return;
   showConfirm({
-    icon: '🏭', title: '¿Eliminar proveedor?',
+    icon: ORD_SVG.supplier, title: '¿Eliminar proveedor?',
     desc: `<strong>${s.name}</strong><br>Esta acción no se puede deshacer.`,
     onConfirm: () => {
       if(editingSuppliedId===id) cancelEditSupplier();
@@ -5943,7 +5950,7 @@ function renderCatalog() {
             <div class="cat-item-sub">S/ ${p.price.toFixed(2)}</div>
           </div>
           <div class="cat-item-actions">
-            <button class="cat-item-edit" onclick="editProduct(\'${p.id}\')" title="Editar">✎</button>
+            <button class="cat-item-edit" onclick="editProduct(\'${p.id}\')" title="Editar">${ORD_SVG.edit}</button>
             <button class="cat-item-del"  onclick="delProduct(\'${p.id}\')"  title="Eliminar">×</button>
           </div>
         </div>`).join('');
@@ -5959,7 +5966,7 @@ function renderCatalog() {
             <div class="cat-item-sub">${c.phone||'Sin teléfono'}</div>
           </div>
           <div class="cat-item-actions">
-            <button class="cat-item-edit" onclick="editClient(\'${c.id}\')" title="Editar">✎</button>
+            <button class="cat-item-edit" onclick="editClient(\'${c.id}\')" title="Editar">${ORD_SVG.edit}</button>
             <button class="cat-item-del"  onclick="delClient(\'${c.id}\')"  title="Eliminar">×</button>
           </div>
         </div>`).join('');
@@ -5976,7 +5983,7 @@ function renderCatalog() {
               <div class="cat-item-sub">${s.phone||'Sin teléfono'}</div>
             </div>
             <div class="cat-item-actions">
-              <button class="cat-item-edit" onclick="editSupplier('${s.id}')" title="Editar">✎</button>
+              <button class="cat-item-edit" onclick="editSupplier('${s.id}')" title="Editar">${ORD_SVG.edit}</button>
               <button class="cat-item-del"  onclick="delSupplier('${s.id}')"  title="Eliminar">×</button>
             </div>
           </div>`).join('');
@@ -6835,7 +6842,7 @@ function renderCliPanel() {
       ? `<span class="pl-badge debt">${fmt(debt)}</span>`
       : `<span class="pl-badge ok">Al día ✓</span>`;
     const waBtn=debt>0
-      ? `<button class="pca-btn" onclick="shareCliWhatsapp('${c.name.replace(/'/g,"\\'")}',${debt},'${key}')" title="WhatsApp" style="color:#25D366;">📱</button>`
+      ? `<button class="pca-btn" onclick="shareCliWhatsapp('${c.name.replace(/'/g,"\\'")}',${debt},'${key}')" title="WhatsApp" style="color:#25D366;">${ORD_SVG.chat}</button>`
       : '';
     return `<div class="pl-row pl-cli">
       <div class="pl-name">${c.name}</div>
@@ -6843,7 +6850,7 @@ function renderCliPanel() {
       <div class="pl-phone" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.address||'—'}</div>
       <div class="pl-phone">${c.phone||'—'}</div>
       <div>${badge}</div>
-      <div class="pl-acts">${waBtn}<button class="pca-btn" onclick="editPanelItem('cli','${c.id}')" title="Editar">✎</button><button class="pca-btn del" onclick="deletePanelItem('cli','${c.id}')" title="Eliminar">×</button></div>
+      <div class="pl-acts">${waBtn}<button class="pca-btn" onclick="editPanelItem('cli','${c.id}')" title="Editar">${ORD_SVG.edit}</button><button class="pca-btn del" onclick="deletePanelItem('cli','${c.id}')" title="Eliminar">×</button></div>
     </div>`;
   }).join('');
 
@@ -6895,7 +6902,7 @@ function renderProvPanel() {
       ? `<span class="pl-badge exp">−${fmt(debt)}</span>`
       : `<span class="pl-badge ok">Al día ✓</span>`;
     const waBtn=debt>0
-      ? `<button class="pca-btn" onclick="shareProvWhatsapp('${s.name.replace(/'/g,"\\'")}',${debt},'${key}')" title="WhatsApp" style="color:#25D366;">📱</button>`
+      ? `<button class="pca-btn" onclick="shareProvWhatsapp('${s.name.replace(/'/g,"\\'")}',${debt},'${key}')" title="WhatsApp" style="color:#25D366;">${ORD_SVG.chat}</button>`
       : '';
     return `<div class="pl-row pl-prov">
       <div class="pl-name">${s.name}</div>
@@ -6903,7 +6910,7 @@ function renderProvPanel() {
       <div class="pl-phone" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.address||'—'}</div>
       <div class="pl-phone">${s.phone||'—'}</div>
       <div>${badge}</div>
-      <div class="pl-acts">${waBtn}<button class="pca-btn" onclick="editPanelItem('prov','${s.id}')" title="Editar">✎</button><button class="pca-btn del" onclick="deletePanelItem('prov','${s.id}')" title="Eliminar">×</button></div>
+      <div class="pl-acts">${waBtn}<button class="pca-btn" onclick="editPanelItem('prov','${s.id}')" title="Editar">${ORD_SVG.edit}</button><button class="pca-btn del" onclick="deletePanelItem('prov','${s.id}')" title="Eliminar">×</button></div>
     </div>`;
   }).join('');
 
@@ -6960,7 +6967,7 @@ function renderInvPanel() {
       <div style="font-family:var(--mono);font-size:12px;${stockColor}">${stock}</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--k-blue);">${p.location||'—'}</div>
       <div style="font-size:11px;color:var(--k-text-3);">${cnt} vta${cnt!==1?'s':''}</div>
-      <div class="pl-acts"><button class="pca-btn" onclick="editPanelItem('inv','${p.id}')" title="Editar">✎</button><button class="pca-btn del" onclick="deletePanelItem('inv','${p.id}')" title="Eliminar">×</button></div>
+      <div class="pl-acts"><button class="pca-btn" onclick="editPanelItem('inv','${p.id}')" title="Editar">${ORD_SVG.edit}</button><button class="pca-btn del" onclick="deletePanelItem('inv','${p.id}')" title="Eliminar">×</button></div>
     </div>`;
   }).join('');
   list.innerHTML=`
@@ -7042,7 +7049,6 @@ function renderCredPanel() {
 
   if (!pending.length) {
     list.innerHTML = `<div class="panel-empty">
-      <span style="font-size:28px">${isCobrar ? '✅' : '🎉'}</span>
       <span>${isCobrar ? 'Sin créditos pendientes.' : 'Sin deudas pendientes.'}</span>
     </div>`;
     return;
@@ -7712,10 +7718,10 @@ function toggleOrdMenu(event, id) {
 ══════════════════════════════════════════ */
 let _confirmCallback = null;
 
-function showConfirm({ title, desc, icon = '🗑', label = 'Sí, eliminar', onConfirm }) {
+function showConfirm({ title, desc, icon, label = 'Sí, eliminar', onConfirm }) {
   document.getElementById('confirmTitle').textContent  = title;
   document.getElementById('confirmDesc').innerHTML     = desc;
-  document.getElementById('confirmIcon').textContent   = icon;
+  document.getElementById('confirmIcon').innerHTML     = icon || ORD_SVG.trash;
   document.getElementById('confirmDelBtn').textContent = label;
   _confirmCallback = onConfirm;
   document.getElementById('confirmOverlay').classList.add('open');
@@ -8918,7 +8924,7 @@ function renderEntries(){
 
   document.getElementById('entCnt').textContent=day.length+' registro'+(day.length!==1?'s':'');
   if(day.length===0){
-    list.innerHTML='<div class="empty"><div class="empty-ic">📒</div><p>Sin movimientos para este día.</p></div>';
+    list.innerHTML='<div class="empty"><div class="empty-ic"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg></div><p>Sin movimientos para este día.</p></div>';
     renderDayOrders();
     return;
   }
@@ -8970,13 +8976,13 @@ function renderEntries(){
           <div class="eactions">
             <button class="abtn-menu" onclick="toggleEntryMenu(event,'${e.id}')" title="Acciones">···</button>
             <div class="entry-popover" id="emenu-${e.id}">
-              ${isCredit ? `<button class="ep-item ep-cobrar" onclick="closeAllMenus();cobrarEntry('${e.id}')"><span class="ep-ic">✓</span>Pagó</button>` : ''}
-              ${isDebt ? `<button class="ep-item ep-cobrar" onclick="closeAllMenus();pagarDebt('${e.id}')"><span class="ep-ic">✓</span>Pagué</button>` : ''}
-              ${(e.paid && e.type==='income') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();uncobrarEntry('${e.id}')"><span class="ep-ic">↩</span>Desmarcar cobro</button>` : ''}
-              ${(e.paid && e.type==='expense') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();unpagarDebt('${e.id}')"><span class="ep-ic">↩</span>Desmarcar pago</button>` : ''}
-              <button class="ep-item" onclick="closeAllMenus();generateReceipt('${e.id}')"><span class="ep-ic">🧾</span>Generar recibo</button>
-              <button class="ep-item" onclick="closeAllMenus();editEntry('${e.id}')"><span class="ep-ic">✎</span>Editar</button>
-              <button class="ep-item ep-del" onclick="closeAllMenus();delEntry('${e.id}')"><span class="ep-ic">×</span>Eliminar</button>
+              ${isCredit ? `<button class="ep-item ep-cobrar" onclick="closeAllMenus();cobrarEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.check}</span>Pagó</button>` : ''}
+              ${isDebt ? `<button class="ep-item ep-cobrar" onclick="closeAllMenus();pagarDebt('${e.id}')"><span class="ep-ic">${ORD_SVG.check}</span>Pagué</button>` : ''}
+              ${(e.paid && e.type==='income') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();uncobrarEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.undo}</span>Desmarcar cobro</button>` : ''}
+              ${(e.paid && e.type==='expense') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();unpagarDebt('${e.id}')"><span class="ep-ic">${ORD_SVG.undo}</span>Desmarcar pago</button>` : ''}
+              <button class="ep-item" onclick="closeAllMenus();generateReceipt('${e.id}')"><span class="ep-ic">${ORD_SVG.receipt}</span>Generar recibo</button>
+              <button class="ep-item" onclick="closeAllMenus();editEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
+              <button class="ep-item ep-del" onclick="closeAllMenus();delEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>
             </div>
           </div>
         </div>`;
@@ -10052,7 +10058,7 @@ function delEntry(id){
   const e=entries.find(x=>String(x.id)===String(id)); if(!e) return;
   const sign=e.credit?'':(e.type==='expense'?'−':'+');
   showConfirm({
-    icon:e.type==='expense'?'💸':'💰',
+    icon:ORD_SVG.cash,
     title:'¿Eliminar movimiento?',
     desc:`<strong>${e.desc}</strong><br>${sign} ${fmt(e.amount)} — Esta acción no se puede deshacer.`,
     onConfirm:async()=>{
@@ -10105,7 +10111,7 @@ async function addProduct(){
 
 function delProduct(id){
   const p=products.find(x=>String(x.id)===String(id)); if(!p) return;
-  showConfirm({icon:'📦',title:'¿Eliminar producto?',desc:`<strong>${p.name}</strong> — S/${p.price.toFixed(2)}<br>Esta acción no se puede deshacer.`,
+  showConfirm({icon:ORD_SVG.box,title:'¿Eliminar producto?',desc:`<strong>${p.name}</strong> — S/${p.price.toFixed(2)}<br>Esta acción no se puede deshacer.`,
     onConfirm:async()=>{
       if(editingProductId===id) cancelEditProduct();
       if(currentUser && !currentUser.id?.includes('demo-user')){
@@ -10156,7 +10162,7 @@ async function addClient(){
 
 function delClient(id){
   const c=clients.find(x=>String(x.id)===String(id)); if(!c) return;
-  showConfirm({icon:'👤',title:'¿Eliminar cliente?',desc:`<strong>${c.name}</strong><br>Esta acción no se puede deshacer.`,
+  showConfirm({icon:ORD_SVG.person,title:'¿Eliminar cliente?',desc:`<strong>${c.name}</strong><br>Esta acción no se puede deshacer.`,
     onConfirm:async()=>{
       if(editingClientId===id) cancelEditClient();
       if(currentUser && !currentUser.id?.includes('demo-user')){
@@ -10247,7 +10253,7 @@ async function savePanelProduct(){
 function deletePanelItem(type,id){
   const maps={cli:clients,prov:suppliers,inv:products};
   const item=maps[type]?.find(x=>String(x.id)===String(id)); if(!item) return;
-  const icons={cli:'👤',prov:'🏭',inv:'📦'};
+  const icons={cli:ORD_SVG.person,prov:ORD_SVG.supplier,inv:ORD_SVG.box};
   const names={cli:'cliente',prov:'proveedor',inv:'producto'};
   showConfirm({
     icon:icons[type],
@@ -10840,7 +10846,7 @@ function _ordReset() {
 
 function toggleOrderForm() {
   _ordReset();
-  document.getElementById('newOrdModal').querySelector('.ord-modal-client').textContent = '📋 Nuevo Pedido';
+  document.getElementById('newOrdModal').querySelector('.ord-modal-client').innerHTML = `<span style="display:flex;align-items:center;gap:8px;">${ORD_SVG.clipboard}Nuevo Pedido</span>`;
   document.getElementById('pfOrdSaveBtn').textContent = 'Guardar pedido';
   document.getElementById('newOrdBackdrop').classList.add('open');
   setTimeout(() => document.getElementById('pfOrdClient').focus(), 80);
@@ -10875,7 +10881,7 @@ function _fmtDateDisplay(iso) {
   if (!iso) return '';
   const [y,m,d] = iso.split('-');
   const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  return `📅 ${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+  return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
 }
 
 let _kjCalYear  = 0;
@@ -11028,7 +11034,7 @@ function openEditOrderModal(id) {
 
   ordRenderItems();
 
-  document.getElementById('newOrdModal').querySelector('.ord-modal-client').textContent = '✏️ Editar Pedido';
+  document.getElementById('newOrdModal').querySelector('.ord-modal-client').innerHTML = `<span style="display:flex;align-items:center;gap:8px;">${ORD_SVG.edit}Editar Pedido</span>`;
   document.getElementById('pfOrdSaveBtn').textContent = 'Guardar cambios';
   document.getElementById('newOrdBackdrop').classList.add('open');
   setTimeout(() => document.getElementById('pfOrdClient').focus(), 80);
@@ -11477,6 +11483,11 @@ const ORD_SVG = {
   pin: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>',
   phone: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
   list: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg>',
+  person: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  supplier: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>',
+  cash: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4"/><path d="M18 10v4"/></svg>',
+  clipboard: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>',
+  award: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
 };
 
 /* Barra de progreso de pedido (círculos check + línea) — compartida entre
@@ -11518,7 +11529,6 @@ function renderOrdPanel() {
 
   if (!filtered.length) {
     list.innerHTML = `<div class="panel-empty">
-      <span style="font-size:28px;">📋</span>
       <span>${_ordFilter==='all' ? 'Sin pedidos aún.<br>Toca <b>+ Nuevo</b> para registrar el primero.' : 'Sin pedidos en este estado.'}</span>
     </div>`;
     return;
@@ -11532,9 +11542,9 @@ function renderOrdPanel() {
   };
 
   const nextStatusMap = {
-    pending: { status:'ready', icon:'✅', svg:ORD_SVG.check, label:'Marcar listo' },
-    ready:   { status:'done',  icon:'📦', svg:ORD_SVG.box,   label:'Marcar entregado' },
-    done:    { status:'pending', icon:'↩', svg:ORD_SVG.undo, label:'Reabrir pedido' }
+    pending: { status:'ready', svg:ORD_SVG.check, label:'Marcar listo' },
+    ready:   { status:'done',  svg:ORD_SVG.box,   label:'Marcar entregado' },
+    done:    { status:'pending', svg:ORD_SVG.undo, label:'Reabrir pedido' }
   };
 
   list.innerHTML = filtered.map(o => {
@@ -11548,8 +11558,8 @@ function renderOrdPanel() {
     const timelineHtml = ordTimelineHtml(o.id, o.status, 'setOrderStatus');
     const metaParts = [dateStr, phoneStr, o.note ? `<span class="pbadge-ic">${ORD_SVG.note}</span>${o.note}` : ''].filter(Boolean);
     return `<div class="order-card" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
-      <div class="swipe-hint-right">${ns.icon} ${ns.label}</div>
-      <div class="swipe-hint-left">↩ Retroceder</div>
+      <div class="swipe-hint-right" style="gap:6px;">${ns.svg} ${ns.label}</div>
+      <div class="swipe-hint-left" style="gap:6px;">${ORD_SVG.undo} Retroceder</div>
       <div class="order-card-body">
         <div class="order-card-head">
           <div class="order-card-dot ${o.status}"></div>
@@ -11929,7 +11939,7 @@ function renderDashboard() {
   document.getElementById('dashGoalFill').style.width = goalPct + '%';
   const periodName = _dashGoalPeriod === 'mes' ? 'del mes' : _dashGoalPeriod === 'dia' ? 'del día' : 'de la semana';
   let msg = '';
-  if (!goalTarget) msg = 'Toca "✏ editar" para establecer tu meta ' + periodName;
+  if (!goalTarget) msg = 'Toca "editar" para establecer tu meta ' + periodName;
   else if (goalPct >= 100) msg = '🎉 ¡Meta alcanzada! Sigue vendiendo.';
   else if (goalPct >= 75) msg = '¡Casi! Estás al ' + goalPct + '% de tu meta ' + periodName;
   else if (goalPct >= 50) msg = '¡Vas bien! Mitad del camino recorrida';
@@ -12584,7 +12594,7 @@ function _qtReset() {
 
 function toggleQuoteForm() {
   _qtReset();
-  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').textContent = '🧾 Nueva Cotización';
+  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').innerHTML = `<span style="display:flex;align-items:center;gap:8px;">${ORD_SVG.note}Nueva Cotización</span>`;
   document.getElementById('pfQtSaveBtn').textContent = 'Guardar cotización';
   document.getElementById('newQuoteBackdrop').classList.add('open');
   setTimeout(() => document.getElementById('pfQtClient').focus(), 80);
@@ -12603,7 +12613,7 @@ function setQtValidity(days) {
   document.getElementById('qtVal'+days)?.classList.add('active');
   const d = new Date(); d.setDate(d.getDate()+days);
   const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  document.getElementById('pfQtValidDisplay').textContent = 'Válida hasta el ' + _fmtDateDisplay(iso).replace('📅 ','');
+  document.getElementById('pfQtValidDisplay').textContent = 'Válida hasta el ' + _fmtDateDisplay(iso);
   document.getElementById('pfQtValidDisplay').dataset.iso = iso;
 }
 
@@ -12779,7 +12789,6 @@ function renderQuotePanel() {
 
   if (!filtered.length) {
     list.innerHTML = `<div class="panel-empty">
-      <span style="font-size:28px;">🧾</span>
       <span>${_qtFilter==='all' ? 'Sin cotizaciones aún.<br>Toca <b>+ Nueva</b> para crear la primera.' : 'Sin cotizaciones en este estado.'}</span>
     </div>`;
     return;
@@ -12789,23 +12798,25 @@ function renderQuotePanel() {
     const st = qtStatus(qt);
     const meta = QT_STATUS_META[st] || QT_STATUS_META.vigente;
     const itemsText = (qt.items||[]).map(i => (i.qty && i.qty>1 ? `${i.qty}× ` : '') + i.desc).join(' · ');
-    const validTxt = qt.validUntil ? 'Válida hasta ' + _fmtDateDisplay(qt.validUntil).replace('📅 ','') : '';
+    const validTxt = qt.validUntil ? 'Válida hasta ' + _fmtDateDisplay(qt.validUntil) : '';
     const numTxt = qt.num ? `#${String(qt.num).padStart(4,'0')}` : '';
-    return `<div class="order-card" data-qt-id="${qt.id}" onclick="openQuoteModal(${qt.id})" style="cursor:pointer;">
-      <div class="order-card-head">
-        <div class="order-card-dot ${meta.dot}"></div>
-        <div class="order-card-info">
-          <div class="order-card-client">${qt.client} <span style="font-family:var(--mono);font-size:11px;color:var(--k-text-3);font-weight:500;">${numTxt}</span></div>
-          <div class="order-card-items">${itemsText}</div>
+    return `<div class="order-card order-card-notml" data-qt-id="${qt.id}" onclick="openQuoteModal(${qt.id})" style="cursor:pointer;">
+      <div class="order-card-body">
+        <div class="order-card-head">
+          <div class="order-card-dot ${meta.dot}"></div>
+          <div class="order-card-info">
+            <div class="order-card-client">${qt.client} <span style="font-family:var(--mono);font-size:11px;color:var(--k-text-3);font-weight:500;">${numTxt}</span></div>
+            <div class="order-card-items">${itemsText}</div>
+          </div>
         </div>
-        <div class="order-card-right" onclick="event.stopPropagation()">
-          <div class="order-card-price">S/ ${(qt.total||0).toFixed(2)}</div>
-          <button class="abtn-menu" data-qt-id="${qt.id}" onclick="toggleQuoteMenu(event,${qt.id})" title="Acciones">···</button>
+        <div class="order-card-footer">
+          <div class="order-card-meta">${validTxt ? `<span>${validTxt}</span>` : ''}${qt.note ? `<span><span class="pbadge-ic">${ORD_SVG.note}</span>${qt.note}</span>` : ''}</div>
+          <span class="order-pay-badge" style="background:${meta.color}1f;color:${meta.color};">${meta.label}</span>
         </div>
       </div>
-      <div class="order-card-footer">
-        <div class="order-card-meta">${validTxt ? `<span>${validTxt}</span>` : ''}${qt.note ? `<span>📝 ${qt.note}</span>` : ''}</div>
-        <span class="order-pay-badge" style="background:${meta.color}1f;color:${meta.color};">${meta.label}</span>
+      <div class="order-card-right" onclick="event.stopPropagation()">
+        <div class="order-card-price">S/ ${(qt.total||0).toFixed(2)}</div>
+        <button class="abtn-menu" data-qt-id="${qt.id}" onclick="toggleQuoteMenu(event,${qt.id})" title="Acciones">···</button>
       </div>
     </div>`;
   }).join('');
@@ -13119,7 +13130,7 @@ function vqCreateQuote() {
   _qtReset();
   _qtItems = _vqItems.map(it => ({ desc: it.desc, qty: it.qty, price: it.unit, total: it.total }));
   qtRenderItems();
-  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').textContent = '📋 Nueva Cotización';
+  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').innerHTML = `<span style="display:flex;align-items:center;gap:8px;">${ORD_SVG.note}Nueva Cotización</span>`;
   document.getElementById('pfQtSaveBtn').textContent = 'Guardar cotización';
   // Cliente por defecto para emitir rápido (el usuario puede personalizarlo)
   const cli = document.getElementById('pfQtClient');
@@ -13304,8 +13315,8 @@ function openQuoteModal(id) {
   const st = qtStatus(qt);
   const meta = QT_STATUS_META[st] || QT_STATUS_META.vigente;
   const numTxt = qt.num ? `#${String(qt.num).padStart(4,'0')}` : '';
-  const validTxt = qt.validUntil ? _fmtDateDisplay(qt.validUntil).replace('📅 ','') : '—';
-  const dateTxt = qt.date ? _fmtDateDisplay(qt.date).replace('📅 ','') : '';
+  const validTxt = qt.validUntil ? _fmtDateDisplay(qt.validUntil) : '—';
+  const dateTxt = qt.date ? _fmtDateDisplay(qt.date) : '';
 
   const itemsHtml = (qt.items||[]).map(it => {
     const qty = it.qty || 1;
@@ -13335,9 +13346,9 @@ function openQuoteModal(id) {
           <span class="order-pay-badge" style="background:${meta.color}1f;color:${meta.color};">${meta.label}</span>
         </div>
         <div class="ord-modal-info">
-          <div class="omi-row"><span class="omi-ic">🧾</span><span class="omi-val">Cotización ${numTxt}${dateTxt ? ' · '+dateTxt : ''}</span></div>
-          ${qt.phone ? `<div class="omi-row"><span class="omi-ic">📞</span><span class="omi-val">${qt.phone}</span></div>` : ''}
-          <div class="omi-row"><span class="omi-ic">⏳</span><span class="omi-val">Válida hasta ${validTxt}</span></div>
+          <div class="omi-row"><span class="omi-ic">${ORD_SVG.receipt}</span><span class="omi-val">Cotización ${numTxt}${dateTxt ? ' · '+dateTxt : ''}</span></div>
+          ${qt.phone ? `<div class="omi-row"><span class="omi-ic">${ORD_SVG.phone}</span><span class="omi-val">${qt.phone}</span></div>` : ''}
+          <div class="omi-row"><span class="omi-ic">${ORD_SVG.clock}</span><span class="omi-val">Válida hasta ${validTxt}</span></div>
         </div>
         ${qt.note ? `<div class="ord-modal-note">${ORD_SVG.note} ${qt.note}</div>` : ''}
       </div>
@@ -13398,10 +13409,10 @@ function openEditQuoteModal(id) {
     setQtValidity(days);
     // conservar la fecha exacta original
     document.getElementById('pfQtValidDisplay').dataset.iso = qt.validUntil;
-    document.getElementById('pfQtValidDisplay').textContent = 'Válida hasta el ' + _fmtDateDisplay(qt.validUntil).replace('📅 ','');
+    document.getElementById('pfQtValidDisplay').textContent = 'Válida hasta el ' + _fmtDateDisplay(qt.validUntil);
   }
   qtRenderItems();
-  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').textContent = '✏️ Editar Cotización';
+  document.getElementById('newQuoteModal').querySelector('.ord-modal-client').innerHTML = `<span style="display:flex;align-items:center;gap:8px;">${ORD_SVG.edit}Editar Cotización</span>`;
   document.getElementById('pfQtSaveBtn').textContent = 'Guardar cambios';
   document.getElementById('newQuoteBackdrop').classList.add('open');
   setTimeout(() => document.getElementById('pfQtClient').focus(), 80);
@@ -13651,7 +13662,7 @@ function quoteWhatsApp(id) {
   const recNum = String(qt.num||'').padStart(4,'0');
   let lines = [`*Cotización N° ${recNum} - ${biz.name||'Kajita'}*`];
   lines.push(`Cliente: ${qt.client||'Sin nombre'}`);
-  if (qt.validUntil) lines.push(`Válida hasta: ${_fmtDateDisplay(qt.validUntil).replace('📅 ','')}`);
+  if (qt.validUntil) lines.push(`Válida hasta: ${_fmtDateDisplay(qt.validUntil)}`);
   lines.push('');
   lines.push('*Detalle:*');
   (qt.items||[]).forEach(it => {
@@ -13791,7 +13802,7 @@ function quoteWhatsApp(id) {
   <div class="ord-modal" id="newOrdModal" style="max-width:500px;">
     <div class="ord-modal-header">
       <div>
-        <div class="ord-modal-client" style="font-size:16px;">📋 Nuevo Pedido</div>
+        <div class="ord-modal-client" style="font-size:16px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>Nuevo Pedido</div>
       </div>
       <button class="ord-modal-close" onclick="closeNewOrderModal()">✕</button>
     </div>
@@ -13868,8 +13879,8 @@ function quoteWhatsApp(id) {
       <div class="fld">
         <label>Tipo de entrega</label>
         <div class="ord-delivery-row">
-          <button class="ord-delivery-btn active" id="ordDelDelivery" onclick="setOrdDelivery('delivery')">🚚 Delivery</button>
-          <button class="ord-delivery-btn" id="ordDelLocal" onclick="setOrdDelivery('local')">🏪 Recojo en local</button>
+          <button class="ord-delivery-btn active" id="ordDelDelivery" onclick="setOrdDelivery('delivery')" style="display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="11" rx="1"/><path d="M14 9h4l3 3v5h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>Delivery</button>
+          <button class="ord-delivery-btn" id="ordDelLocal" onclick="setOrdDelivery('local')" style="display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 4 4h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/></svg>Recojo en local</button>
         </div>
         <input class="panel-form-inp" id="pfOrdAddress" type="text"
           placeholder="Dirección de entrega..." maxlength="120"
@@ -13883,10 +13894,10 @@ function quoteWhatsApp(id) {
           <div class="ord-date-row" style="flex:1 1 auto;min-width:0;margin:0;">
             <button class="ord-date-btn" id="ordDateHoy"    onclick="setOrdDate('today')">Hoy</button>
             <button class="ord-date-btn" id="ordDateManana" onclick="setOrdDate('tomorrow')">Mañana</button>
-            <button class="ord-date-btn" id="ordDateCustom" onclick="setOrdDate('pick')">📅 Otra fecha</button>
+            <button class="ord-date-btn" id="ordDateCustom" onclick="setOrdDate('pick')" style="display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Otra fecha</button>
           </div>
           <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;">🕐 Hora</span>
+            <span style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--k-text-3);text-transform:uppercase;letter-spacing:.06em;display:inline-flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>Hora</span>
             <input type="time" id="pfOrdTime" class="panel-form-inp" style="width:auto;padding:6px 9px;box-sizing:border-box;color-scheme:dark;">
           </div>
         </div>
@@ -13941,7 +13952,7 @@ function quoteWhatsApp(id) {
   <div class="ord-modal" id="newQuoteModal" style="max-width:500px;">
     <div class="ord-modal-header">
       <div>
-        <div class="ord-modal-client" style="font-size:16px;">🧾 Nueva Cotización</div>
+        <div class="ord-modal-client" id="newQuoteModalTitle" style="font-size:16px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2-1.2L9 21l2-1.2L13 21l2-1.2L17 21l2-1.2V3l-2 1.2L15 3l-2 1.2L11 3 9 4.2 7 3 5 4.2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span id="newQuoteModalTitleTxt">Nueva Cotización</span></div>
       </div>
       <button class="ord-modal-close" onclick="closeNewQuoteModal()">✕</button>
     </div>
