@@ -4496,7 +4496,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.139</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.142</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4745,7 +4745,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.139</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.142</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -8574,8 +8574,8 @@ function showPDFPreview() {
     const isCredit = e.credit;
     const sign     = isCredit ? '' : (e.type==='expense' ? '−' : '+');
     const amtColor = isCredit ? C.cred : (e.type==='expense' ? C.exp : C.inc);
-    const dotBg    = isCredit ? 'transparent' : (e.type==='expense' ? C.exp : C.accent);
-    const dotBdr   = isCredit ? `2px dashed ${C.cred}` : 'none';
+    const dotBg    = e.type==='expense' ? C.exp : C.accent;
+    const dotIcon  = isCredit ? `<span style="display:inline-flex;color:${C.cred};">${ORD_SVG.clock}</span>` : `<div style="width:7px;height:7px;border-radius:50%;background:${dotBg};margin:0 auto;"></div>`;
     const payLbl   = isCredit ? 'Crédito' : (PAY_LBL[e.pay] || 'Efectivo');
     const payBg    = isCredit ? '#FEF3C7' : (e.pay==='cash' ? '#FEF9C3' : e.pay==='yape' ? '#F5F3FF' : '#EFF6FF');
     const payClr   = isCredit ? C.cash : (e.pay==='cash' ? '#713F12' : e.pay==='yape' ? '#6D28D9' : '#1E40AF');
@@ -8584,8 +8584,8 @@ function showPDFPreview() {
     const unitBadge= e.unitPrice ? `<span style="display:inline-block;background:#F3F4F6;color:${C.muted};font-family:'JetBrains Mono',monospace;font-size:9px;padding:1px 6px;border-radius:99px;margin-left:3px;">S/${Number(e.unitPrice).toFixed(2)} c/u</span>` : '';
     return `<tr style="border-bottom:1px solid ${C.line}; page-break-inside:avoid;">
       <td style="padding:5px 5px 5px 8px; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:${C.muted}; white-space:nowrap; vertical-align:middle;">${e.time||'—'}</td>
-      <td style="padding:5px 3px; vertical-align:middle; width:14px;">
-        <div style="width:7px;height:7px;border-radius:50%;background:${dotBg};border:${dotBdr};margin:0 auto;"></div>
+      <td style="padding:5px 3px; vertical-align:middle; width:14px; text-align:center;">
+        ${dotIcon}
       </td>
       <td style="padding:5px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:11.5px; font-weight:600; color:${C.ink}; line-height:1.35; vertical-align:middle;">${e.desc}${qtyBadge}${unitBadge}${extra}</td>
       <td style="padding:5px 6px; vertical-align:middle; white-space:nowrap;">
@@ -8603,7 +8603,7 @@ function showPDFPreview() {
   const creditsHtml = allCredits.length === 0 ? '' : `
     <div style="margin-top:16px; border:1.5px solid #FCD34D; background:#FFFBEB; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
       <div style="background:#FEF3C7; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#92400E;">⏳ Créditos pendientes de cobro</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#92400E;display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>Créditos pendientes de cobro</div>
         <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#92400E;">${fmt(allCredits.reduce((s,e)=>s+(e.pendiente||e.amount),0))} total</div>
       </div>
       <table style="width:100%; border-collapse:collapse;">
@@ -8637,7 +8637,7 @@ function showPDFPreview() {
   const debtsHtml = allDebts.length === 0 ? '' : `
     <div style="margin-top:12px; border:1.5px solid #FCA5A5; background:#FFF1F2; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
       <div style="background:#FEE2E2; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#991B1B;">🧾 Deudas pendientes de pago</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#991B1B;display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2-1.2L9 21l2-1.2L13 21l2-1.2L17 21l2-1.2V3l-2 1.2L15 3l-2 1.2L11 3 9 4.2 7 3 5 4.2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Deudas pendientes de pago</div>
         <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#991B1B;">${fmt(allDebts.reduce((s,e)=>s+(e.pendiente||e.amount),0))} total</div>
       </div>
       <table style="width:100%; border-collapse:collapse;">
@@ -8708,7 +8708,7 @@ function showPDFPreview() {
         <div style="display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:8.5px;color:${C.muted};">
           <span style="color:${C.inc};">▲ ${incomes.length} ingreso${incomes.length!==1?'s':''}</span>
           <span style="color:${C.exp};">▼ ${expenses.length} egreso${expenses.length!==1?'s':''}</span>
-          ${credits.length>0?`<span style="color:${C.cred};">⏳ ${credits.length} crédito${credits.length!==1?'s':''}</span>`:''}
+          ${credits.length>0?`<span style="color:${C.cred};display:inline-flex;align-items:center;gap:3px;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>${credits.length} crédito${credits.length!==1?'s':''}</span>`:''}
         </div>
       </div>
 
@@ -8750,13 +8750,18 @@ function showPDFPreview() {
         });
         if (!dayOrders.length) return '';
         const sColor = { pending:'#D97706', ready:'#059669', done:'#6B7280' };
-        const sLabel = { pending:'⏳ Pendiente', ready:'✅ Listo', done:'📦 Entregado' };
+        const sIcon = {
+          pending:'<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+          ready:'<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+          done:'<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>'
+        };
+        const sLabel = { pending:'Pendiente', ready:'Listo', done:'Entregado' };
         const fmtD = d => { if(!d) return ''; const [y,m,day]=d.split('-'); return `${day}/${m}`; };
         const ordTotal = dayOrders.reduce((s,o)=>s+(o.total||0),0);
         return `
           <div style="margin-top:16px; border:1.5px solid #86EFAC; border-radius:10px; overflow:hidden; page-break-inside:avoid;">
             <div style="background:#F0FDF4; padding:8px 14px; display:flex; align-items:center; justify-content:space-between;">
-              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#166534;">📋 Pedidos del día &nbsp;<span style="font-weight:400;color:#4B7C59;">${dayOrders.length} pedido${dayOrders.length!==1?'s':''}</span></div>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#166534;display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>Pedidos del día &nbsp;<span style="font-weight:400;color:#4B7C59;">${dayOrders.length} pedido${dayOrders.length!==1?'s':''}</span></div>
               <div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#166534;">${fmt(ordTotal)} total</div>
             </div>
             <table style="width:100%; border-collapse:collapse;">
@@ -8777,19 +8782,23 @@ function showPDFPreview() {
                   const items = itc === 0 ? '—'
                     : itc === 1 ? o.items[0].desc
                     : `${o.items[0].desc} <span style="color:${C.muted};">+ ${itc-1} producto${itc-1!==1?'s':''} más</span>`;
+                  const pinIcon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+                  const storeIcon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M3 9 4 4h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9h18"/></svg>';
                   const delivery = o.delivery==='address' && o.address
-                    ? `📍 ${o.address}${o.date?' · '+fmtD(o.date):''}`
-                    : `🏪 Local${o.date?' · '+fmtD(o.date):''}`;
+                    ? `${pinIcon} ${o.address}${o.date?' · '+fmtD(o.date):''}`
+                    : `${storeIcon} Local${o.date?' · '+fmtD(o.date):''}`;
                   const sc = sColor[o.status]||'#6B7280';
                   const sl = sLabel[o.status]||o.status;
-                  const note = o.note ? `<br><span style="font-size:9px;color:${C.muted};">📝 ${o.note}</span>` : '';
+                  const si = sIcon[o.status]||'';
+                  const noteIcon = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>';
+                  const note = o.note ? `<br><span style="font-size:9px;color:${C.muted};">${noteIcon} ${o.note}</span>` : '';
                   return `<tr style="border-top:1px solid #BBF7D0; ${i%2===1?'background:#F0FDF4':''}">
                     <td style="padding:6px 8px; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:${C.muted}; vertical-align:top;">${tStr}</td>
                     <td style="padding:6px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:#166534; vertical-align:top;">${o.client}</td>
                     <td style="padding:6px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; color:${C.ink}; max-width:160px; vertical-align:top;">${items}${note}</td>
                     <td style="padding:6px 6px; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; color:${C.muted}; vertical-align:top;">${delivery}</td>
                     <td style="padding:6px 6px; text-align:center; vertical-align:top;">
-                      <span style="background:${sc}22;color:${sc};border-radius:99px;padding:2px 7px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${sl}</span>
+                      <span style="background:${sc}22;color:${sc};border-radius:99px;padding:2px 7px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;">${si}${sl}</span>
                     </td>
                     <td style="padding:6px 10px 6px 6px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:#059669; vertical-align:top; white-space:nowrap;">S/ ${(o.total||0).toFixed(2)}</td>
                   </tr>`;
@@ -13305,6 +13314,7 @@ function toggleQuoteMenu(event, id) {
   menu.style.zIndex = '99990';
   menu.style.top = (r.bottom + 4) + 'px';
   menu.style.left = Math.max(8, r.right - 180) + 'px';
+  menu.style.right = 'auto';
   menu.classList.add('open');
 }
 
