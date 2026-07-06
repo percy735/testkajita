@@ -4528,7 +4528,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.145</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.146</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4777,7 +4777,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.145</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.146</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -11278,6 +11278,7 @@ function saveOrder() {
         entries[entryIdx].amount = total;
         entries[entryIdx].desc   = descText;
         entries[entryIdx].client = client;
+        if (entries[entryIdx].credit) entries[entryIdx].pendiente = total;
         save();
         if (typeof render === 'function') render();
       }
@@ -11292,7 +11293,8 @@ function saveOrder() {
     _orders.unshift({ id: ordId, status: 'pending', createdAt: now.toISOString(), ...orderData });
     saveOrders(); // persistir ANTES de render() — render() llama loadOrders() y vaciaría _orders
 
-    // Register as income entry so it appears in daily balance
+    // Registrar como pendiente de cobro — recién suma al balance cuando se marca "Pagado"
+    // (ver ordModalTogglePaid, que lo convierte en ingreso real al cobrarse).
     const newEntry = {
       id:        'local-' + (ordId + 1),
       type:      'income',
@@ -11303,10 +11305,12 @@ function saveOrder() {
       pay:       'cash',
       date:      activeDay,
       time:      timeStr,
-      credit:    false,
+      credit:    true,
       debt:      false,
       client:    client,
       paid:      false,
+      acuenta:   0,
+      pendiente: total,
       orderId:   ordId
     };
     entries.unshift(newEntry);
@@ -12490,12 +12494,21 @@ function ordModalTogglePaid(id) {
   if (!o) return;
   o.paid = !o.paid;
   saveOrders();
-  // Sincronizar el ingreso vinculado (si existe) para que cuadre con caja/créditos
+  // Sincronizar el ingreso vinculado (si existe): mientras no está pagado es un
+  // crédito pendiente (no suma al balance); al pagarse se vuelve ingreso real.
   const entryIdx = entries.findIndex(e => e.orderId === id);
-  if (entryIdx !== -1) { entries[entryIdx].paid = o.paid; save(); if (typeof render === 'function') render(); }
+  if (entryIdx !== -1) {
+    const e = entries[entryIdx];
+    e.paid = o.paid;
+    e.credit = !o.paid;
+    e.pendiente = o.paid ? 0 : e.amount;
+    save();
+    if (typeof render === 'function') render();
+    if (typeof renderCredPanel === 'function') renderCredPanel();
+  }
   openOrderModal(id); // re-render modal
   if (typeof renderOrdPanel === 'function') renderOrdPanel();
-  toast(o.paid ? 'Pedido marcado como pagado ✓' : 'Pedido marcado como pendiente');
+  toast(o.paid ? '✓ Pedido cobrado — ya suma al balance' : 'Pedido marcado como pendiente');
 }
 
 function ordModalDelete(id) {
@@ -13501,15 +13514,38 @@ function convertQuoteToOrder(id) {
   if (!confirm('¿Convertir esta cotización en un pedido?')) return;
   const ordId = Date.now();
   const now = new Date();
+  const total = qt.total || 0;
   loadOrders();
   _orders.unshift({
     id: ordId, status:'pending', createdAt: now.toISOString(),
     client: qt.client, phone: qt.phone || '',
     items: (qt.items||[]).map(i => ({ desc:i.desc, qty:i.qty||1, unit:i.unit||0, price:i.price, total:i.total })),
-    total: qt.total || 0, delivery:'delivery', address:'', date:'', time:'',
+    total, delivery:'delivery', address:'', date:'', time:'',
     note: 'Desde cotización #' + String(qt.num||'').padStart(4,'0'),
   });
   saveOrders();
+  // Igual que en saveOrder(): registrar como pendiente de cobro, no como ingreso
+  // ya sumado — recién cuenta en el balance cuando se marca "Pagado".
+  const descText = (qt.items||[]).map(i => i.desc).join(', ');
+  entries.unshift({
+    id:        'local-' + (ordId + 1),
+    type:      'income',
+    desc:      descText,
+    amount:    total,
+    qty:       null,
+    unitPrice: null,
+    pay:       'cash',
+    date:      activeDay,
+    time:      now.toTimeString().slice(0, 8),
+    credit:    true,
+    debt:      false,
+    client:    qt.client,
+    paid:      false,
+    acuenta:   0,
+    pendiente: total,
+    orderId:   ordId
+  });
+  save();
   // marcar cotización como aceptada
   qt.status = 'aceptada';
   saveQuotes();
