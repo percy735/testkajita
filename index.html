@@ -2945,58 +2945,47 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   display: none; /* ya no se usa — reemplazado por biz-identity */
 }
 
-/* ══ BÚSQUEDA GLOBAL — bottom sheet ══ */
-.search-overlay {
-  display: none; position: fixed; inset: 0; z-index: 9300;
-  background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
-  align-items: flex-end; justify-content: center;
+/* ══ BÚSQUEDA de "Movimientos del día" — inline, expande en el propio encabezado ══ */
+.inline-search-wrap {
+  display: flex; align-items: center; gap: 8px;
+  max-width: 0; flex: 0 1 auto; opacity: 0; overflow: hidden;
+  background: rgba(255,255,255,0.06); border: 0 solid var(--k-line);
+  border-radius: 12px; padding: 0; height: 38px; margin: 0;
+  transition: max-width 0.32s cubic-bezier(0.34,1.1,0.64,1), opacity 0.22s,
+              padding 0.28s, margin 0.28s, border-width 0.2s;
 }
-.search-overlay.open { display: flex; }
-.search-sheet {
-  background: linear-gradient(180deg, var(--k-panel-2), var(--k-panel)); border: 1px solid var(--k-line);
-  border-radius: 28px 28px 0 0;
-  width: 100%; max-width: 600px;
-  box-shadow: 0 -8px 60px rgba(0,0,0,0.5);
-  display: flex; flex-direction: column;
-  max-height: 88dvh;
-  animation: sheetUp 0.32s cubic-bezier(0.34,1.1,0.64,1);
+.inline-search-wrap.open {
+  max-width: 100%; flex: 1 1 auto; opacity: 1; padding: 0 14px;
+  border-width: 1.5px; margin: 0 12px;
 }
-.search-sheet-handle {
-  width: 40px; height: 4px; background: rgba(255,255,255,0.15);
-  border-radius: 99px; margin: 12px auto 0; flex-shrink: 0;
-}
-.search-sheet-head {
-  padding: 14px 20px 12px; border-bottom: 1px solid var(--k-line); flex-shrink: 0;
-}
-.search-bar-inner {
-  display: flex; align-items: center; gap: 10px;
-  background: rgba(255,255,255,0.06); border: 1.5px solid var(--k-line);
-  border-radius: 14px; padding: 0 16px; height: 48px;
-  transition: border-color 0.2s;
-}
-.search-bar-inner:focus-within {
+.inline-search-wrap.open:focus-within {
   border-color: var(--k-accent);
   box-shadow: 0 0 0 3px rgba(196,240,66,0.1);
 }
-.search-bar-ic { color: var(--k-text-3); flex-shrink: 0; }
-.search-bar-inp {
+.entries-ttl.search-active { display: none; }
+.inline-search-ic { color: var(--k-text-3); flex-shrink: 0; }
+.inline-search-inp {
   flex: 1; background: transparent; border: none; outline: none;
-  font-family: var(--sans); font-size: 15px; font-weight: 500;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
   color: var(--k-text); min-width: 0;
 }
-.search-bar-inp::placeholder { color: var(--k-text-3); }
-.search-bar-clear {
+.inline-search-inp::placeholder { color: var(--k-text-3); }
+.inline-search-clear {
   background: none; border: none; cursor: pointer; padding: 4px;
-  color: var(--k-text-3); font-size: 20px; line-height: 1;
-  display: none; transition: color 0.15s;
+  color: var(--k-text-3); font-size: 18px; line-height: 1;
+  display: none; transition: color 0.15s; flex-shrink: 0;
 }
-.search-bar-clear.show { display: block; }
-.search-bar-clear:hover { color: var(--k-text); }
+.inline-search-clear.show { display: block; }
+.inline-search-clear:hover { color: var(--k-text); }
 
-/* Resultados dentro del sheet */
-.search-results {
-  flex: 1; overflow-y: auto; padding: 12px 20px 24px;
+/* Panel de resultados — aparece debajo del encabezado, en el flujo normal (sin ventana) */
+.inline-search-results {
+  display: none; margin: -6px 0 16px; padding: 12px 14px 6px;
+  background: var(--k-panel); border: 1px solid var(--k-line); border-radius: 14px;
+  max-height: 360px; overflow-y: auto;
+  animation: sheetUp 0.22s cubic-bezier(0.34,1.1,0.64,1);
 }
+.inline-search-results.open { display: block; }
 .search-results-hdr {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 10px; padding-top: 2px;
@@ -4528,7 +4517,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.147</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.152</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4777,7 +4766,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.147</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.152</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5099,16 +5088,30 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     <div class="debts-list" id="debtsList"></div>
   </div>
 
-  <div class="entries-hdr">
-    <div class="entries-ttl">Movimientos del día</div>
+  <div class="entries-hdr" id="entriesHdr">
+    <div class="entries-ttl" id="entriesTtl">Movimientos del día</div>
+    <div class="inline-search-wrap" id="inlineSearchWrap">
+      <svg class="inline-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="inline-search-inp" id="searchInp" type="text" placeholder="Buscar descripción, cliente, proveedor..." oninput="runGlobalSearch()" autocomplete="off">
+      <button class="inline-search-clear" id="searchClear" onclick="clearSearch()">×</button>
+    </div>
     <div style="display:flex;align-items:center;gap:10px;">
       <button class="btn-search" onclick="showPDFPreview()" title="Imprimir movimientos del día">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       </button>
-      <button class="btn-search" onclick="toggleSearch()" title="Buscar movimientos">
+      <button class="btn-search" id="btnSearch" onclick="toggleSearch()" title="Buscar movimientos">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
       <div class="entries-cnt" id="entCnt"></div>
+    </div>
+  </div>
+  <div class="inline-search-results" id="searchResults">
+    <div class="search-results-hdr">
+      <span class="search-results-ttl">Resultados</span>
+      <span class="search-results-cnt" id="searchResultsCnt"></span>
+    </div>
+    <div id="searchResultsList">
+      <div class="search-empty-state"><p>Escribe para buscar entre<br>todos tus movimientos registrados.</p></div>
     </div>
   </div>
   <div class="panel-type-tabs" style="padding:0;margin-bottom:16px;">
@@ -5201,32 +5204,6 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   </div>
 </div>
 
-<!-- ══ BÚSQUEDA GLOBAL — bottom sheet ══ -->
-<div class="search-overlay" id="searchOverlay" onclick="if(event.target===this)toggleSearch()">
-  <div class="search-sheet">
-    <div class="search-sheet-handle"></div>
-    <div class="search-sheet-head">
-      <div class="search-bar-inner">
-        <svg class="search-bar-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input class="search-bar-inp" id="searchInp" type="text"
-          placeholder="Buscar descripción, cliente, proveedor..."
-          oninput="runGlobalSearch()" autocomplete="off">
-        <button class="search-bar-clear" id="searchClear" onclick="clearSearch()">×</button>
-      </div>
-    </div>
-    <div class="search-results" id="searchResults">
-      <div class="search-results-hdr">
-        <span class="search-results-ttl">Resultados</span>
-        <span class="search-results-cnt" id="searchResultsCnt"></span>
-      </div>
-      <div id="searchResultsList">
-        <div class="search-empty-state">
-          <p>Escribe para buscar entre<br>todos tus movimientos registrados.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="cat-overlay" id="catOverlay" onclick="closeCatalogOutside(event)">
   <div class="cat-modal">
@@ -7780,12 +7757,16 @@ let searchOpen = false;
 
 function toggleSearch() {
   searchOpen = !searchOpen;
-  const overlay = document.getElementById('searchOverlay');
-  const btn     = document.getElementById('btnSearch');
-  overlay.classList.toggle('open', searchOpen);
+  const wrap  = document.getElementById('inlineSearchWrap');
+  const ttl   = document.getElementById('entriesTtl');
+  const panel = document.getElementById('searchResults');
+  const btn   = document.getElementById('btnSearch');
+  wrap.classList.toggle('open', searchOpen);
+  ttl.classList.toggle('search-active', searchOpen);
+  panel.classList.toggle('open', searchOpen);
   btn.classList.toggle('active', searchOpen);
   if(searchOpen) {
-    setTimeout(() => document.getElementById('searchInp').focus(), 300);
+    setTimeout(() => document.getElementById('searchInp').focus(), 220);
   } else {
     clearSearch();
   }
@@ -7853,7 +7834,9 @@ function runGlobalSearch() {
 function jumpToEntry(id) {
   const e = entries.find(x => String(x.id) === String(id)); if(!e) return;
   searchOpen = false;
-  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById('inlineSearchWrap').classList.remove('open');
+  document.getElementById('entriesTtl').classList.remove('search-active');
+  document.getElementById('searchResults').classList.remove('open');
   document.getElementById('btnSearch').classList.remove('active');
   clearSearch();
   selectDay(e.date);
@@ -8611,7 +8594,8 @@ function showPDFPreview() {
     const payLbl   = isCredit ? 'Crédito' : (PAY_LBL[e.pay] || 'Efectivo');
     const payBg    = isCredit ? '#FEF3C7' : (e.pay==='cash' ? '#FEF9C3' : e.pay==='yape' ? '#F5F3FF' : '#EFF6FF');
     const payClr   = isCredit ? C.cash : (e.pay==='cash' ? '#713F12' : e.pay==='yape' ? '#6D28D9' : '#1E40AF');
-    const extra    = e.client ? `<br><span style="font-size:9.5px;color:${C.muted};font-weight:400;">↳ ${e.client}</span>` : '';
+    const orderTag = e.orderId ? `<span style="display:inline-block;background:#CCFBF1;color:#0F766E;font-family:'Plus Jakarta Sans',sans-serif;font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:99px;margin-right:5px;">Pedido</span>` : '';
+    const extra    = e.client ? `<br><span style="font-size:9.5px;color:${C.muted};font-weight:400;">${orderTag}↳ ${e.client}</span>` : (orderTag ? `<br>${orderTag}` : '');
     const qtyBadge = e.qty&&e.qty>1 ? `<span style="display:inline-block;background:#F3F4F6;color:${C.muted};font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:5px;">×${e.qty}</span>` : '';
     const unitBadge= e.unitPrice ? `<span style="display:inline-block;background:#F3F4F6;color:${C.muted};font-family:'JetBrains Mono',monospace;font-size:9px;padding:1px 6px;border-radius:99px;margin-left:3px;">S/${Number(e.unitPrice).toFixed(2)} c/u</span>` : '';
     return `<tr style="border-bottom:1px solid ${C.line}; page-break-inside:avoid;">
@@ -9001,6 +8985,9 @@ function renderEntries(){
       const dotHtml = isCredit
         ? `<span class="edot-ic credit">${ORD_SVG.clock}</span>`
         : `<span class="edot ${dotClass}"></span>`;
+      const orderBadge = e.orderId
+        ? `<span class="pbadge" style="background:rgba(52,211,153,0.1);color:var(--k-order);cursor:pointer;" onclick="event.stopPropagation();goToOrder(${e.orderId})" title="Ver pedido"><span class="pbadge-ic">${ORD_SVG.clipboard}</span>Pedido${e.client?' · '+e.client:''}</span>`
+        : '';
       return `
         <div class="entry-item ${itemClass}" data-eid="${e.id}" ${credNav}>
           ${dotHtml}
@@ -9008,6 +8995,7 @@ function renderEntries(){
             <div class="edesc">${e.desc}</div>
             <div class="emeta">
               <span class="etime">${e.time||''}</span>
+              ${orderBadge}
               ${e.qty&&e.qty>1?`<span class="pbadge" style="background:rgba(255,255,255,0.07);color:var(--k-text-3);">×${e.qty}</span>`:''}
               ${e.unitPrice?`<span class="pbadge" style="background:rgba(255,255,255,0.05);color:var(--k-text-3);font-family:var(--mono);">S/${Number(e.unitPrice).toFixed(2)} c/u</span>`:''}
               ${payBadge}
