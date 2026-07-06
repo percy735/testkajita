@@ -1902,6 +1902,38 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 .order-pay-badge.paid   { background: var(--k-accent-l); color: var(--k-accent); }
 .order-pay-badge.unpaid { background: var(--k-expense-l); color: var(--k-expense); }
+/* Etiqueta de fecha de entrega destacada (cabecera de tarjeta) */
+.order-date-badge {
+  font-family: var(--sans); font-size: 11px; font-weight: 700;
+  padding: 3px 9px; border-radius: 99px; white-space: nowrap; flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.05); color: var(--k-text-2);
+}
+.order-date-badge svg { width: 12px; height: 12px; }
+.order-date-badge.today   { background: var(--k-accent-l);  color: var(--k-accent); }
+.order-date-badge.soon    { background: var(--k-order-l);   color: var(--k-order); }
+.order-date-badge.overdue { background: var(--k-expense-l); color: var(--k-expense); }
+.order-date-badge.future  { background: rgba(255,255,255,0.05); color: var(--k-text-2); }
+/* Pedido entregado (cumplido): todo en gris/apagado, salvo "Falta pagar" que se mantiene en rojo */
+.order-card-fulfilled .order-card-client,
+.order-card-fulfilled .order-card-items,
+.order-card-fulfilled .order-card-price,
+.order-card-fulfilled .order-card-meta { color: var(--k-text-3) !important; }
+.order-card-fulfilled .order-date-badge {
+  background: rgba(255,255,255,0.05) !important; color: var(--k-text-3) !important;
+}
+.order-card-fulfilled .order-pay-badge.paid {
+  background: rgba(255,255,255,0.05) !important; color: var(--k-text-3) !important;
+}
+.order-card-fulfilled .ord-tml-dot {
+  background: var(--k-inset, var(--k-panel-2)) !important; border-color: var(--k-line) !important;
+}
+.order-card-fulfilled .ord-tml-dot.done,
+.order-card-fulfilled .ord-tml-dot.active {
+  background: var(--k-text-3) !important; border-color: var(--k-text-3) !important; color: var(--k-bg, #0c0d09) !important;
+}
+.order-card-fulfilled .ord-tml-line.filled { background: var(--k-text-3) !important; }
+.order-card-fulfilled .ord-tml-label { color: var(--k-text-3) !important; font-weight: 500 !important; }
 /* Botón alternar pago en el detalle */
 .ord-pay-toggle {
   width: 100%; padding: 13px; border-radius: var(--r-sm, 10px); cursor: pointer;
@@ -4496,7 +4528,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.142</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.145</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4745,7 +4777,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.142</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.145</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -10892,6 +10924,23 @@ function _fmtDateDisplay(iso) {
   const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
 }
+// Chip de fecha de entrega para las tarjetas de Pedidos — etiqueta relativa (Hoy/Mañana/6 jul)
+// con color según urgencia. Reutiliza _isoToday()/_isoTomorrow().
+function ordDeliveryBadge(o) {
+  const cal = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  const timeStr = o.time ? ' · ' + o.time.slice(0,5) : '';
+  if (!o.date) return `<span class="order-date-badge future">${cal}Sin fecha</span>`;
+  const hoy = _isoToday(), man = _isoTomorrow();
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const [y,m,d] = o.date.split('-');
+  const corta = `${parseInt(d)} ${months[parseInt(m)-1]}`;
+  let label, cls;
+  if (o.date === hoy)                            { label = 'Hoy';    cls = 'today'; }
+  else if (o.date === man)                       { label = 'Mañana'; cls = 'soon'; }
+  else if (o.date < hoy && o.status !== 'done')  { label = corta;    cls = 'overdue'; }
+  else                                           { label = corta;    cls = 'future'; }
+  return `<span class="order-date-badge ${cls}">${cal}${label}${timeStr}</span>`;
+}
 
 let _kjCalYear  = 0;
 let _kjCalMonth = 0; // 0-based
@@ -11543,30 +11592,41 @@ function renderOrdPanel() {
     return;
   }
 
-  const fmtDate = (d, t) => {
-    if (!d && !t) return '';
-    if (!d) return `Entrega: ${t}`;
-    const [y,m,day] = d.split('-');
-    return `Entrega: ${day}/${m}/${y}${t ? ' · ' + t : ''}`;
-  };
-
   const nextStatusMap = {
     pending: { status:'ready', svg:ORD_SVG.check, label:'Marcar listo' },
     ready:   { status:'done',  svg:ORD_SVG.box,   label:'Marcar entregado' },
     done:    { status:'pending', svg:ORD_SVG.undo, label:'Reabrir pedido' }
   };
 
-  list.innerHTML = filtered.map(o => {
+  // Orden cronológico por fecha de entrega (copia, sin mutar _orders):
+  // activos (pending/ready) primero por entrega más cercana; sin fecha al final;
+  // entregados (done) al final como historial reciente.
+  const statusRank = o => (o.status === 'done' ? 1 : 0);
+  const ordered = [...filtered].sort((a, b) => {
+    const ra = statusRank(a), rb = statusRank(b);
+    if (ra !== rb) return ra - rb;
+    if (ra === 0) {
+      const ka = a.date || '9999-99-99', kb = b.date || '9999-99-99';
+      if (ka !== kb) return ka < kb ? -1 : 1;
+      const ta = a.time || '', tb = b.time || '';
+      if (ta !== tb) return ta < tb ? -1 : 1;
+      return (a.createdAt || '') < (b.createdAt || '') ? -1 : 1;
+    }
+    const ka = a.date || '', kb = b.date || '';
+    if (ka !== kb) return ka > kb ? -1 : 1;
+    return (a.createdAt || '') > (b.createdAt || '') ? -1 : 1;
+  });
+
+  list.innerHTML = ordered.map(o => {
     const itemsText = o.items.map(i => {
       const q = i.qty && i.qty > 1 ? `${i.qty}× ` : '';
       return q + i.desc;
     }).join(' · ');
-    const dateStr  = fmtDate(o.date, o.time);
     const phoneStr = o.phone ? `<span class="pbadge-ic">${ORD_SVG.phone}</span>${o.phone}` : '';
     const ns = nextStatusMap[o.status] || nextStatusMap.pending;
     const timelineHtml = ordTimelineHtml(o.id, o.status, 'setOrderStatus');
-    const metaParts = [dateStr, phoneStr, o.note ? `<span class="pbadge-ic">${ORD_SVG.note}</span>${o.note}` : ''].filter(Boolean);
-    return `<div class="order-card" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
+    const metaParts = [phoneStr, o.note ? `<span class="pbadge-ic">${ORD_SVG.note}</span>${o.note}` : ''].filter(Boolean);
+    return `<div class="order-card${o.status==='done'?' order-card-fulfilled':''}" data-ord-id="${o.id}" onclick="openOrderModal(${o.id})" style="cursor:pointer;">
       <div class="swipe-hint-right" style="gap:6px;">${ns.svg} ${ns.label}</div>
       <div class="swipe-hint-left" style="gap:6px;">${ORD_SVG.undo} Retroceder</div>
       <div class="order-card-body">
@@ -11576,6 +11636,7 @@ function renderOrdPanel() {
             <div class="order-card-client">${o.client}</div>
             <div class="order-card-items">${itemsText}</div>
           </div>
+          ${ordDeliveryBadge(o)}
         </div>
         <div class="order-card-footer">
           <div class="order-card-meta">${metaParts.map(p=>`<span>${p}</span>`).join('')}</div>
@@ -12425,24 +12486,21 @@ function ordModalSetStatus(id, newStatus) {
 }
 
 function ordModalTogglePaid(id) {
-  let orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
-  const idx = orders.findIndex(x => x.id === id);
-  if (idx === -1) return;
-  orders[idx].paid = !orders[idx].paid;
-  localStorage.setItem('kajita_orders', JSON.stringify(orders));
+  const o = _orders.find(x => x.id === id);
+  if (!o) return;
+  o.paid = !o.paid;
+  saveOrders();
   // Sincronizar el ingreso vinculado (si existe) para que cuadre con caja/créditos
   const entryIdx = entries.findIndex(e => e.orderId === id);
-  if (entryIdx !== -1) { entries[entryIdx].paid = orders[idx].paid; save(); if (typeof render === 'function') render(); }
+  if (entryIdx !== -1) { entries[entryIdx].paid = o.paid; save(); if (typeof render === 'function') render(); }
   openOrderModal(id); // re-render modal
   if (typeof renderOrdPanel === 'function') renderOrdPanel();
-  toast(orders[idx].paid ? 'Pedido marcado como pagado ✓' : 'Pedido marcado como pendiente');
+  toast(o.paid ? 'Pedido marcado como pagado ✓' : 'Pedido marcado como pendiente');
 }
 
 function ordModalDelete(id) {
   if (!confirm('¿Eliminar este pedido?')) return;
-  let orders = JSON.parse(localStorage.getItem('kajita_orders') || '[]');
-  orders = orders.filter(x => x.id !== id);
-  localStorage.setItem('kajita_orders', JSON.stringify(orders));
+  _deleteOrderAndEntry(id);
   closeOrderModal();
   if (typeof renderOrdPanel === 'function') renderOrdPanel();
   toast('Pedido eliminado');
