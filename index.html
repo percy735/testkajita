@@ -1561,7 +1561,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .picker-panel .cchip:last-child { border-bottom: none; }
 .picker-panel .pchip:hover,
 .picker-panel .cchip:hover { background: rgba(255,255,255,0.07); }
-.picker-panel .pchip.pchip-focus { background: rgba(196,240,66,0.12); color: var(--k-accent); }
+.picker-panel .pchip.pchip-focus,
+.picker-panel .cchip.cchip-focus { background: rgba(196,240,66,0.12); color: var(--k-accent); }
 .chip-price { font-family: var(--mono); font-size: 11px; color: var(--k-text-3); flex-shrink: 0; }
 .picker-empty { padding: 16px; font-size: 13px; color: var(--k-text-3); font-style: italic; text-align: center; }
 
@@ -2375,6 +2376,30 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .kj-modal-inp::placeholder { color: var(--k-text-3); }
 .kj-modal-row { display: flex; gap: 10px; }
 .kj-modal-row .kj-modal-field { flex: 1; }
+.kj-doc-row { display: flex; gap: 8px; }
+.kj-doc-search-btn {
+  flex: none; display: flex; align-items: center; gap: 6px; padding: 0 14px;
+  border-radius: var(--r-sm, 10px); border: 1px solid var(--k-accent-line);
+  background: var(--k-accent-soft); color: var(--k-accent);
+  font-family: var(--sans); font-size: 12.5px; font-weight: 700; cursor: pointer; transition: background .15s;
+}
+.kj-doc-search-btn:hover { background: var(--k-accent-l); }
+.kj-doc-status { min-height: 14px; margin-top: 2px; font-family: var(--mono); font-size: 10.5px; color: var(--k-text-3); }
+.kj-doctype-row { display: flex; gap: 6px; }
+.kj-doctype-btn {
+  flex: 1; padding: 9px 6px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.03); color: var(--k-text-3); font-family: var(--sans); font-size: 12.5px;
+  font-weight: 600; cursor: pointer; transition: all .15s; text-align: center; white-space: nowrap;
+}
+.kj-doctype-btn:hover { background: rgba(255,255,255,0.07); color: var(--k-text); }
+.kj-doctype-btn.active { background: var(--k-accent-l); border-color: var(--k-accent-line); color: var(--k-accent); }
+.kj-doctype-more {
+  flex: 1.4; padding: 9px 6px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.03); color: var(--k-text-3); font-family: var(--sans); font-size: 12px;
+  font-weight: 600; cursor: pointer; outline: none;
+}
+.kj-doctype-more.active { background: var(--k-accent-l); border-color: var(--k-accent-line); color: var(--k-accent); }
+.kj-doctype-more option { background: var(--k-panel-2); color: var(--k-text); }
 .kj-modal-footer {
   display: flex; gap: 8px; justify-content: flex-end;
   padding: 20px 24px 24px;
@@ -2494,6 +2519,177 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .pl-cli  { grid-template-columns: 1.4fr 100px 1fr 120px 110px 80px; }
 .pl-prov { grid-template-columns: 1.4fr 100px 1fr 120px 110px 80px; }
 .pl-inv  { grid-template-columns: 1.2fr 80px 90px 55px 60px 60px 50px 64px; }
+.pl-fact { grid-template-columns: 120px 90px 90px 1.3fr 100px 100px 50px; }
+
+/* Encabezado de columna clickeable para ordenar (Facturación) */
+.pl-sort-th { display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; transition: color .15s; }
+.pl-sort-th:hover { color: var(--k-text-2); }
+.pl-sort-th.active { color: var(--k-accent); }
+.pl-sort-th .sort-ic { display: inline-flex; opacity: .5; transition: transform .15s, opacity .15s; }
+.pl-sort-th.active .sort-ic { opacity: 1; }
+.pl-sort-th.active.desc .sort-ic { transform: rotate(180deg); }
+.pl-badge.registrado { background: rgba(255,255,255,0.06); color: var(--k-text-2); }
+.pl-badge.anulado    { background: var(--k-expense-l); color: var(--k-expense); }
+
+/* ── Facturación: pantalla completa "Nueva venta" (dos columnas, como Registrar) ── */
+.fact-create-hdr { display: flex; align-items: center; gap: 12px; padding: 20px 4px 16px; border-bottom: 1px solid var(--k-line); margin-bottom: 20px; }
+.fact-back-btn {
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.04); color: var(--k-text-2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all .15s;
+}
+.fact-back-btn:hover { background: rgba(255,255,255,0.08); color: var(--k-text); }
+.fact-create-title { font-family: var(--serif); font-size: 20px; font-weight: 500; }
+
+.fact-create-layout { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: 28px; align-items: start; padding: 0 4px; }
+.fact-create-right { position: sticky; top: 0; display: flex; flex-direction: column; gap: 16px; }
+
+/* Fila de búsqueda de producto tipo tabla */
+.fact-search-row { display: grid; grid-template-columns: 1fr 110px 110px 110px auto; gap: 8px; align-items: start; margin-bottom: 16px; }
+.fact-search-col { min-width: 0; }
+.fact-search-desc { position: relative; }
+
+/* Alineación pareja: todos los campos/botones de la pantalla de creación comparten la misma altura */
+#facturaCreateScreen .fact-search-row .input-with-toggle,
+#facturaCreateScreen .fact-search-row .num-stepper,
+#facturaCreateScreen .fact-search-row .panel-form-inp,
+#facturaCreateScreen .fact-search-row .push-item-btn,
+#facturaCreateScreen .fld .input-with-toggle,
+#facturaCreateScreen .fld .panel-form-inp,
+#facturaCreateScreen .fact-pay-select {
+  height: 44px; min-height: 44px; flex-shrink: 0; box-sizing: border-box;
+}
+#facturaCreateScreen .input-with-toggle input,
+#facturaCreateScreen .input-with-toggle select,
+#facturaCreateScreen .fact-search-row .num-stepper input {
+  height: 100%; padding-top: 0; padding-bottom: 0;
+}
+#facturaCreateScreen .fact-search-row .field-toggle-btn { align-self: stretch; height: 44px; min-height: 44px; width: 40px; flex: none; }
+
+/* Encabezado + filas de ítems, estilo tabla (Producto/Cant/P.Unit/Impuesto/Subtotal/Total/quitar) */
+#pfFactItemsList, #pfNotaItemsList, #pfDetailItemsList { overflow-x: auto; }
+.fact-items-head {
+  display: grid; grid-template-columns: 1fr 90px 74px 74px 78px 82px 28px; gap: 8px; min-width: 580px;
+  padding: 6px 10px; font-family: var(--mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--k-text-3); border-bottom: 1px solid var(--k-line);
+}
+.fact-item-row {
+  display: grid; grid-template-columns: 1fr 90px 74px 74px 78px 82px 28px; gap: 8px; align-items: center; min-width: 580px;
+  padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
+}
+.fact-item-row:hover { background: rgba(255,255,255,0.025); }
+.fact-item-qty-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.fact-item-unit { font-family: var(--mono); font-size: 9px; letter-spacing: .05em; text-transform: uppercase; color: var(--k-text-3); }
+.fact-item-row .num-stepper.fact-item-stepper { width: 100%; height: 28px; border-radius: 8px; }
+.fact-item-row .fact-item-stepper .step-btn { width: 22px; height: 26px; font-size: 14px; }
+.fact-item-row .fact-item-stepper input { font-size: 12px; padding: 0; }
+.fact-cell-tax, .fact-cell-subtotal { font-size: 12px; }
+.fact-item-price-inp {
+  width: 100%; box-sizing: border-box; background: var(--k-inset); border: 1px solid var(--k-line);
+  border-radius: 8px; padding: 5px 6px; font-family: var(--mono); font-size: 12.5px; color: var(--k-text);
+  text-align: right; height: 28px;
+}
+.fact-item-price-inp:focus { outline: none; border-color: var(--k-accent); }
+.fact-item-edit-btn, .fact-cell-editbtn { display: none; }
+.fact-item-edit-btn {
+  align-items: center; justify-content: center; background: none; border: none; color: var(--k-text-3);
+  cursor: pointer; padding: 0; width: 100%; height: 100%;
+}
+.fact-item-edit-btn:hover { color: var(--k-accent); }
+.fact-item-expand-panel {
+  display: none; flex-direction: column; gap: 8px; padding: 4px 10px 14px; margin-top: -4px;
+  border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015);
+}
+.fact-expand-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--sans); font-size: 12px; color: var(--k-text-3); }
+.fact-expand-row input.fact-item-price-inp { width: 100px; flex: none; }
+@media (min-width: 641px) { .fact-item-expand-panel { display: none !important; } }
+
+/* Toggle grande Boleta/Factura */
+.fact-type-row { display: flex; gap: 8px; }
+.fact-type-tab {
+  flex: 1; padding: 14px 16px; border-radius: var(--r-md, 14px); border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 15px; font-weight: 600;
+  color: var(--k-text-3); cursor: pointer; transition: all .15s; text-align: center;
+}
+.fact-type-tab:hover { background: rgba(255,255,255,0.08); color: var(--k-text); }
+.fact-type-tab.active { background: var(--k-accent-l); border-color: rgba(196,240,66,0.4); color: var(--k-accent); }
+
+.fact-new-client-btn {
+  margin-top: 8px; background: none; border: none; padding: 0; cursor: pointer;
+  font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--k-accent);
+  display: flex; align-items: center; gap: 4px; transition: opacity .15s;
+}
+.fact-new-client-btn:hover { opacity: .8; }
+.fact-nota-ref-box {
+  padding: 11px 14px; border-radius: var(--r-sm, 10px); background: var(--k-inset); border: 1px solid var(--k-line);
+  font-family: var(--sans); font-size: 13px; color: var(--k-text); min-height: 44px; box-sizing: border-box;
+  display: flex; align-items: center;
+}
+.fact-detail-actions { display: flex; gap: 8px; margin-top: 16px; }
+.fact-detail-action-btn {
+  flex: 1; padding: 12px 16px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line);
+  background: rgba(255,255,255,0.04); color: var(--k-text-2); font-family: var(--sans); font-size: 13.5px;
+  font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.fact-detail-action-btn:hover { background: rgba(255,255,255,0.08); color: var(--k-text); }
+.fact-detail-action-btn.fact-detail-action-primary { background: var(--k-accent); border-color: var(--k-accent); color: #000; }
+.fact-detail-action-btn.fact-detail-action-primary:hover { background: var(--k-accent); opacity: .9; }
+
+.fact-totals-box { margin-top: 4px; padding: 14px 16px; border-radius: var(--r-md, 14px); background: var(--k-panel-2); border: 1px solid var(--k-line); }
+.fact-totals-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; font-family: var(--mono); font-size: 12.5px; color: var(--k-text-3); }
+.fact-totals-total { border-top: 1px solid var(--k-line); margin-top: 6px; padding-top: 12px; }
+.fact-totals-total span:first-child { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--k-text-2); text-transform: uppercase; letter-spacing: .05em; }
+.fact-totals-total span:last-child { font-family: var(--mono); font-size: 26px; font-weight: 700; color: var(--k-accent); }
+.fact-totals-desc { padding-bottom: 9px; margin-bottom: 5px; border-bottom: 1px dashed rgba(255,255,255,0.08); }
+.fact-desc-inp-wrap { display: flex; align-items: center; gap: 4px; color: var(--k-text-3); }
+.fact-desc-inp-wrap input {
+  width: 70px; background: var(--k-inset); border: 1px solid var(--k-line); border-radius: 8px;
+  padding: 4px 6px; font-family: var(--mono); font-size: 12.5px; color: var(--k-text); text-align: right; outline: none;
+}
+.fact-desc-inp-wrap input:focus { border-color: var(--k-accent); }
+
+.fact-pay-wrap { position: relative; }
+.fact-pay-select { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--r-sm, 10px); border: 1px solid var(--k-line); background: var(--k-inset); cursor: pointer; transition: border-color .15s; }
+.fact-pay-select:hover { border-color: rgba(255,255,255,0.25); }
+.fact-pay-select-ic { width: 17px; height: 17px; flex: none; display: flex; }
+.fact-pay-select-ic svg { width: 17px; height: 17px; }
+.fact-pay-select-label { flex: 1; font-family: var(--sans); font-size: 13.5px; font-weight: 600; color: var(--k-text); }
+.fact-pay-select-caret { color: var(--k-text-3); font-size: 12px; }
+.fact-pay-select.pc  .fact-pay-select-ic, .fact-pay-select.pc  .fact-pay-select-label { color: var(--k-cash); }
+.fact-pay-select.py  .fact-pay-select-ic, .fact-pay-select.py  .fact-pay-select-label { color: var(--k-purple); }
+.fact-pay-select.pp  .fact-pay-select-ic, .fact-pay-select.pp  .fact-pay-select-label { color: var(--k-blue); }
+.fact-pay-select.pt  .fact-pay-select-ic, .fact-pay-select.pt  .fact-pay-select-label { color: var(--k-text); }
+.fact-pay-select.pca .fact-pay-select-ic, .fact-pay-select.pca .fact-pay-select-label { color: var(--k-text-2); }
+.fact-pay-drop { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 50; background: var(--k-panel-2); border: 1px solid var(--k-line); border-radius: var(--r-sm, 10px); overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+.fact-pay-opt { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border: none; background: none; cursor: pointer; font-family: var(--sans); font-size: 13px; color: var(--k-text-2); text-align: left; transition: background .12s; }
+.fact-pay-opt svg { width: 16px; height: 16px; flex: none; }
+.fact-pay-opt:hover { background: rgba(255,255,255,0.06); color: var(--k-text); }
+
+.fact-mobile-tabs { display: none; }
+
+@media (max-width: 1180px) {
+  .fact-create-layout { grid-template-columns: 1fr; }
+  .fact-create-right { position: static; }
+  .fact-mobile-tabs { display: flex; gap: 4px; margin: -4px 4px 18px; border-bottom: 1px solid var(--k-line); }
+  .fact-mobile-tab {
+    flex: 1; padding: 12px 8px; background: none; border: none; border-bottom: 2px solid transparent;
+    color: var(--k-text-3); font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer; transition: color .15s;
+  }
+  .fact-mobile-tab.active { color: var(--k-accent); border-bottom-color: var(--k-accent); }
+  .fact-create-layout[data-mtab="productos"] .fact-create-right { display: none; }
+  .fact-create-layout[data-mtab="pagos"] .fact-create-left { display: none; }
+}
+@media (max-width: 640px) {
+  .fact-search-row { grid-template-columns: 1fr 1fr; }
+  .fact-search-desc { grid-column: 1 / -1; }
+  /* Móvil: minimizar la fila de ítem a Producto/Cantidad/Total — con lápiz para desplegar P.Unit/Impuesto/Subtotal, igual que la referencia */
+  .fact-items-head { grid-template-columns: 1fr 70px 78px 24px 24px; font-size: 8px; min-width: 0; }
+  .fact-item-row { grid-template-columns: 1fr 70px 78px 24px 24px; font-size: 12px; min-width: 0; }
+  .fact-item-row .fact-item-stepper .step-btn { width: 18px; }
+  .fact-item-price-inp { font-size: 11px; padding: 4px; }
+  .fact-cell-punit, .fact-cell-tax, .fact-cell-subtotal { display: none; }
+  .fact-item-edit-btn, .fact-cell-editbtn { display: flex; }
+}
 
 /* Acciones CRUD en fila */
 .pca-btn {
@@ -4517,7 +4713,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.154</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.167</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4721,6 +4917,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
         <span>Cotizaciones</span>
       </button>
+      <button class="sb-item" id="sbi-factura" onclick="sbPanel('factura')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2-1.2L9 21l2-1.2L13 21l2-1.2L17 21l2-1.2V3l-2 1.2L15 3l-2 1.2L11 3 9 4.2 7 3 5 4.2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Facturación</span>
+      </button>
     </nav>
 
     <!-- Footer del sidebar -->
@@ -4766,7 +4966,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.154</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.167</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5479,6 +5679,290 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
       <div class="panel-total-box">
         <div class="panel-total-lbl">Total cotizado</div>
         <div class="panel-total-val" id="panelQuoteTotal" style="color:var(--k-accent);">S/ 0.00</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL FACTURACIÓN ══ -->
+<div class="panel-overlay" id="panelFacturaOverlay" onclick="if(event.target===this)closePanel('factura')">
+  <div class="panel-sheet" id="panelFacturaSheet">
+    <div id="facturaListView">
+      <div class="panel-head">
+        <div>
+          <div class="panel-ttl">Facturación</div>
+          <div class="panel-sub" id="panelFacturaSub">—</div>
+        </div>
+        <div class="panel-head-right">
+          <div class="panel-search">
+            <div class="panel-search-wrap">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="panel-search-inp" id="panelFacturaSearch" type="text" placeholder="Buscar..." oninput="renderFacturaPanel()">
+            </div>
+          </div>
+          <button class="panel-add-btn" onclick="toggleFacturaForm()">+ Nueva</button>
+          <button class="panel-close" onclick="closePanel('factura')">×</button>
+        </div>
+      </div>
+      <div class="panel-type-tabs">
+        <button class="panel-type-tab active" id="factF-all"           onclick="setFacturaFilter('all')">Todos</button>
+        <button class="panel-type-tab"        id="factF-factura"       onclick="setFacturaFilter('factura')">Facturas</button>
+        <button class="panel-type-tab"        id="factF-boleta"        onclick="setFacturaFilter('boleta')">Boletas</button>
+        <button class="panel-type-tab"        id="factF-nota-credito"  onclick="setFacturaFilter('nota-credito')">N. Crédito</button>
+        <button class="panel-type-tab"        id="factF-nota-debito"   onclick="setFacturaFilter('nota-debito')">N. Débito</button>
+      </div>
+      <div class="panel-list" id="panelFacturaList"></div>
+      <div class="panel-totals">
+        <div class="panel-total-box">
+          <div class="panel-total-lbl">Documentos</div>
+          <div class="panel-total-val" id="panelFacturaCount" style="color:var(--k-order);">0</div>
+        </div>
+        <div class="panel-total-box">
+          <div class="panel-total-lbl">Total facturado</div>
+          <div class="panel-total-val" id="panelFacturaTotal" style="color:var(--k-accent);">S/ 0.00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PANTALLA COMPLETA: NUEVA VENTA (factura/boleta) ══ -->
+    <div id="facturaCreateScreen" style="display:none;">
+      <div class="fact-create-hdr">
+        <button class="fact-back-btn" onclick="closeFacturaCreateScreen()" title="Volver">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <div class="fact-create-title" id="factCreateTitle">Nueva venta</div>
+      </div>
+
+      <div class="fact-mobile-tabs">
+        <button type="button" class="fact-mobile-tab active" data-tab="productos" onclick="setFactMobileTab('productos')">Productos</button>
+        <button type="button" class="fact-mobile-tab" data-tab="pagos" onclick="setFactMobileTab('pagos')">Pagos</button>
+      </div>
+
+      <div class="fact-create-layout" data-mtab="productos">
+        <!-- Columna izquierda: búsqueda de productos + ítems -->
+        <div class="fact-create-left">
+          <div class="fact-search-row">
+            <div class="fact-search-col fact-search-desc">
+              <div class="input-with-toggle">
+                <input class="panel-form-inp" id="pfFactDesc" type="text" placeholder="Buscar producto..." maxlength="80" autocomplete="off"
+                  oninput="factFilterProducts()"
+                  onkeydown="factDescKeyNav(event)"
+                  style="width:100%;box-sizing:border-box;">
+                <button type="button" class="field-toggle-btn" onclick="factToggleProducts()" title="Ver productos"><span class="ftb-icon">⌄</span></button>
+              </div>
+              <div class="picker-panel" id="factProdDrop" style="display:none;position:fixed;z-index:99999;"></div>
+            </div>
+            <div class="fact-search-col fact-search-qty">
+              <div class="num-stepper">
+                <button type="button" class="step-btn" onclick="factStepQty(-1)">−</button>
+                <input type="number" id="pfFactQty" placeholder="1" min="1" step="1" value="1" oninput="factRecalc()">
+                <button type="button" class="step-btn" onclick="factStepQty(1)">+</button>
+              </div>
+            </div>
+            <div class="fact-search-col fact-search-unit">
+              <input type="number" id="pfFactUnit" class="panel-form-inp" placeholder="P. Unit." min="0" step="0.01" oninput="factRecalc()" style="width:100%;box-sizing:border-box;">
+            </div>
+            <div class="fact-search-col fact-search-amt">
+              <input type="number" id="pfFactAmt" class="panel-form-inp" placeholder="Monto" min="0" step="0.01" oninput="factRecalcFromAmt()" style="width:100%;box-sizing:border-box;opacity:0.75;">
+            </div>
+            <button class="push-item-btn" onclick="factPushItem()" title="Agregar ítem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+
+          <div id="pfFactItemsList" style="display:none;">
+            <div class="fact-items-head">
+              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax">Impuesto</div><div class="fact-cell-subtotal">Subtotal</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+            </div>
+            <div id="pfFactItemsRows"></div>
+          </div>
+          <div id="factItemsEmpty" class="panel-empty">
+            <span>No hay productos aún.<br>Busca y agrega el primero arriba.</span>
+          </div>
+
+          <div class="fact-totals-box" id="factTotalsBox" style="display:none;">
+            <div class="fact-totals-row fact-totals-desc">
+              <span>Descuento</span>
+              <span class="fact-desc-inp-wrap">S/ <input type="number" id="factDescuento" min="0" step="0.01" placeholder="0.00" oninput="factRenderItems()"></span>
+            </div>
+            <div class="fact-totals-row"><span>Subtotal</span><span id="factSubtotalVal">S/ 0.00</span></div>
+            <div class="fact-totals-row"><span>IGV (18%)</span><span id="factIgvVal">S/ 0.00</span></div>
+            <div class="fact-totals-row fact-totals-total"><span>Total</span><span id="factTotalVal2">S/ 0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: tipo, pago, cliente, fecha (el Total destaca abajo a la izquierda, junto a los ítems) -->
+        <div class="fact-create-right">
+          <div class="fact-type-row">
+            <button class="fact-type-tab active" id="factTipoFactura" onclick="setFactTipo('factura')">Factura</button>
+            <button class="fact-type-tab" id="factTipoBoleta" onclick="setFactTipo('boleta')">Boleta de venta</button>
+          </div>
+
+          <div class="fld">
+            <label>Método de pago</label>
+            <div class="fact-pay-wrap">
+              <div class="fact-pay-select pc" id="factPaySelectBtn" onclick="factTogglePayDrop()">
+                <span class="fact-pay-select-ic" id="factPaySelIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4"/><path d="M18 10v4"/></svg></span>
+                <span class="fact-pay-select-label" id="factPaySelLabel">Efectivo</span>
+                <span class="fact-pay-select-caret">⌄</span>
+              </div>
+              <div class="fact-pay-drop" id="factPayDrop" style="display:none;">
+                <button type="button" class="fact-pay-opt" onclick="setFactPay('cash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4"/><path d="M18 10v4"/></svg>Efectivo</button>
+                <button type="button" class="fact-pay-opt" onclick="setFactPay('yape')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><line x1="10" y1="18.5" x2="14" y2="18.5"/></svg>Yape</button>
+                <button type="button" class="fact-pay-opt" onclick="setFactPay('plin')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Plin</button>
+                <button type="button" class="fact-pay-opt" onclick="setFactPay('transfer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6"/><line x1="4" y1="21" x2="20" y2="21"/><line x1="6" y1="12" x2="6" y2="18"/><line x1="10" y1="12" x2="10" y2="18"/><line x1="14" y1="12" x2="14" y2="18"/><line x1="18" y1="12" x2="18" y2="18"/></svg>Transferencia</button>
+                <button type="button" class="fact-pay-opt" onclick="setFactPay('card')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Tarjeta</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fld">
+            <label>Cliente</label>
+            <div class="input-with-toggle">
+              <input class="panel-form-inp" id="pfFactClient" type="text" placeholder="Escribe o elige cliente..." maxlength="60" autocomplete="off"
+                oninput="factFilterClients()"
+                onkeydown="factClientKeyNav(event)"
+                style="width:100%;box-sizing:border-box;">
+              <button type="button" class="field-toggle-btn" onclick="factToggleClients()" title="Ver clientes"><span class="ftb-icon">⌄</span></button>
+            </div>
+            <div class="picker-panel" id="factClientDrop" style="display:none;position:fixed;z-index:99999;"></div>
+            <button type="button" class="fact-new-client-btn" onclick="openFacturaNewClient()">+ Nuevo cliente</button>
+          </div>
+
+          <div class="fld">
+            <label>RUC / DNI</label>
+            <input class="panel-form-inp" id="pfFactDoc" type="text" inputmode="numeric" placeholder="Ej: 20512345678" maxlength="15" autocomplete="off"
+              style="width:100%;min-height:44px;flex-shrink:0;box-sizing:border-box;">
+          </div>
+
+          <div class="fld">
+            <label>Fecha</label>
+            <input class="panel-form-inp" id="pfFactFecha" type="date" style="width:100%;min-height:44px;flex-shrink:0;box-sizing:border-box;color-scheme:dark;">
+          </div>
+
+          <button class="ord-btn" id="pfFactSaveBtn" onclick="saveFactura()" style="width:100%;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;margin-top:6px;">Guardar comprobante</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PANTALLA COMPLETA: NOTA DE CRÉDITO/DÉBITO NUEVA ══ -->
+    <div id="facturaNotaScreen" style="display:none;">
+      <div class="fact-create-hdr">
+        <button class="fact-back-btn" onclick="closeFacturaNotaScreen()" title="Volver">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <div class="fact-create-title" id="factNotaTitle">Nota de crédito nueva</div>
+      </div>
+
+      <div class="fact-create-layout">
+        <!-- Columna izquierda: ítems de la factura/boleta original (editables — cantidad/precio para devoluciones parciales) -->
+        <div class="fact-create-left">
+          <div id="pfNotaItemsList">
+            <div class="fact-items-head">
+              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax">Impuesto</div><div class="fact-cell-subtotal">Subtotal</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+            </div>
+            <div id="pfNotaItemsRows"></div>
+          </div>
+
+          <div class="fact-totals-box" id="factNotaTotalsBox">
+            <div class="fact-totals-row"><span>Subtotal</span><span id="factNotaSubtotalVal">S/ 0.00</span></div>
+            <div class="fact-totals-row"><span>IGV (18%)</span><span id="factNotaIgvVal">S/ 0.00</span></div>
+            <div class="fact-totals-row fact-totals-total"><span>Total</span><span id="factNotaTotalVal">S/ 0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: documento que modifica, motivo, cliente, fecha -->
+        <div class="fact-create-right">
+          <div class="fld">
+            <label>Documento que modifica</label>
+            <div class="fact-nota-ref-box" id="factNotaDocRef">—</div>
+          </div>
+
+          <div class="fld">
+            <label>Motivo</label>
+            <select class="panel-form-inp" id="factNotaMotivoTipo" style="width:100%;box-sizing:border-box;"></select>
+          </div>
+
+          <div class="fld">
+            <label>Detalle adicional</label>
+            <textarea class="panel-form-inp" id="factNotaMotivo" rows="3" placeholder="Opcional" style="width:100%;box-sizing:border-box;resize:vertical;"></textarea>
+          </div>
+
+          <div class="fld">
+            <label>Cliente</label>
+            <div class="fact-nota-ref-box" id="factNotaClientBox">—</div>
+          </div>
+
+          <div class="fld">
+            <label>Fecha</label>
+            <input class="panel-form-inp" id="pfNotaFecha" type="date" style="width:100%;min-height:44px;flex-shrink:0;box-sizing:border-box;color-scheme:dark;">
+          </div>
+
+          <button class="ord-btn" id="pfNotaSaveBtn" onclick="saveNotaFactura()" style="width:100%;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;margin-top:6px;">Guardar nota</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PANTALLA COMPLETA: DETALLE DE COMPROBANTE ══ -->
+    <div id="facturaDetailScreen" style="display:none;">
+      <div class="fact-create-hdr">
+        <button class="fact-back-btn" onclick="closeFacturaDetailScreen()" title="Volver">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <div class="fact-create-title" id="factDetailTitle">Documento</div>
+      </div>
+
+      <div class="fact-create-layout">
+        <!-- Columna izquierda: ítems (editables) + totales + acciones -->
+        <div class="fact-create-left">
+          <div id="pfDetailItemsList">
+            <div class="fact-items-head">
+              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax">Impuesto</div><div class="fact-cell-subtotal">Subtotal</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+            </div>
+            <div id="pfDetailItemsRows"></div>
+          </div>
+
+          <div class="fact-totals-box" id="factDetailTotalsBox">
+            <div class="fact-totals-row"><span>Subtotal</span><span id="factDetailSubtotalVal">S/ 0.00</span></div>
+            <div class="fact-totals-row"><span>IGV (18%)</span><span id="factDetailIgvVal">S/ 0.00</span></div>
+            <div class="fact-totals-row fact-totals-total"><span>Total</span><span id="factDetailTotalVal">S/ 0.00</span></div>
+          </div>
+
+          <div class="fact-detail-actions">
+            <button type="button" class="fact-detail-action-btn" onclick="generateComprobantePDF(_factDetailId)">Imprimir</button>
+            <button type="button" class="fact-detail-action-btn" onclick="clonarFactura()">Clonar</button>
+            <button type="button" class="fact-detail-action-btn fact-detail-action-primary" onclick="saveFacturaDetail()">Guardar</button>
+          </div>
+        </div>
+
+        <!-- Columna derecha: cliente, orden de compra, fecha -->
+        <div class="fact-create-right">
+          <div class="fld">
+            <label>Cliente</label>
+            <div class="fact-nota-ref-box" id="factDetailClientBox">—</div>
+          </div>
+          <div class="fld">
+            <label>RUC / DNI</label>
+            <div class="fact-nota-ref-box" id="factDetailDocBox">—</div>
+          </div>
+
+          <div class="fld">
+            <label>Orden de compra</label>
+            <input class="panel-form-inp" id="pfDetailOrdenCompra" type="text" placeholder="Opcional" maxlength="40" style="width:100%;min-height:44px;flex-shrink:0;box-sizing:border-box;">
+          </div>
+
+          <div class="fld">
+            <label>Fecha</label>
+            <input class="panel-form-inp" id="pfDetailFecha" type="date" style="width:100%;min-height:44px;flex-shrink:0;box-sizing:border-box;color-scheme:dark;">
+          </div>
+
+          <div class="fld" id="factDetailOrigenWrap" style="display:none;">
+            <label>Origen</label>
+            <div class="fact-nota-ref-box" id="factDetailOrigenBox">—</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -6755,13 +7239,15 @@ function openKjModal(type, editId) {
       const item = arr.find(x=>String(x.id)===String(editId));
       if (item) {
         document.getElementById('kjName').value  = item.name    || '';
-        document.getElementById('kjDoc').value   = item.doc     || '';
         document.getElementById('kjPhone').value = item.phone   || '';
         document.getElementById('kjAddr').value  = item.address || '';
+        setKjDocType(item.docType || 'ruc');
+        document.getElementById('kjDoc').value   = item.doc     || '';
         title.textContent = type === 'cli' ? 'Editar cliente' : 'Editar proveedor';
       }
     } else {
       ['kjName','kjDoc','kjPhone','kjAddr'].forEach(id=>document.getElementById(id).value='');
+      setKjDocType('ruc');
     }
     setTimeout(()=>document.getElementById('kjName').focus(), 80);
   }
@@ -6781,6 +7267,7 @@ async function kjModalSave() {
 }
 
 function togglePanelForm(type) {
+  _factPendingClientCallback = null;
   openKjModal(type, null);
 }
 
@@ -6789,6 +7276,7 @@ function cancelPanelForm(type) {
 }
 
 function editPanelItem(type, id) {
+  _factPendingClientCallback = null;
   openKjModal(type, id);
 }
 
@@ -6797,16 +7285,17 @@ function editPanelItem(type, id) {
 function savePanelSupplier() {
   const name   = document.getElementById('kjName').value.trim();
   const doc    = document.getElementById('kjDoc').value.trim();
+  const docType= _kjDocType;
   const address= document.getElementById('kjAddr').value.trim();
   const phone  = document.getElementById('kjPhone').value.trim();
   if(!name){ document.getElementById('kjName').focus(); return; }
   const id=_panelEditId.prov;
   if(id!==null){
     const s=suppliers.find(x=>String(x.id)===String(id));
-    if(s){ s.name=name; s.doc=doc; s.address=address; s.phone=phone; }
+    if(s){ s.name=name; s.doc=doc; s.docType=docType; s.address=address; s.phone=phone; }
     toast('Proveedor actualizado');
   } else {
-    suppliers.unshift({id:Date.now(),name,doc,address,phone});
+    suppliers.unshift({id:Date.now(),name,doc,docType,address,phone});
     toast('Proveedor agregado');
   }
   saveSuppliers(); closeKjModal(); renderProvPanel(); renderSupplierDropdown();
@@ -7703,6 +8192,7 @@ function toggleOrdMenu(event, id) {
   // Poblar el menú con los ítems de este pedido
   ctx.innerHTML = `
     <button class="ep-item" onclick="closeAllMenus();generateOrderReceipt(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Generar recibo</button>
+    <button class="ep-item" onclick="closeAllMenus();facturarDesde('pedido',${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Facturar</button>
     <button class="ep-item" onclick="closeAllMenus();ordWhatsApp(${id})"><span class="ep-ic">${ORD_SVG.chat}</span>WhatsApp</button>
     <button class="ep-item" onclick="closeAllMenus();openEditOrderModal(${id})"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
     <button class="ep-item ep-del" onclick="closeAllMenus();deleteOrderFromPanel(${id})"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>`;
@@ -7727,11 +8217,15 @@ function toggleOrdMenu(event, id) {
 ══════════════════════════════════════════ */
 let _confirmCallback = null;
 
-function showConfirm({ title, desc, icon, label = 'Sí, eliminar', onConfirm }) {
+function showConfirm({ title, desc, icon, label = 'Sí, eliminar', onConfirm, variant }) {
   document.getElementById('confirmTitle').textContent  = title;
   document.getElementById('confirmDesc').innerHTML     = desc;
   document.getElementById('confirmIcon').innerHTML     = icon || ORD_SVG.trash;
-  document.getElementById('confirmDelBtn').textContent = label;
+  const delBtn = document.getElementById('confirmDelBtn');
+  delBtn.textContent = label;
+  // Variante neutral para diálogos informativos (no destructivos) — el botón rojo por defecto no aplica aquí.
+  delBtn.style.background = variant === 'info' ? 'var(--k-accent)' : '';
+  delBtn.style.color = variant === 'info' ? 'var(--k-bg)' : '';
   _confirmCallback = onConfirm;
   document.getElementById('confirmOverlay').classList.add('open');
   // Cerrar al tocar fuera
@@ -10220,13 +10714,14 @@ function delClient(id){
 async function savePanelClient(){
   const name   = document.getElementById('kjName').value.trim();
   const doc    = document.getElementById('kjDoc').value.trim();
+  const docType= _kjDocType;
   const address= document.getElementById('kjAddr').value.trim();
   const phone  = document.getElementById('kjPhone').value.trim();
   if(!name){ document.getElementById('pfCliName').focus(); toast('Escribe el nombre'); return; }
   const id=_panelEditId.cli;
   if(id!==null){
     const c=clients.find(x=>String(x.id)===String(id));
-    if(c){ c.name=name; c.doc=doc; c.address=address; c.phone=phone;
+    if(c){ c.name=name; c.doc=doc; c.docType=docType; c.address=address; c.phone=phone;
       if(currentUser && !currentUser.id?.includes('demo-user')){
         try{ await sb.from('clients').update({name,phone:phone||null}).eq('id',id).eq('user_id',currentUser.id); }
         catch(e){ console.error('update client panel:',e); }
@@ -10242,13 +10737,17 @@ async function savePanelClient(){
         newId=data.id;
       }catch(e){ toast('✗ Error al guardar'); return; }
     }
-    clients.unshift({id:newId,name,doc,address,phone});
+    clients.unshift({id:newId,name,doc,docType,address,phone});
     toast('✓ Cliente agregado');
   }
   try{saveClients();}catch(e){}
   closeKjModal();
   renderCliPanel();
   try{renderClientDropdown();}catch(e){}
+  if(_factPendingClientCallback){
+    _factPendingClientCallback(clients[0]);
+    _factPendingClientCallback=null;
+  }
 }
 
 async function savePanelProduct(){
@@ -10852,6 +11351,30 @@ function saveOrders() {
   localStorage.setItem(ORD_KEY, JSON.stringify(_orders));
 }
 loadOrders();
+
+// ── Facturación (comprobantes) ──
+const FACT_KEY = 'kajita_comprobantes';
+let _comprobantes = [];
+let _factFilter = 'all';
+let _factSort = { key: 'fecha', dir: 'desc' };
+
+function loadComprobantes() {
+  try { _comprobantes = JSON.parse(localStorage.getItem(FACT_KEY) || '[]'); } catch(e) { _comprobantes = []; }
+}
+function saveComprobantes() {
+  localStorage.setItem(FACT_KEY, JSON.stringify(_comprobantes));
+}
+loadComprobantes();
+
+// Serie por tipo de comprobante — al conectar NubeFacT esto se puede sincronizar con SUNAT sin tocar la UI.
+const FACT_SERIE = { factura: 'F001', boleta: 'B001', 'nota-credito': 'FC01', 'nota-debito': 'FD01' };
+const FACT_TIPO_LABEL = { factura: 'Factura', boleta: 'Boleta de venta', 'nota-credito': 'Nota de crédito', 'nota-debito': 'Nota de débito' };
+function _factNextNum(tipo) {
+  const serie = FACT_SERIE[tipo];
+  const max = _comprobantes.filter(c => c.serie === serie).reduce((m, c) => Math.max(m, c.numero || 0), 0);
+  const numero = max + 1;
+  return { serie, numero, numeroFormato: `${serie}-${String(numero).padStart(5, '0')}` };
+}
 
 // ── Formulario ──
 let _ordItems  = []; // accumulated items for new order form
@@ -11708,15 +12231,16 @@ const VIEW_TITLES = {
   cred: 'Créditos',
   ord:  'Pedidos',
   quote: 'Cotizaciones',
+  factura: 'Facturación',
   cal:  'Calendario',
   notas: 'Notas',
 };
 
-const PANEL_VIEWS = ['cli','prov','inv','cred','ord','quote'];
+const PANEL_VIEWS = ['cli','prov','inv','cred','ord','quote','factura'];
 const PANEL_OVERLAY_IDS = {
   cli:'panelCliOverlay', prov:'panelProvOverlay',
   inv:'panelInvOverlay', cred:'panelCredOverlay', ord:'panelOrdOverlay',
-  quote:'panelQuoteOverlay'
+  quote:'panelQuoteOverlay', factura:'panelFacturaOverlay'
 };
 
 function switchView(view) {
@@ -11760,6 +12284,7 @@ function switchView(view) {
     if (view === 'cred') renderCredPanel();
     if (view === 'ord')  { loadOrders(); renderOrdPanel(); }
     if (view === 'quote'){ loadQuotes(); document.getElementById('panelQuoteSearch').value=''; renderQuotePanel(); }
+    if (view === 'factura'){ loadComprobantes(); document.getElementById('panelFacturaSearch').value=''; renderFacturaPanel(); }
 
   } else if (view === 'cal') {
     openSalesCalendar();
@@ -12632,12 +13157,53 @@ async function lookupDocumento(doc, onResult) {
   }
 }
 
-// Clientes / Proveedores (campo kjDoc)
+// Clientes / Proveedores (campo kjDoc) — tipo de documento (RUC/DNI/Sin documento/otros, catálogo SUNAT 06)
+const KJ_DOCTYPES = {
+  ruc:            { label: 'RUC',                          maxlen: 11, numeric: true,  ph: 'RUC (11 dígitos)' },
+  dni:            { label: 'DNI',                          maxlen: 8,  numeric: true,  ph: 'DNI (8 dígitos)' },
+  sin:            { label: 'Sin documento',                maxlen: 0,  numeric: false, ph: '' },
+  no_domiciliado: { label: 'No domiciliado',               maxlen: 20, numeric: false, ph: 'N° de documento' },
+  pasaporte:      { label: 'Pasaporte',                    maxlen: 20, numeric: false, ph: 'N° de pasaporte' },
+  carnet_ext:     { label: 'Carnet de extranjería',        maxlen: 20, numeric: false, ph: 'N° de carnet' },
+  carnet_id:      { label: 'Carnet de identidad',          maxlen: 20, numeric: false, ph: 'N° de carnet' },
+  doc_no_dom:     { label: 'Doc.Identif.Pers.Nat.No Dom.', maxlen: 20, numeric: false, ph: 'N° de documento' },
+  tam:            { label: 'TAM - Tarjeta Andina de Migración', maxlen: 20, numeric: false, ph: 'N° de TAM' },
+  carnet_temp:    { label: 'Carnet Permiso Temp.Permanencia',   maxlen: 20, numeric: false, ph: 'N° de carnet' }
+};
+let _kjDocType = 'ruc';
+
+function setKjDocType(type) {
+  if (!type) return; // placeholder "Más opciones" seleccionado sin elegir nada real
+  _kjDocType = type;
+  const meta = KJ_DOCTYPES[type];
+  document.querySelectorAll('.kj-doctype-btn').forEach(b => b.classList.toggle('active', b.dataset.doctype === type));
+  const moreSel = document.getElementById('kjDocTypeMore');
+  const isMore = !['ruc', 'dni', 'sin'].includes(type);
+  moreSel.classList.toggle('active', isMore);
+  moreSel.value = isMore ? type : '';
+  const wrap = document.getElementById('kjDocFieldWrap');
+  const inp = document.getElementById('kjDoc');
+  const searchBtn = document.getElementById('kjDocSearchBtn');
+  document.getElementById('kjDocStatus').textContent = '';
+  if (type === 'sin') {
+    wrap.style.display = 'none';
+    inp.value = '';
+    return;
+  }
+  wrap.style.display = 'flex';
+  document.getElementById('kjDocLabel').textContent = 'N° de Documento';
+  inp.placeholder = meta.ph;
+  inp.maxLength = meta.maxlen;
+  inp.inputMode = meta.numeric ? 'numeric' : 'text';
+  searchBtn.style.display = (type === 'ruc' || type === 'dni') ? 'flex' : 'none';
+}
+
 let _kjDocTimer = null;
 function onKjDocInput(val) {
   clearTimeout(_kjDocTimer);
-  const doc = val.replace(/\D/g, '');
   const statusEl = document.getElementById('kjDocStatus');
+  if (_kjDocType !== 'ruc' && _kjDocType !== 'dni') { if (statusEl) statusEl.textContent = ''; return; }
+  const doc = val.replace(/\D/g, '');
   if (doc.length !== 8 && doc.length !== 11) { if (statusEl) statusEl.textContent = ''; return; }
   if (statusEl) statusEl.textContent = '🔍 Buscando…';
   _kjDocTimer = setTimeout(async () => {
@@ -12652,6 +13218,9 @@ function onKjDocInput(val) {
       }
       if (statusEl) { statusEl.textContent = '✓ Encontrado'; setTimeout(() => { statusEl.textContent = ''; }, 3000); }
     });
+    // Si lookupDocumento no encontró nada o falló (sin token, sin resultados, error de red),
+    // no llama a onResult — evita que el status quede pegado en "Buscando…" para siempre.
+    if (statusEl && statusEl.textContent === '🔍 Buscando…') statusEl.textContent = '';
   }, 600);
 }
 
@@ -12889,6 +13458,791 @@ function _qtNextNum() {
 }
 
 // ── Filtros ──
+// ── Facturación: formulario "+ Nueva" (picker de cliente/producto, ítems) ──
+let _factTipo = 'factura';
+let _factItems = [];
+let _factPay = 'cash';
+let _factOrigen = null; // {tipo:'pedido'|'cotizacion', id} cuando se factura desde uno existente
+let _factPendingClientCallback = null; // set por openFacturaNewClient(), consumido en savePanelClient()
+let _factPendingUnit = ''; // unidad SUNAT (NIU/KGM/...) del producto seleccionado, consumida en factPushItem()
+let _factExpandedIdx = null; // índice de la fila expandida en móvil (editar P.Unit/Impuesto/Subtotal), null = ninguna
+
+function openFacturaNewClient() {
+  _factPendingClientCallback = (c) => {
+    document.getElementById('pfFactClient').value = c.name;
+    document.getElementById('pfFactDoc').value = c.doc || '';
+  };
+  openKjModal('cli', null);
+}
+
+function setFactTipo(tipo) {
+  _factTipo = tipo;
+  document.getElementById('factTipoFactura').classList.toggle('active', tipo === 'factura');
+  document.getElementById('factTipoBoleta').classList.toggle('active', tipo === 'boleta');
+}
+
+const FACT_PAY_META = {
+  cash:     { label: 'Efectivo',      cls: 'pc',  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4"/><path d="M18 10v4"/></svg>' },
+  yape:     { label: 'Yape',          cls: 'py',  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><line x1="10" y1="18.5" x2="14" y2="18.5"/></svg>' },
+  plin:     { label: 'Plin',          cls: 'pp',  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
+  transfer: { label: 'Transferencia', cls: 'pt',  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6"/><line x1="4" y1="21" x2="20" y2="21"/><line x1="6" y1="12" x2="6" y2="18"/><line x1="10" y1="12" x2="10" y2="18"/><line x1="14" y1="12" x2="14" y2="18"/><line x1="18" y1="12" x2="18" y2="18"/></svg>' },
+  card:     { label: 'Tarjeta',       cls: 'pca', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' }
+};
+
+function factTogglePayDrop() {
+  const d = document.getElementById('factPayDrop');
+  d.style.display = d.style.display === 'block' ? 'none' : 'block';
+}
+
+function setFactPay(p) {
+  _factPay = p;
+  const meta = FACT_PAY_META[p];
+  document.getElementById('factPaySelectBtn').className = 'fact-pay-select ' + meta.cls;
+  document.getElementById('factPaySelIcon').innerHTML = meta.icon;
+  document.getElementById('factPaySelLabel').textContent = meta.label;
+  document.getElementById('factPayDrop').style.display = 'none';
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('#facturaCreateScreen .fact-pay-wrap');
+  if (wrap && !wrap.contains(e.target)) document.getElementById('factPayDrop').style.display = 'none';
+  [['factProdDrop', 'pfFactDesc'], ['factClientDrop', 'pfFactClient']].forEach(([dropId, inputId]) => {
+    const drop = document.getElementById(dropId);
+    const input = document.getElementById(inputId);
+    const wrap = input && input.closest('.input-with-toggle');
+    if (drop && drop.style.display === 'block' && !drop.contains(e.target) && !(wrap && wrap.contains(e.target))) {
+      drop.style.display = 'none';
+    }
+  });
+});
+
+function _factReset() {
+  _factItems = [];
+  _factOrigen = null;
+  _factPay = 'cash';
+  _factPendingUnit = '';
+  _factExpandedIdx = null;
+  document.getElementById('pfFactClient').value = '';
+  document.getElementById('pfFactDoc').value = '';
+  document.getElementById('pfFactDesc').value = '';
+  document.getElementById('pfFactQty').value = '1';
+  document.getElementById('pfFactUnit').value = '';
+  document.getElementById('pfFactAmt').value = '';
+  document.getElementById('pfFactFecha').value = _isoToday();
+  document.getElementById('factDescuento').value = '';
+  setFactTipo('factura');
+  setFactPay('cash');
+  setFactMobileTab('productos');
+  factRenderItems();
+}
+
+function setFactMobileTab(tab) {
+  document.querySelector('#facturaCreateScreen .fact-create-layout').dataset.mtab = tab;
+  document.querySelectorAll('.fact-mobile-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+}
+
+function toggleFacturaForm() {
+  _factReset();
+  document.getElementById('factCreateTitle').textContent = 'Nueva venta';
+  document.getElementById('facturaListView').style.display = 'none';
+  document.getElementById('facturaCreateScreen').style.display = 'block';
+  setTimeout(() => document.getElementById('pfFactDesc').focus(), 80);
+}
+
+function closeFacturaCreateScreen() {
+  document.getElementById('facturaCreateScreen').style.display = 'none';
+  document.getElementById('facturaListView').style.display = 'block';
+  factHideDrop('factClientDrop');
+  factHideDrop('factProdDrop');
+  factHideDrop('factPayDrop');
+}
+
+function factHideDrop(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+
+function _factPositionDrop(inputId, dropId) {
+  const inp = document.getElementById(inputId), drop = document.getElementById(dropId);
+  if (!inp || !drop) return;
+  const r = inp.getBoundingClientRect();
+  drop.style.left = r.left + 'px';
+  drop.style.top = (r.bottom + 4) + 'px';
+  drop.style.width = r.width + 'px';
+}
+function _factRenderDrop(inputId, dropId, items, onSelectHtml) {
+  const drop = document.getElementById(dropId);
+  if (!drop) return;
+  if (!items.length) { drop.style.display = 'none'; return; }
+  drop.innerHTML = items.map(onSelectHtml).join('');
+  _factPositionDrop(inputId, dropId);
+  drop.style.display = 'block';
+}
+
+function factFilterClients() {
+  _factCliCursor = -1;
+  const q = (document.getElementById('pfFactClient').value || '').toLowerCase();
+  const list = (typeof clients !== 'undefined' ? clients : [])
+    .filter(c => !q || c.name.toLowerCase().includes(q)).slice(0, 8);
+  _factRenderDrop('pfFactClient', 'factClientDrop', list,
+    c => `<button type="button" class="cchip" onmousedown="factSelectClient('${String(c.id).replace(/'/g,"\\'")}')">${c.name}${c.doc ? ' · <span style="opacity:.5;font-size:10px">'+c.doc+'</span>' : ''}</button>`
+  );
+}
+
+// Navegación por teclado (↑/↓/Enter/Esc) en el picker de clientes — mismo patrón que iDescKeyNav en Registrar.
+let _factCliCursor = -1;
+function factClientKeyNav(e) {
+  const drop = document.getElementById('factClientDrop');
+  const isOpen = !!drop && drop.style.display === 'block';
+  const chips = isOpen ? Array.from(drop.querySelectorAll('.cchip')) : [];
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (!isOpen) { factToggleClients(); return; }
+    if (!chips.length) return;
+    _factCliCursor = Math.min(_factCliCursor + 1, chips.length - 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!isOpen || !chips.length) return;
+    _factCliCursor = Math.max(_factCliCursor - 1, 0);
+  } else if (e.key === 'Enter') {
+    if (isOpen && _factCliCursor >= 0 && chips[_factCliCursor]) {
+      e.preventDefault();
+      chips[_factCliCursor].dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+      _factCliCursor = -1;
+    } else if (isOpen && chips.length === 1) {
+      e.preventDefault();
+      chips[0].dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+      _factCliCursor = -1;
+    }
+    return;
+  } else if (e.key === 'Escape') {
+    _factCliCursor = -1;
+    factHideDrop('factClientDrop');
+    return;
+  } else { _factCliCursor = -1; return; }
+  chips.forEach((c, i) => c.classList.toggle('cchip-focus', i === _factCliCursor));
+  if (chips[_factCliCursor]) chips[_factCliCursor].scrollIntoView({ block: 'nearest' });
+}
+function factToggleClients() {
+  const drop = document.getElementById('factClientDrop');
+  if (drop.style.display === 'block') { drop.style.display = 'none'; return; }
+  document.getElementById('pfFactClient').value = '';
+  factFilterClients();
+  document.getElementById('pfFactClient').focus();
+}
+function factSelectClient(id) {
+  const c = (typeof clients !== 'undefined' ? clients : []).find(x => String(x.id) === String(id));
+  if (!c) return;
+  document.getElementById('pfFactClient').value = c.name;
+  document.getElementById('pfFactDoc').value = c.doc || '';
+  factHideDrop('factClientDrop');
+}
+
+function factFilterProducts() {
+  _factPendingUnit = ''; // se re-establece solo al elegir un producto de la lista (factSelectProduct)
+  _factProdCursor = -1;
+  const q = (document.getElementById('pfFactDesc').value || '').toLowerCase();
+  const list = (typeof products !== 'undefined' ? products : [])
+    .filter(p => !q || p.name.toLowerCase().includes(q)).slice(0, 8);
+  _factRenderDrop('pfFactDesc', 'factProdDrop', list,
+    p => `<button type="button" class="pchip" onmousedown="factSelectProduct('${String(p.id).replace(/'/g,"\\'")}')">${p.name}<span class="pchip-price">S/ ${parseFloat(p.price||0).toFixed(2)}</span></button>`
+  );
+}
+
+// Navegación por teclado (↑/↓/Enter/Esc) en el picker de productos — mismo patrón que iDescKeyNav en Registrar.
+let _factProdCursor = -1;
+function factDescKeyNav(e) {
+  const drop = document.getElementById('factProdDrop');
+  const isOpen = !!drop && drop.style.display === 'block';
+  const chips = isOpen ? Array.from(drop.querySelectorAll('.pchip')) : [];
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (!isOpen) { factToggleProducts(); return; }
+    if (!chips.length) return;
+    _factProdCursor = Math.min(_factProdCursor + 1, chips.length - 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!isOpen || !chips.length) return;
+    _factProdCursor = Math.max(_factProdCursor - 1, 0);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (isOpen && _factProdCursor >= 0 && chips[_factProdCursor]) {
+      chips[_factProdCursor].dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+      _factProdCursor = -1;
+    } else if (isOpen && chips.length === 1) {
+      chips[0].dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+      _factProdCursor = -1;
+    } else {
+      factPushItem();
+    }
+    return;
+  } else if (e.key === 'Escape') {
+    _factProdCursor = -1;
+    factHideDrop('factProdDrop');
+    return;
+  } else { _factProdCursor = -1; return; }
+  chips.forEach((c, i) => c.classList.toggle('pchip-focus', i === _factProdCursor));
+  if (chips[_factProdCursor]) chips[_factProdCursor].scrollIntoView({ block: 'nearest' });
+}
+function factToggleProducts() {
+  const drop = document.getElementById('factProdDrop');
+  if (drop.style.display === 'block') { drop.style.display = 'none'; return; }
+  document.getElementById('pfFactDesc').value = '';
+  factFilterProducts();
+  document.getElementById('pfFactDesc').focus();
+}
+function factSelectProduct(id) {
+  const p = (typeof products !== 'undefined' ? products : []).find(x => String(x.id) === String(id));
+  if (!p) return;
+  document.getElementById('pfFactDesc').value = p.name;
+  document.getElementById('pfFactUnit').value = parseFloat(p.price || 0).toFixed(2);
+  _factPendingUnit = p.unit || 'NIU';
+  factHideDrop('factProdDrop');
+  factRecalc();
+  document.getElementById('pfFactQty').focus();
+}
+
+function factStepQty(delta) {
+  const el = document.getElementById('pfFactQty');
+  el.value = Math.max(1, (parseFloat(el.value) || 1) + delta);
+  factRecalc();
+}
+function factRecalc() {
+  const qty = parseFloat(document.getElementById('pfFactQty').value) || 1;
+  const unit = parseFloat(document.getElementById('pfFactUnit').value) || 0;
+  if (unit > 0) document.getElementById('pfFactAmt').value = (qty * unit).toFixed(2);
+}
+function factRecalcFromAmt() {
+  const qty = parseFloat(document.getElementById('pfFactQty').value) || 1;
+  const amt = parseFloat(document.getElementById('pfFactAmt').value) || 0;
+  if (amt > 0) document.getElementById('pfFactUnit').value = (amt / qty).toFixed(2);
+}
+
+function factPushItem() {
+  const desc = document.getElementById('pfFactDesc').value.trim();
+  const qty  = parseFloat(document.getElementById('pfFactQty').value)  || 1;
+  const unit = parseFloat(document.getElementById('pfFactUnit').value) || 0;
+  const amt  = parseFloat(document.getElementById('pfFactAmt').value)  || (qty * unit);
+  if (!desc) { document.getElementById('pfFactDesc').focus(); return; }
+  if (amt <= 0) { document.getElementById('pfFactUnit').focus(); return; }
+  _factItems.push({ desc, qty, price: unit || (amt / qty), total: amt, unit: _factPendingUnit || 'NIU' });
+  _factPendingUnit = '';
+  document.getElementById('pfFactDesc').value = '';
+  document.getElementById('pfFactQty').value  = '1';
+  document.getElementById('pfFactUnit').value = '';
+  document.getElementById('pfFactAmt').value  = '';
+  factRenderItems();
+  document.getElementById('pfFactDesc').focus();
+}
+function factRemoveItem(idx) { _factItems.splice(idx, 1); factRenderItems(); }
+
+// Móvil: expandir una fila para editar P.Unit/Impuesto/Subtotal (columnas ocultas en la vista compacta)
+function factToggleItemExpand(idx) {
+  _factExpandedIdx = (_factExpandedIdx === idx) ? null : idx;
+  factRenderItems();
+}
+
+function factItemStepQty(idx, delta) {
+  const it = _factItems[idx]; if (!it) return;
+  it.qty = Math.max(1, (parseFloat(it.qty) || 1) + delta);
+  it.total = it.qty * it.price;
+  factRenderItems();
+}
+function factItemSetQty(idx, val) {
+  const it = _factItems[idx]; if (!it) return;
+  it.qty = Math.max(1, parseFloat(val) || 1);
+  it.total = it.qty * it.price;
+  factRenderItems();
+}
+function factItemSetPrice(idx, val) {
+  const it = _factItems[idx]; if (!it) return;
+  it.price = Math.max(0, parseFloat(val) || 0);
+  it.total = it.qty * it.price;
+  factRenderItems();
+}
+function factItemSetTotal(idx, val) {
+  const it = _factItems[idx]; if (!it) return;
+  it.total = Math.max(0, parseFloat(val) || 0);
+  it.price = it.qty > 0 ? it.total / it.qty : 0;
+  factRenderItems();
+}
+
+function _factItemsTotal() { return _factItems.reduce((s, i) => s + i.total, 0); }
+function _factDescuentoVal() { return Math.max(0, parseFloat(document.getElementById('factDescuento').value) || 0); }
+function _factNetTotal() { return Math.max(0, _factItemsTotal() - _factDescuentoVal()); }
+
+function factRenderItems() {
+  const rows = document.getElementById('pfFactItemsRows');
+  const list = document.getElementById('pfFactItemsList');
+  const empty = document.getElementById('factItemsEmpty');
+  const totalsBox = document.getElementById('factTotalsBox');
+  const netTotal = _factNetTotal();
+  // El precio de venta ya incluye IGV — se desglosa solo para mostrarlo (mismo cálculo que generateComprobantePDF).
+  const subtotal = netTotal / 1.18;
+  const igv = netTotal - subtotal;
+  document.getElementById('factSubtotalVal').textContent = 'S/ ' + subtotal.toFixed(2);
+  document.getElementById('factIgvVal').textContent = 'S/ ' + igv.toFixed(2);
+  document.getElementById('factTotalVal2').textContent = 'S/ ' + netTotal.toFixed(2);
+  if (!_factItems.length) { list.style.display = 'none'; empty.style.display = 'block'; totalsBox.style.display = 'none'; return; }
+  list.style.display = 'block'; empty.style.display = 'none'; totalsBox.style.display = 'block';
+  rows.innerHTML = _factItems.map((it, i) => {
+    const expanded = _factExpandedIdx === i;
+    const editIcon = expanded
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
+    return `
+    <div class="fact-item-row" data-expanded="${expanded}">
+      <div style="color:var(--k-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.desc}</div>
+      <div class="fact-item-qty-col">
+        <div class="num-stepper fact-item-stepper">
+          <button type="button" class="step-btn" onclick="factItemStepQty(${i},-1)">−</button>
+          <input type="number" min="1" step="1" value="${it.qty}" onchange="factItemSetQty(${i}, this.value)">
+          <button type="button" class="step-btn" onclick="factItemStepQty(${i},1)">+</button>
+        </div>
+        <div class="fact-item-unit">${it.unit || 'NIU'}</div>
+      </div>
+      <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factItemSetPrice(${i}, this.value)">
+      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);">IGV 18%</div>
+      <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
+      <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
+      <button type="button" class="fact-item-edit-btn" onclick="factToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
+      <button onclick="factRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0;line-height:1;" title="Quitar">×</button>
+    </div>
+    <div class="fact-item-expand-panel" style="display:${expanded ? 'flex' : 'none'};">
+      <div class="fact-expand-row"><span>Precio U.</span><input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factItemSetPrice(${i}, this.value)"></div>
+      <div class="fact-expand-row"><span>Impuesto</span><span style="color:var(--k-text-3);font-family:var(--mono);">IGV 18%</span></div>
+      <div class="fact-expand-row"><span>Subtotal</span><span style="color:var(--k-text-3);font-family:var(--mono);">S/ ${(it.total / 1.18).toFixed(2)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// Crea un comprobante a partir del formulario en blanco, o pre-llenado (origen) desde un Pedido/Cotización.
+function _crearComprobante(tipo, client, doc, phone, items, total, origen, opts) {
+  const { serie, numero, numeroFormato } = _factNextNum(tipo);
+  const now = new Date();
+  const nuevo = {
+    id: Date.now(), tipo, serie, numero, numeroFormato,
+    fecha: (opts && opts.fecha) || _isoToday(), hora: now.toTimeString().slice(0, 8),
+    client, doc: doc || '', phone: phone || '', items, total,
+    descuento: (opts && opts.descuento) || 0,
+    pay: (opts && opts.pay) || 'cash',
+    motivoTipo: (opts && opts.motivoTipo) || '',
+    motivo: (opts && opts.motivo) || '',
+    estado: 'registrado',
+    origen: origen || { tipo: null, id: null }
+  };
+  _comprobantes.unshift(nuevo);
+  saveComprobantes();
+  return nuevo;
+}
+
+function saveFactura() {
+  const client = document.getElementById('pfFactClient').value.trim();
+  if (!client) { document.getElementById('pfFactClient').focus(); toast('Escribe el nombre del cliente'); return; }
+  const pendingDesc = document.getElementById('pfFactDesc').value.trim();
+  const pendingAmt  = parseFloat(document.getElementById('pfFactAmt').value) || 0;
+  if (pendingDesc && pendingAmt > 0) factPushItem();
+  if (!_factItems.length) { document.getElementById('pfFactDesc').focus(); toast('Agrega al menos un ítem'); return; }
+  const descuento = _factDescuentoVal();
+  const total = _factNetTotal();
+  const doc = document.getElementById('pfFactDoc').value.trim();
+  const fecha = document.getElementById('pfFactFecha').value || _isoToday();
+  const nuevo = _crearComprobante(_factTipo, client, doc, '', [..._factItems], total, _factOrigen, { pay: _factPay, fecha, descuento });
+  closeFacturaCreateScreen();
+  renderFacturaPanel();
+  toast(`${FACT_TIPO_LABEL[_factTipo]} registrada: ${nuevo.numeroFormato}`);
+}
+
+// Abre la pantalla completa de facturación pre-llenada con los datos de un Pedido o Cotización existente.
+function facturarDesde(origType, id) {
+  const src = origType === 'pedido' ? _orders.find(o => o.id === id) : _quotes.find(q => q.id === id);
+  if (!src) return;
+  switchView('factura'); // asegura que el panel de Facturación esté activo antes de mostrar la pantalla de creación
+  _factReset();
+  document.getElementById('pfFactClient').value = src.client || '';
+  document.getElementById('pfFactDoc').value = src.doc || '';
+  _factItems = (src.items || []).map(i => {
+    const qty = i.qty || 1;
+    // total es el dato confiable en ambos orígenes; el precio unitario se deriva de él
+    // porque en Cotizaciones "price" guarda el total de la línea, no el precio unitario (a diferencia de Pedidos).
+    const total = i.total != null ? i.total : (i.price != null ? i.price * qty : (i.unit || 0) * qty);
+    const price = qty > 0 ? total / qty : (i.price != null ? i.price : (i.unit || 0));
+    return { desc: i.desc, qty, price, total };
+  });
+  factRenderItems();
+  _factOrigen = { tipo: origType, id: src.id };
+  document.getElementById('factCreateTitle').textContent = origType === 'pedido' ? 'Facturar pedido' : 'Facturar cotización';
+  document.getElementById('facturaListView').style.display = 'none';
+  document.getElementById('facturaCreateScreen').style.display = 'block';
+  setTimeout(() => document.getElementById('pfFactDoc').focus(), 80);
+}
+
+// ── Facturación: menú de acciones ──
+function toggleFacturaMenu(event, id) {
+  event.stopPropagation();
+  const menu = document.getElementById('facturaContextMenu');
+  const open = menu.classList.contains('open') && menu.dataset.factId == id;
+  closeAllMenus();
+  if (open) return;
+  const c = _comprobantes.find(x => x.id === id);
+  if (!c) return;
+  menu.dataset.factId = id;
+  const puedeGenerarNotas = c.tipo === 'factura' || c.tipo === 'boleta';
+  menu.innerHTML = `
+    <button class="ep-item" onclick="closeAllMenus();verDetalleFactura(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Ver detalle</button>
+    <button class="ep-item" onclick="closeAllMenus();generateComprobantePDF(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Imprimir / PDF</button>
+    ${puedeGenerarNotas ? `<button class="ep-item" onclick="closeAllMenus();generarNotaFactura(${id},'nota-credito')"><span class="ep-ic">${ORD_SVG.note}</span>Generar nota de Crédito</button>` : ''}
+    ${puedeGenerarNotas ? `<button class="ep-item" onclick="closeAllMenus();generarNotaFactura(${id},'nota-debito')"><span class="ep-ic">${ORD_SVG.note}</span>Generar nota de Débito</button>` : ''}
+    ${c.estado!=='anulado' ? `<button class="ep-item ep-del" onclick="closeAllMenus();anularFactura(${id})"><span class="ep-ic">${ORD_SVG.undo}</span>Anular</button>` : ''}`;
+  const r = event.currentTarget.getBoundingClientRect();
+  menu.style.position = 'fixed';
+  menu.style.zIndex = '99990';
+  menu.style.top = (r.bottom + 4) + 'px';
+  menu.style.left = Math.max(8, r.right - 200) + 'px';
+  menu.style.right = 'auto';
+  menu.classList.add('open');
+}
+
+function anularFactura(id) {
+  const c = _comprobantes.find(x => x.id === id);
+  if (!c) return;
+  showConfirm({
+    icon: ORD_SVG.undo,
+    title: '¿Anular este comprobante?',
+    desc: `<strong>${c.numeroFormato}</strong> — ${c.client||'—'}<br>El registro se conserva, solo se marca como anulado.`,
+    onConfirm: () => {
+      c.estado = 'anulado';
+      saveComprobantes();
+      renderFacturaPanel();
+      toast('Comprobante anulado');
+    }
+  });
+}
+
+// Catálogo SUNAT 09 (motivos de nota de crédito) y 10 (motivos de nota de débito).
+const SUNAT_MOTIVO_NC = [
+  'Anulación de la operación', 'Anulación por error en el RUC', 'Corrección por error en la descripción o datos del bien/servicio',
+  'Descuento global', 'Descuento por ítem', 'Devolución total', 'Devolución por ítem',
+  'Bonificación', 'Disminución en el valor', 'Otros conceptos', 'Ajustes de montos o fechas de pago'
+];
+const SUNAT_MOTIVO_ND = ['Intereses por mora', 'Aumento en el valor', 'Penalidades y otros conceptos', 'Ajustes de montos o fechas de pago'];
+
+let _factNotaItems = [];
+let _factNotaOrig = null;
+let _factNotaTipo = 'nota-credito';
+let _factNotaExpandedIdx = null;
+
+// Abre la pantalla de creación de nota (ya NO genera la nota directamente) — el usuario revisa ítems,
+// elige el motivo SUNAT y confirma con "Guardar nota".
+function generarNotaFactura(origId, tipoNota) {
+  const orig = _comprobantes.find(x => x.id === origId);
+  if (!orig) return;
+  _factNotaOrig = orig;
+  _factNotaTipo = tipoNota;
+  _factNotaItems = (orig.items || []).map(i => ({ ...i }));
+  _factNotaExpandedIdx = null;
+  document.getElementById('factNotaTitle').textContent = FACT_TIPO_LABEL[tipoNota] + ' nueva';
+  document.getElementById('factNotaDocRef').textContent = `${orig.numeroFormato} (S/ ${(orig.total || 0).toFixed(2)})`;
+  document.getElementById('factNotaClientBox').textContent = orig.client + (orig.doc ? ' · ' + orig.doc : '');
+  document.getElementById('pfNotaFecha').value = _isoToday();
+  document.getElementById('factNotaMotivo').value = '';
+  const motivos = tipoNota === 'nota-credito' ? SUNAT_MOTIVO_NC : SUNAT_MOTIVO_ND;
+  document.getElementById('factNotaMotivoTipo').innerHTML =
+    '<option value="">Selecciona un motivo…</option>' + motivos.map(m => `<option>${m}</option>`).join('');
+  factRenderNotaItems();
+  document.getElementById('facturaListView').style.display = 'none';
+  document.getElementById('facturaNotaScreen').style.display = 'block';
+}
+
+function closeFacturaNotaScreen() {
+  document.getElementById('facturaNotaScreen').style.display = 'none';
+  document.getElementById('facturaListView').style.display = 'block';
+}
+
+function factNotaItemStepQty(idx, delta) {
+  const it = _factNotaItems[idx]; if (!it) return;
+  it.qty = Math.max(1, (parseFloat(it.qty) || 1) + delta);
+  it.total = it.qty * it.price;
+  factRenderNotaItems();
+}
+function factNotaItemSetQty(idx, val) {
+  const it = _factNotaItems[idx]; if (!it) return;
+  it.qty = Math.max(1, parseFloat(val) || 1);
+  it.total = it.qty * it.price;
+  factRenderNotaItems();
+}
+function factNotaItemSetPrice(idx, val) {
+  const it = _factNotaItems[idx]; if (!it) return;
+  it.price = Math.max(0, parseFloat(val) || 0);
+  it.total = it.qty * it.price;
+  factRenderNotaItems();
+}
+function factNotaItemSetTotal(idx, val) {
+  const it = _factNotaItems[idx]; if (!it) return;
+  it.total = Math.max(0, parseFloat(val) || 0);
+  it.price = it.qty > 0 ? it.total / it.qty : 0;
+  factRenderNotaItems();
+}
+function factNotaRemoveItem(idx) { _factNotaItems.splice(idx, 1); factRenderNotaItems(); }
+function factNotaToggleItemExpand(idx) {
+  _factNotaExpandedIdx = (_factNotaExpandedIdx === idx) ? null : idx;
+  factRenderNotaItems();
+}
+
+function factRenderNotaItems() {
+  const rows = document.getElementById('pfNotaItemsRows');
+  const grandTotal = _factNotaItems.reduce((s, i) => s + i.total, 0);
+  const subtotal = grandTotal / 1.18;
+  const igv = grandTotal - subtotal;
+  document.getElementById('factNotaSubtotalVal').textContent = 'S/ ' + subtotal.toFixed(2);
+  document.getElementById('factNotaIgvVal').textContent = 'S/ ' + igv.toFixed(2);
+  document.getElementById('factNotaTotalVal').textContent = 'S/ ' + grandTotal.toFixed(2);
+  rows.innerHTML = _factNotaItems.map((it, i) => {
+    const expanded = _factNotaExpandedIdx === i;
+    const editIcon = expanded
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
+    return `
+    <div class="fact-item-row" data-expanded="${expanded}">
+      <div style="color:var(--k-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.desc}</div>
+      <div class="fact-item-qty-col">
+        <div class="num-stepper fact-item-stepper">
+          <button type="button" class="step-btn" onclick="factNotaItemStepQty(${i},-1)">−</button>
+          <input type="number" min="1" step="1" value="${it.qty}" onchange="factNotaItemSetQty(${i}, this.value)">
+          <button type="button" class="step-btn" onclick="factNotaItemStepQty(${i},1)">+</button>
+        </div>
+        <div class="fact-item-unit">${it.unit || 'NIU'}</div>
+      </div>
+      <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factNotaItemSetPrice(${i}, this.value)">
+      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);">IGV 18%</div>
+      <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
+      <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factNotaItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
+      <button type="button" class="fact-item-edit-btn" onclick="factNotaToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
+      <button onclick="factNotaRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0;line-height:1;" title="Quitar">×</button>
+    </div>
+    <div class="fact-item-expand-panel" style="display:${expanded ? 'flex' : 'none'};">
+      <div class="fact-expand-row"><span>Precio U.</span><input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factNotaItemSetPrice(${i}, this.value)"></div>
+      <div class="fact-expand-row"><span>Impuesto</span><span style="color:var(--k-text-3);font-family:var(--mono);">IGV 18%</span></div>
+      <div class="fact-expand-row"><span>Subtotal</span><span style="color:var(--k-text-3);font-family:var(--mono);">S/ ${(it.total / 1.18).toFixed(2)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function saveNotaFactura() {
+  if (!_factNotaOrig) return;
+  if (!_factNotaItems.length) { toast('Agrega al menos un ítem'); return; }
+  const motivoTipo = document.getElementById('factNotaMotivoTipo').value;
+  if (!motivoTipo) { document.getElementById('factNotaMotivoTipo').focus(); toast('Selecciona un motivo'); return; }
+  const motivo = document.getElementById('factNotaMotivo').value.trim();
+  const fecha = document.getElementById('pfNotaFecha').value || _isoToday();
+  const total = _factNotaItems.reduce((s, i) => s + i.total, 0);
+  const orig = _factNotaOrig;
+  const nuevo = _crearComprobante(_factNotaTipo, orig.client, orig.doc, orig.phone, [..._factNotaItems], total, { tipo: orig.tipo, id: orig.id }, { fecha, motivoTipo, motivo });
+  closeFacturaNotaScreen();
+  renderFacturaPanel();
+  toast(`${FACT_TIPO_LABEL[_factNotaTipo]} registrada: ${nuevo.numeroFormato}`);
+}
+
+// ── Pantalla completa de detalle (reemplaza el modal simple de "Ver detalle") ──
+let _factDetailId = null;
+let _factDetailItems = [];
+let _factDetailExpandedIdx = null;
+
+function verDetalleFactura(id) {
+  const c = _comprobantes.find(x => x.id === id);
+  if (!c) return;
+  _factDetailId = id;
+  _factDetailItems = (c.items || []).map(i => ({ ...i }));
+  _factDetailExpandedIdx = null;
+  document.getElementById('factDetailTitle').textContent = `Documento ${c.numeroFormato} — ${FACT_TIPO_LABEL[c.tipo] || c.tipo}`;
+  document.getElementById('factDetailClientBox').textContent = c.client || '—';
+  document.getElementById('factDetailDocBox').textContent = c.doc || '—';
+  document.getElementById('pfDetailOrdenCompra').value = c.ordenCompra || '';
+  document.getElementById('pfDetailFecha').value = c.fecha || _isoToday();
+  const origenWrap = document.getElementById('factDetailOrigenWrap');
+  if (c.origen && c.origen.tipo) {
+    origenWrap.style.display = 'flex';
+    const origenLabel = c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : (FACT_TIPO_LABEL[c.origen.tipo] || c.origen.tipo);
+    document.getElementById('factDetailOrigenBox').textContent = `Generado desde ${origenLabel}`;
+  } else {
+    origenWrap.style.display = 'none';
+  }
+  factRenderDetailItems();
+  document.getElementById('facturaListView').style.display = 'none';
+  document.getElementById('facturaDetailScreen').style.display = 'block';
+}
+
+function closeFacturaDetailScreen() {
+  document.getElementById('facturaDetailScreen').style.display = 'none';
+  document.getElementById('facturaListView').style.display = 'block';
+  _factDetailId = null;
+}
+
+function factDetailItemStepQty(idx, delta) {
+  const it = _factDetailItems[idx]; if (!it) return;
+  it.qty = Math.max(1, (parseFloat(it.qty) || 1) + delta);
+  it.total = it.qty * it.price;
+  factRenderDetailItems();
+}
+function factDetailItemSetQty(idx, val) {
+  const it = _factDetailItems[idx]; if (!it) return;
+  it.qty = Math.max(1, parseFloat(val) || 1);
+  it.total = it.qty * it.price;
+  factRenderDetailItems();
+}
+function factDetailItemSetPrice(idx, val) {
+  const it = _factDetailItems[idx]; if (!it) return;
+  it.price = Math.max(0, parseFloat(val) || 0);
+  it.total = it.qty * it.price;
+  factRenderDetailItems();
+}
+function factDetailItemSetTotal(idx, val) {
+  const it = _factDetailItems[idx]; if (!it) return;
+  it.total = Math.max(0, parseFloat(val) || 0);
+  it.price = it.qty > 0 ? it.total / it.qty : 0;
+  factRenderDetailItems();
+}
+function factDetailRemoveItem(idx) { _factDetailItems.splice(idx, 1); factRenderDetailItems(); }
+function factDetailToggleItemExpand(idx) {
+  _factDetailExpandedIdx = (_factDetailExpandedIdx === idx) ? null : idx;
+  factRenderDetailItems();
+}
+
+function factRenderDetailItems() {
+  const rows = document.getElementById('pfDetailItemsRows');
+  const grandTotal = _factDetailItems.reduce((s, i) => s + i.total, 0);
+  const subtotal = grandTotal / 1.18;
+  const igv = grandTotal - subtotal;
+  document.getElementById('factDetailSubtotalVal').textContent = 'S/ ' + subtotal.toFixed(2);
+  document.getElementById('factDetailIgvVal').textContent = 'S/ ' + igv.toFixed(2);
+  document.getElementById('factDetailTotalVal').textContent = 'S/ ' + grandTotal.toFixed(2);
+  rows.innerHTML = _factDetailItems.map((it, i) => {
+    const expanded = _factDetailExpandedIdx === i;
+    const editIcon = expanded
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
+    return `
+    <div class="fact-item-row" data-expanded="${expanded}">
+      <div style="color:var(--k-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.desc}</div>
+      <div class="fact-item-qty-col">
+        <div class="num-stepper fact-item-stepper">
+          <button type="button" class="step-btn" onclick="factDetailItemStepQty(${i},-1)">−</button>
+          <input type="number" min="1" step="1" value="${it.qty}" onchange="factDetailItemSetQty(${i}, this.value)">
+          <button type="button" class="step-btn" onclick="factDetailItemStepQty(${i},1)">+</button>
+        </div>
+        <div class="fact-item-unit">${it.unit || 'NIU'}</div>
+      </div>
+      <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factDetailItemSetPrice(${i}, this.value)">
+      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);">IGV 18%</div>
+      <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
+      <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factDetailItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
+      <button type="button" class="fact-item-edit-btn" onclick="factDetailToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
+      <button onclick="factDetailRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0;line-height:1;" title="Quitar">×</button>
+    </div>
+    <div class="fact-item-expand-panel" style="display:${expanded ? 'flex' : 'none'};">
+      <div class="fact-expand-row"><span>Precio U.</span><input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factDetailItemSetPrice(${i}, this.value)"></div>
+      <div class="fact-expand-row"><span>Impuesto</span><span style="color:var(--k-text-3);font-family:var(--mono);">IGV 18%</span></div>
+      <div class="fact-expand-row"><span>Subtotal</span><span style="color:var(--k-text-3);font-family:var(--mono);">S/ ${(it.total / 1.18).toFixed(2)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function saveFacturaDetail() {
+  const c = _comprobantes.find(x => x.id === _factDetailId);
+  if (!c) return;
+  if (!_factDetailItems.length) { toast('El comprobante debe tener al menos un ítem'); return; }
+  c.items = [..._factDetailItems];
+  c.total = _factDetailItems.reduce((s, i) => s + i.total, 0);
+  c.ordenCompra = document.getElementById('pfDetailOrdenCompra').value.trim();
+  c.fecha = document.getElementById('pfDetailFecha').value || c.fecha;
+  saveComprobantes();
+  closeFacturaDetailScreen();
+  renderFacturaPanel();
+  toast('Comprobante actualizado');
+}
+
+// Duplica el comprobante actual como uno nuevo (misma serie, correlativo siguiente, fecha de hoy).
+function clonarFactura() {
+  const c = _comprobantes.find(x => x.id === _factDetailId);
+  if (!c) return;
+  const nuevo = _crearComprobante(c.tipo, c.client, c.doc, c.phone, c.items.map(i => ({ ...i })), c.total, { tipo: null, id: null }, { pay: c.pay, fecha: _isoToday() });
+  closeFacturaDetailScreen();
+  renderFacturaPanel();
+  toast(`Comprobante clonado: ${nuevo.numeroFormato}`);
+}
+
+// ── Facturación: filtro, orden y render ──
+function setFacturaFilter(f) {
+  _factFilter = f;
+  ['all','factura','boleta','nota-credito','nota-debito'].forEach(k =>
+    document.getElementById('factF-'+k)?.classList.toggle('active', k===f));
+  renderFacturaPanel();
+}
+
+function setFacturaSort(key) {
+  if (_factSort.key === key) _factSort.dir = _factSort.dir === 'asc' ? 'desc' : 'asc';
+  else _factSort = { key, dir: 'desc' };
+  renderFacturaPanel();
+}
+
+function renderFacturaPanel() {
+  const list  = document.getElementById('panelFacturaList');
+  const subEl = document.getElementById('panelFacturaSub');
+  const cntEl = document.getElementById('panelFacturaCount');
+  const totEl = document.getElementById('panelFacturaTotal');
+  if (!list) return;
+
+  const q = (document.getElementById('panelFacturaSearch')?.value || '').toLowerCase();
+  let filtered = _comprobantes.filter(c => !q ||
+    (c.numeroFormato||'').toLowerCase().includes(q) ||
+    (c.client||'').toLowerCase().includes(q) ||
+    (c.doc||'').toLowerCase().includes(q));
+  if (_factFilter !== 'all') filtered = filtered.filter(c => c.tipo === _factFilter);
+
+  const dir = _factSort.dir === 'asc' ? 1 : -1;
+  const key = _factSort.key;
+  filtered = [...filtered].sort((a, b) => {
+    let va = a[key], vb = b[key];
+    if (key === 'fecha') { va = a.fecha + ' ' + (a.hora||''); vb = b.fecha + ' ' + (b.hora||''); }
+    if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
+    return String(va||'').localeCompare(String(vb||'')) * dir;
+  });
+
+  const activeCount = _comprobantes.filter(c => c.estado !== 'anulado').length;
+  const totalAll = _comprobantes.filter(c => c.estado !== 'anulado').reduce((s,c) => s + (c.total||0), 0);
+  cntEl.textContent = activeCount;
+  totEl.textContent = 'S/ ' + totalAll.toFixed(2);
+  subEl.textContent = _comprobantes.length + ' comprobante' + (_comprobantes.length!==1?'s':'') + ' registrado' + (_comprobantes.length!==1?'s':'');
+
+  const th = (k, lbl) => {
+    const active = _factSort.key === k;
+    return `<div class="pl-sort-th${active?' active '+_factSort.dir:''}" onclick="setFacturaSort('${k}')">${lbl}<svg class="sort-ic" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>`;
+  };
+  const headRow = `<div class="pl-head-row pl-fact">
+    ${th('numeroFormato','Documento')}<div>Tipo</div>${th('fecha','Fecha')}${th('client','Cliente')}${th('total','Total')}${th('estado','Estado')}<div></div>
+  </div>`;
+
+  if (!filtered.length) {
+    list.innerHTML = headRow + `<div class="panel-empty">
+      <span>${_factFilter==='all' ? 'Sin comprobantes aún.<br>Toca <b>+ Nueva</b> para registrar el primero.' : 'Sin comprobantes en este tipo.'}</span>
+    </div>`;
+    return;
+  }
+
+  const rows = filtered.map(c => `
+    <div class="pl-row pl-fact" data-fact-id="${c.id}" onclick="verDetalleFactura(${c.id})" style="cursor:pointer;">
+      <div class="pl-name" style="font-family:var(--mono);font-size:12px;">${c.numeroFormato}</div>
+      <div class="pl-phone">${FACT_TIPO_LABEL[c.tipo]||c.tipo}</div>
+      <div class="pl-phone">${_fmtDateDisplay(c.fecha)}</div>
+      <div class="pl-name">${c.client||'—'}</div>
+      <div class="pl-phone" style="font-family:var(--mono);color:var(--k-text);">S/ ${(c.total||0).toFixed(2)}</div>
+      <div><span class="pl-badge ${c.estado}">${c.estado==='anulado'?'Anulado':'Registrado'}</span></div>
+      <div class="pl-acts"><button class="abtn-menu" onclick="toggleFacturaMenu(event,${c.id})" title="Acciones">···</button></div>
+    </div>`).join('');
+
+  list.innerHTML = headRow + rows;
+}
+
 function setQuoteFilter(f) {
   _qtFilter = f;
   ['all','vigente','aceptada','vencida'].forEach(k =>
@@ -13426,6 +14780,7 @@ function toggleQuoteMenu(event, id) {
   menu.innerHTML = `
     <button class="ep-item" onclick="closeAllMenus();openQuoteModal(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Ver detalle</button>
     <button class="ep-item" onclick="closeAllMenus();generateQuoteReceipt(${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Imprimir / PDF</button>
+    <button class="ep-item" onclick="closeAllMenus();facturarDesde('cotizacion',${id})"><span class="ep-ic">${ORD_SVG.receipt}</span>Facturar</button>
     <button class="ep-item ep-wa" onclick="closeAllMenus();quoteWhatsApp(${id})"><span class="ep-ic">${ORD_SVG.chat}</span>WhatsApp</button>
     <button class="ep-item" onclick="closeAllMenus();openEditQuoteModal(${id})"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
     <button class="ep-item ep-del" onclick="closeAllMenus();deleteQuote(${id})"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>`;
@@ -13808,6 +15163,149 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   w.document.write(html); w.document.close();
 }
 
+// ── Documento imprimible del comprobante (Factura/Boleta/Nota) ──
+const FACT_DOC_TITLE = {
+  factura: 'Factura Electrónica',
+  boleta: 'Boleta de Venta Electrónica',
+  'nota-credito': 'Nota de Crédito Electrónica',
+  'nota-debito': 'Nota de Débito Electrónica'
+};
+
+function generateComprobantePDF(id) {
+  const c = _comprobantes.find(x => x.id === id);
+  if (!c) { toast('Comprobante no encontrado'); return; }
+  const biz = bizProfile || {};
+  const logo = localStorage.getItem('kajita_logo') || '';
+
+  const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = getBrandColor();
+  const darkBar = '#52525b';
+
+  const today = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'long', year:'numeric' });
+  const fechaEmision = new Date(c.fecha+'T12:00:00').toLocaleDateString('es-PE', { day:'numeric', month:'long', year:'numeric' });
+  const total = c.total || 0;
+  // En Perú el precio de venta ya incluye IGV — se desglosa para mostrarlo en el comprobante.
+  const subtotal = total / 1.18;
+  const igv = total - subtotal;
+  const letras = _totalToLetras(total);
+
+  const bizName  = biz.name    || 'Mi Negocio';
+  const bizRuc   = biz.ruc     || '20123456789';
+  const bizAddr  = biz.address || 'Av. Los Olivos 456, Lima';
+  const bizPhone = biz.phone   || '';
+
+  const itemsRows = (c.items||[]).map((i, idx) => {
+    const qty = i.qty || 1;
+    const unitP = parseFloat(i.price||0);
+    const lineTotal = parseFloat(i.total != null ? i.total : qty*unitP) || 0;
+    const bg = idx%2===0 ? '#fff' : soft;
+    return `<tr style="background:${bg};">
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${qty}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${i.desc||'—'}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">S/${unitP.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">S/${lineTotal.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+
+  const origenTxt = c.origen && c.origen.tipo
+    ? `<div class="info-row"><span class="info-lbl">Origen</span><span class="info-val">${c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : FACT_TIPO_LABEL[c.origen.tipo]}</span></div>`
+    : '';
+
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>${FACT_DOC_TITLE[c.tipo]} ${c.numeroFormato} — ${bizName}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@page { size: A4; margin: 16mm 18mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.5px; color: ${ink}; background: #f0f0f0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { background: #fff; width: 100%; max-width: 740px; margin: 24px auto; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,.13); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid ${line}; }
+.col-us { padding: 16px 20px 16px 32px; border-right: 1px solid ${line}; background: ${soft}; }
+.col-cli { padding: 16px 32px 16px 20px; background: #fff; }
+.col-title { font-size: 8.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: ${accent}; margin-bottom: 10px; border-bottom: 1.5px solid ${accent}; padding-bottom: 4px; display: inline-block; }
+.info-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: baseline; }
+.info-lbl { font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: ${gray}; width: 72px; flex-shrink: 0; }
+.info-val { font-size: 12px; color: ${ink}; font-weight: 500; line-height: 1.4; }
+.info-val.big { font-size: 13.5px; font-weight: 700; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: ${darkBar}; }
+thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.9); }
+thead th:first-child { text-align: center; width: 52px; }
+thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
+.totals-wrap { padding: 0 32px 4px; display: flex; justify-content: flex-end; }
+.totals-card { width: 220px; border: 1px solid ${line}; border-radius: 10px; overflow: hidden; margin-top: 16px; }
+.tot-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; font-size: 12.5px; border-bottom: 1px solid ${line}; color: ${gray}; }
+.tot-row.is-total { background: ${darkBar}; color: #fff; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; }
+.letras-wrap { padding: 16px 32px; }
+.letras-card { background: ${soft}; border-radius: 10px; border: 1px solid ${line}; padding: 10px 14px; }
+.letras-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 5px; }
+.letras-val { font-family: 'Fraunces', Georgia, serif; font-size: 13px; font-weight: 700; color: ${ink}; }
+.footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; }
+.footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
+.footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
+.kj { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -.5px; color: #888; }
+.kj-j { color: ${accent}; }
+.local-badge { text-align: center; padding: 8px; font-size: 9.5px; letter-spacing: .05em; color: ${gray}; background: ${soft}; border-bottom: 1px solid ${line}; }
+@media print { body { background: #fff; } .page { border-radius: 0; box-shadow: none; margin: 0; } }
+</style></head><body>
+<div class="page">
+
+  ${c.estado === 'registrado' ? '<div class="local-badge">Documento registrado en KAJITA — pendiente de envío a SUNAT</div>' : ''}
+
+  ${kjDocHeader({ logo, bizName, docType: FACT_DOC_TITLE[c.tipo], docNum: c.numeroFormato, metaLines:[`Emitido el ${fechaEmision}`], accent })}
+
+  <div class="two-col">
+    <div class="col-us">
+      <div class="info-row"><span class="info-lbl">Negocio</span><span class="info-val big">${bizName}</span></div>
+      ${bizRuc ? `<div class="info-row"><span class="info-lbl">RUC</span><span class="info-val">${bizRuc}</span></div>` : ''}
+      ${bizAddr ? `<div class="info-row"><span class="info-lbl">Dirección</span><span class="info-val">${bizAddr}</span></div>` : ''}
+      ${bizPhone ? `<div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${bizPhone}</span></div>` : ''}
+    </div>
+    <div class="col-cli">
+      <div class="info-row"><span class="info-lbl">Cliente</span><span class="info-val big">${c.client||'Sin nombre'}</span></div>
+      ${c.doc ? `<div class="info-row"><span class="info-lbl">RUC / DNI</span><span class="info-val">${c.doc}</span></div>` : ''}
+      ${c.phone ? `<div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${c.phone}</span></div>` : ''}
+      ${origenTxt}
+    </div>
+  </div>
+
+  <table>
+    <thead><tr>
+      <th>Cant.</th>
+      <th style="text-align:left;">Descripción</th>
+      <th>P.U.</th>
+      <th>Total</th>
+    </tr></thead>
+    <tbody>${itemsRows}</tbody>
+  </table>
+
+  <div class="totals-wrap">
+    <div class="totals-card">
+      <div class="tot-row"><span>Op. Gravada</span><span>S/ ${subtotal.toFixed(2)}</span></div>
+      <div class="tot-row"><span>IGV (18%)</span><span>S/ ${igv.toFixed(2)}</span></div>
+      <div class="tot-row is-total"><span>Total</span><span>S/ ${total.toFixed(2)}</span></div>
+    </div>
+  </div>
+
+  <div class="letras-wrap">
+    <div class="letras-card">
+      <div class="letras-lbl">Son</div>
+      <div class="letras-val">${letras}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-thanks">¡Gracias por su preferencia!</div>
+    <div class="footer-brand">Generado con <span class="kj">Ka<span class="kj-j">j</span>ita</span></div>
+  </div>
+
+</div>
+<script>setTimeout(()=>{window.focus();window.print();},400);<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank', 'width=820,height=1000');
+  w.document.write(html); w.document.close();
+}
+
 function quoteWhatsApp(id) {
   const qt = _quotes.find(x => x.id === id);
   if (!qt) return;
@@ -13860,16 +15358,37 @@ function quoteWhatsApp(id) {
     <!-- BODY: campos comunes persona -->
     <div class="kj-modal-body" id="kjModalBodyPerson" style="display:none">
       <div class="kj-modal-field">
-        <label>Nombre / Razón social <span class="req">*</span></label>
-        <input class="kj-modal-inp" id="kjName" placeholder="Ej: Juan Pérez" maxlength="60">
+        <div class="kj-doctype-row">
+          <button type="button" class="kj-doctype-btn active" data-doctype="ruc" onclick="setKjDocType('ruc')">RUC</button>
+          <button type="button" class="kj-doctype-btn" data-doctype="dni" onclick="setKjDocType('dni')">DNI</button>
+          <button type="button" class="kj-doctype-btn" data-doctype="sin" onclick="setKjDocType('sin')">Sin documento</button>
+          <select class="kj-doctype-more" id="kjDocTypeMore" onchange="setKjDocType(this.value)">
+            <option value="">Más opciones</option>
+            <option value="no_domiciliado">No domiciliado</option>
+            <option value="pasaporte">Pasaporte</option>
+            <option value="carnet_ext">Carnet de extranjería</option>
+            <option value="carnet_id">Carnet de identidad</option>
+            <option value="doc_no_dom">Doc.Identif.Pers.Nat.No Dom.</option>
+            <option value="tam">TAM - Tarjeta Andina de Migración</option>
+            <option value="carnet_temp">Carnet Permiso Temp.Permanencia</option>
+          </select>
+        </div>
+      </div>
+      <div class="kj-modal-field" id="kjDocFieldWrap">
+        <label id="kjDocLabel">N° de Documento</label>
+        <div class="kj-doc-row">
+          <input class="kj-modal-inp" id="kjDoc" placeholder="RUC (11 dígitos)" maxlength="11" inputmode="numeric" oninput="onKjDocInput(this.value)" style="flex:1;box-sizing:border-box;">
+          <button type="button" class="kj-doc-search-btn" id="kjDocSearchBtn" onclick="onKjDocInput(document.getElementById('kjDoc').value)" title="Buscar en RENIEC/SUNAT">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Buscar
+          </button>
+        </div>
+        <div id="kjDocStatus" class="kj-doc-status"></div>
       </div>
       <div class="kj-modal-row">
         <div class="kj-modal-field">
-          <label>DNI / RUC</label>
-          <div style="position:relative;">
-            <input class="kj-modal-inp" id="kjDoc" placeholder="DNI (8) o RUC (11 dígitos)" maxlength="11" oninput="onKjDocInput(this.value)" style="width:100%;box-sizing:border-box;padding-right:100px;">
-            <span id="kjDocStatus" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--k-text-3);pointer-events:none;white-space:nowrap;"></span>
-          </div>
+          <label>Nombre / Razón social <span class="req">*</span></label>
+          <input class="kj-modal-inp" id="kjName" placeholder="Ej: Juan Pérez" maxlength="60">
         </div>
         <div class="kj-modal-field">
           <label>Teléfono</label>
@@ -14099,6 +15618,7 @@ function quoteWhatsApp(id) {
 
 <!-- Menú contextual global de cotizaciones -->
 <div class="entry-popover" id="quoteContextMenu" style="position:fixed;z-index:99990;"></div>
+<div class="entry-popover" id="facturaContextMenu" style="position:fixed;z-index:99990;"></div>
 
 <!-- ══ MODAL: NUEVA COTIZACIÓN ══ -->
 <div class="ord-modal-backdrop" id="newQuoteBackdrop" onclick="if(event.target===this)closeNewQuoteModal()">
