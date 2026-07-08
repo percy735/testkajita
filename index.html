@@ -2569,25 +2569,29 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 /* Encabezado + filas de ítems, estilo tabla (Producto/Cant/P.Unit/Impuesto/Subtotal/Total/quitar) */
 #pfFactItemsList, #pfNotaItemsList, #pfDetailItemsList { overflow-x: auto; }
 .fact-items-head {
-  display: grid; grid-template-columns: 1fr 90px 74px 74px 78px 82px 28px; gap: 8px; min-width: 580px;
-  padding: 6px 10px; font-family: var(--mono); font-size: 9px; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--k-text-3); border-bottom: 1px solid var(--k-line);
+  display: grid; grid-template-columns: minmax(70px,1fr) 76px 56px 44px 56px 60px 20px; gap: 6px;
+  padding: 6px 8px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--k-text-3); border-bottom: 1px solid var(--k-line); white-space: nowrap;
 }
 .fact-item-row {
-  display: grid; grid-template-columns: 1fr 90px 74px 74px 78px 82px 28px; gap: 8px; align-items: center; min-width: 580px;
-  padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
+  display: grid; grid-template-columns: minmax(70px,1fr) 76px 56px 44px 56px 60px 20px; gap: 6px; align-items: center;
+  padding: 9px 8px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
 }
 .fact-item-row:hover { background: rgba(255,255,255,0.025); }
-.fact-item-qty-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.fact-item-unit { font-family: var(--mono); font-size: 9px; letter-spacing: .05em; text-transform: uppercase; color: var(--k-text-3); }
-.fact-item-row .num-stepper.fact-item-stepper { width: 100%; height: 28px; border-radius: 8px; }
-.fact-item-row .fact-item-stepper .step-btn { width: 22px; height: 26px; font-size: 14px; }
-.fact-item-row .fact-item-stepper input { font-size: 12px; padding: 0; }
-.fact-cell-tax, .fact-cell-subtotal { font-size: 12px; }
+/* height:26px fija para que la fila se alinee igual que los demás inputs (26px); la unidad se posiciona debajo sin sumar altura al grid. */
+.fact-item-qty-col { position: relative; height: 26px; }
+.fact-item-unit {
+  position: absolute; top: 100%; left: 0; right: 0; margin-top: 2px; text-align: center;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--k-text-3);
+}
+.fact-item-row .num-stepper.fact-item-stepper { width: 100%; height: 26px; border-radius: 7px; }
+.fact-item-row .fact-item-stepper .step-btn { width: 18px; height: 24px; font-size: 13px; }
+.fact-item-row .fact-item-stepper input { font-size: 11px; padding: 0; }
+.fact-cell-tax, .fact-cell-subtotal { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fact-item-price-inp {
   width: 100%; box-sizing: border-box; background: var(--k-inset); border: 1px solid var(--k-line);
-  border-radius: 8px; padding: 5px 6px; font-family: var(--mono); font-size: 12.5px; color: var(--k-text);
-  text-align: right; height: 28px;
+  border-radius: 7px; padding: 4px 5px; font-family: var(--mono); font-size: 11.5px; color: var(--k-text);
+  text-align: right; height: 26px;
 }
 .fact-item-price-inp:focus { outline: none; border-color: var(--k-accent); }
 .fact-item-edit-btn, .fact-cell-editbtn { display: none; }
@@ -2666,6 +2670,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .fact-pay-opt:hover { background: rgba(255,255,255,0.06); color: var(--k-text); }
 
 .fact-mobile-tabs { display: none; }
+.fact-mobile-save-btn { display: none; }
+.fact-footer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 4px 4px; margin-top: 20px; border-top: 1px solid var(--k-line); }
 
 @media (max-width: 1180px) {
   .fact-create-layout { grid-template-columns: 1fr; }
@@ -2678,10 +2684,13 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   .fact-mobile-tab.active { color: var(--k-accent); border-bottom-color: var(--k-accent); }
   .fact-create-layout[data-mtab="productos"] .fact-create-right { display: none; }
   .fact-create-layout[data-mtab="pagos"] .fact-create-left { display: none; }
+  .fact-mobile-save-btn { display: block; }
+  .fact-footer-row { display: none; }
 }
 @media (max-width: 640px) {
-  .fact-search-row { grid-template-columns: 1fr 1fr; }
-  .fact-search-desc { grid-column: 1 / -1; }
+  /* Móvil: solo el buscador — elegir/escribir el producto lo agrega directo (qty 1), se edita luego desde la fila (lápiz) */
+  .fact-search-row { grid-template-columns: 1fr; }
+  .fact-search-qty, .fact-search-unit, .fact-search-amt, .fact-search-row .push-item-btn { display: none; }
   /* Móvil: minimizar la fila de ítem a Producto/Cantidad/Total — con lápiz para desplegar P.Unit/Impuesto/Subtotal, igual que la referencia */
   .fact-items-head { grid-template-columns: 1fr 70px 78px 24px 24px; font-size: 8px; min-width: 0; }
   .fact-item-row { grid-template-columns: 1fr 70px 78px 24px 24px; font-size: 12px; min-width: 0; }
@@ -4713,7 +4722,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.167</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.174</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4966,7 +4975,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.167</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.174</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5700,6 +5709,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
               <input class="panel-search-inp" id="panelFacturaSearch" type="text" placeholder="Buscar..." oninput="renderFacturaPanel()">
             </div>
           </div>
+          <button class="panel-add-btn" onclick="openVoiceFact()" title="Venta por voz" style="background:transparent;border:1px solid var(--k-line);color:var(--k-text-3);width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
           <button class="panel-add-btn" onclick="toggleFacturaForm()">+ Nueva</button>
           <button class="panel-close" onclick="closePanel('factura')">×</button>
         </div>
@@ -5774,7 +5784,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
           <div id="pfFactItemsList" style="display:none;">
             <div class="fact-items-head">
-              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax">Impuesto</div><div class="fact-cell-subtotal">Subtotal</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
             </div>
             <div id="pfFactItemsRows"></div>
           </div>
@@ -5791,6 +5801,8 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <div class="fact-totals-row"><span>IGV (18%)</span><span id="factIgvVal">S/ 0.00</span></div>
             <div class="fact-totals-row fact-totals-total"><span>Total</span><span id="factTotalVal2">S/ 0.00</span></div>
           </div>
+
+          <button class="ord-btn fact-mobile-save-btn" onclick="saveFactura()" style="width:100%;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;margin-top:12px;">Guardar comprobante</button>
         </div>
 
         <!-- Columna derecha: tipo, pago, cliente, fecha (el Total destaca abajo a la izquierda, junto a los ítems) -->
@@ -5845,6 +5857,18 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           <button class="ord-btn" id="pfFactSaveBtn" onclick="saveFactura()" style="width:100%;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;margin-top:6px;">Guardar comprobante</button>
         </div>
       </div>
+
+      <!-- Pie de página del comprobante impreso (cuentas bancarias, etc.) — precargado desde Configuración, editable solo para este comprobante. Solo escritorio. -->
+      <div class="fact-footer-row">
+        <div class="fld">
+          <label>Pie de página (cuentas, condiciones…)</label>
+          <textarea class="panel-form-inp" id="pfFactPie" rows="3" placeholder="Ej: BCP S/ 123-456-789" style="width:100%;box-sizing:border-box;resize:vertical;font-family:var(--mono);font-size:12px;"></textarea>
+        </div>
+        <div class="fld">
+          <label>Nota <span style="text-transform:none;font-weight:400;">(no visible en la impresión)</span></label>
+          <textarea class="panel-form-inp" id="pfFactNota" rows="3" placeholder="Opcional" style="width:100%;box-sizing:border-box;resize:vertical;"></textarea>
+        </div>
+      </div>
     </div>
 
     <!-- ══ PANTALLA COMPLETA: NOTA DE CRÉDITO/DÉBITO NUEVA ══ -->
@@ -5861,7 +5885,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <div class="fact-create-left">
           <div id="pfNotaItemsList">
             <div class="fact-items-head">
-              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax">Impuesto</div><div class="fact-cell-subtotal">Subtotal</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
             </div>
             <div id="pfNotaItemsRows"></div>
           </div>
@@ -5919,7 +5943,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <div class="fact-create-left">
           <div id="pfDetailItemsList">
             <div class="fact-items-head">
-              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax">Impuesto</div><div class="fact-cell-subtotal">Subtotal</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
             </div>
             <div id="pfDetailItemsRows"></div>
           </div>
@@ -13530,6 +13554,8 @@ function _factReset() {
   document.getElementById('pfFactAmt').value = '';
   document.getElementById('pfFactFecha').value = _isoToday();
   document.getElementById('factDescuento').value = '';
+  document.getElementById('pfFactPie').value = (bizProfile && bizProfile.footerText) || '';
+  document.getElementById('pfFactNota').value = '';
   setFactTipo('factura');
   setFactPay('cash');
   setFactMobileTab('productos');
@@ -13694,6 +13720,16 @@ function factToggleProducts() {
 function factSelectProduct(id) {
   const p = (typeof products !== 'undefined' ? products : []).find(x => String(x.id) === String(id));
   if (!p) return;
+  if (window.innerWidth <= 640) {
+    // Móvil: no hay campos de cantidad/precio visibles — agrega directo (cant. 1) y se edita luego desde la fila (lápiz).
+    const price = parseFloat(p.price || 0);
+    _factItems.push({ desc: p.name, qty: 1, price, total: price, unit: p.unit || 'NIU' });
+    document.getElementById('pfFactDesc').value = '';
+    factHideDrop('factProdDrop');
+    factRenderItems();
+    document.getElementById('pfFactDesc').focus();
+    return;
+  }
   document.getElementById('pfFactDesc').value = p.name;
   document.getElementById('pfFactUnit').value = parseFloat(p.price || 0).toFixed(2);
   _factPendingUnit = p.unit || 'NIU';
@@ -13802,7 +13838,7 @@ function factRenderItems() {
         <div class="fact-item-unit">${it.unit || 'NIU'}</div>
       </div>
       <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factItemSetPrice(${i}, this.value)">
-      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);">IGV 18%</div>
+      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);" title="IGV 18%">18%</div>
       <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
       <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
       <button type="button" class="fact-item-edit-btn" onclick="factToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
@@ -13828,6 +13864,8 @@ function _crearComprobante(tipo, client, doc, phone, items, total, origen, opts)
     pay: (opts && opts.pay) || 'cash',
     motivoTipo: (opts && opts.motivoTipo) || '',
     motivo: (opts && opts.motivo) || '',
+    pieDePagina: (opts && opts.pieDePagina != null) ? opts.pieDePagina : ((bizProfile && bizProfile.footerText) || ''),
+    nota: (opts && opts.nota) || '',
     estado: 'registrado',
     origen: origen || { tipo: null, id: null }
   };
@@ -13847,7 +13885,9 @@ function saveFactura() {
   const total = _factNetTotal();
   const doc = document.getElementById('pfFactDoc').value.trim();
   const fecha = document.getElementById('pfFactFecha').value || _isoToday();
-  const nuevo = _crearComprobante(_factTipo, client, doc, '', [..._factItems], total, _factOrigen, { pay: _factPay, fecha, descuento });
+  const pieDePagina = document.getElementById('pfFactPie').value.trim();
+  const nota = document.getElementById('pfFactNota').value.trim();
+  const nuevo = _crearComprobante(_factTipo, client, doc, '', [..._factItems], total, _factOrigen, { pay: _factPay, fecha, descuento, pieDePagina, nota });
   closeFacturaCreateScreen();
   renderFacturaPanel();
   toast(`${FACT_TIPO_LABEL[_factTipo]} registrada: ${nuevo.numeroFormato}`);
@@ -13903,20 +13943,35 @@ function toggleFacturaMenu(event, id) {
   menu.classList.add('open');
 }
 
+let _anularFacturaId = null;
 function anularFactura(id) {
   const c = _comprobantes.find(x => x.id === id);
   if (!c) return;
-  showConfirm({
-    icon: ORD_SVG.undo,
-    title: '¿Anular este comprobante?',
-    desc: `<strong>${c.numeroFormato}</strong> — ${c.client||'—'}<br>El registro se conserva, solo se marca como anulado.`,
-    onConfirm: () => {
-      c.estado = 'anulado';
-      saveComprobantes();
-      renderFacturaPanel();
-      toast('Comprobante anulado');
-    }
-  });
+  _anularFacturaId = id;
+  const tipoTxt = (FACT_TIPO_LABEL[c.tipo] || c.tipo).toLowerCase();
+  document.getElementById('anularFacturaDesc').innerHTML =
+    `¿Desea anular la <strong>${tipoTxt} ${c.numeroFormato}</strong> por <strong>S/ ${(c.total || 0).toFixed(2)}</strong> cuyo cliente es <strong>${c.client || '—'}</strong>?`;
+  document.getElementById('anularMotivo').value = '';
+  document.getElementById('anularFacturaBackdrop').classList.add('open');
+  document.getElementById('anularFacturaBackdrop').style.display = 'flex';
+  setTimeout(() => document.getElementById('anularMotivo').focus(), 80);
+}
+function closeAnularFacturaModal() {
+  document.getElementById('anularFacturaBackdrop').style.display = 'none';
+  document.getElementById('anularFacturaBackdrop').classList.remove('open');
+  _anularFacturaId = null;
+}
+function confirmAnularFactura() {
+  const motivo = document.getElementById('anularMotivo').value.trim();
+  if (!motivo) { document.getElementById('anularMotivo').focus(); toast('Escribe el motivo de anulación'); return; }
+  const c = _comprobantes.find(x => x.id === _anularFacturaId);
+  if (!c) { closeAnularFacturaModal(); return; }
+  c.estado = 'anulado';
+  c.motivoAnulacion = motivo;
+  saveComprobantes();
+  closeAnularFacturaModal();
+  renderFacturaPanel();
+  toast('Comprobante anulado');
 }
 
 // Catálogo SUNAT 09 (motivos de nota de crédito) y 10 (motivos de nota de débito).
@@ -14014,7 +14069,7 @@ function factRenderNotaItems() {
         <div class="fact-item-unit">${it.unit || 'NIU'}</div>
       </div>
       <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factNotaItemSetPrice(${i}, this.value)">
-      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);">IGV 18%</div>
+      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);" title="IGV 18%">18%</div>
       <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
       <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factNotaItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
       <button type="button" class="fact-item-edit-btn" onclick="factNotaToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
@@ -14133,7 +14188,7 @@ function factRenderDetailItems() {
         <div class="fact-item-unit">${it.unit || 'NIU'}</div>
       </div>
       <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factDetailItemSetPrice(${i}, this.value)">
-      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);">IGV 18%</div>
+      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);" title="IGV 18%">18%</div>
       <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
       <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factDetailItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
       <button type="button" class="fact-item-edit-btn" onclick="factDetailToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
@@ -14517,7 +14572,8 @@ function vqParseText(text) {
     let desc = descToks.join(' ').replace(/^(?:de|del|los|las|unos|unas)\s+/i, '').trim();
     const matched = vqFindProduct(desc);
     const unit = matched ? matched.price : 0;
-    return { qty, desc: matched ? matched.name : desc, unit, total: qty * unit, matched: !!matched };
+    // unitCode (unidad SUNAT del producto) es un campo aditivo: cotizaciones/registrar lo ignoran, Facturación lo usa.
+    return { qty, desc: matched ? matched.name : desc, unit, total: qty * unit, matched: !!matched, unitCode: matched ? (matched.unit || 'NIU') : 'NIU' };
   }).filter(x => x.desc && x.qty > 0);
 
   // Consolidar ítems idénticos: mismo producto → sumar cantidades en una sola línea
@@ -14552,6 +14608,52 @@ function vqFindProduct(text) {
     }
   }
   return bestScore >= 0.5 ? best : null;  // umbral mínimo: evita falsos positivos
+}
+
+// Coincidencia de cliente por nombre hablado — mismo enfoque IDF + difuso que vqFindProduct.
+function vqFindClient(text) {
+  const qStems = vqStems(text);
+  if (!qStems.length || typeof clients === 'undefined' || !clients.length) return null;
+  const df = {};
+  const cliStems = clients.map(c => { const s = [...new Set(vqStems(c.name))]; s.forEach(w => df[w] = (df[w] || 0) + 1); return s; });
+  const N = clients.length;
+  let best = null, bestScore = 0;
+  for (let k = 0; k < clients.length; k++) {
+    const ns = cliStems[k], nsSet = new Set(ns);
+    let score = 0;
+    for (const w of qStems) {
+      let mw = 0;
+      if (nsSet.has(w)) mw = 1;
+      else { for (const s of ns) { if (s.length >= 4 && w.length >= 4 && vqLev(w, s) <= 1) { mw = 0.8; break; } } }
+      if (mw) { const idf = Math.log((N + 1) / ((df[w] || 0.5) + 0.5)) + 0.3; score += mw * idf; }
+    }
+    if (score > bestScore || (score === bestScore && score > 0 && clients[k].name.length < (best?.name.length || 9999))) {
+      bestScore = score; best = clients[k];
+    }
+  }
+  return bestScore >= 0.5 ? best : null;
+}
+
+// Separa un bloque "cliente <nombre>" del resto del texto (los ítems). El nombre del cliente termina
+// en la primera coma o al empezar un número (inicio de un ítem). Solo dispara con la palabra "cliente".
+function vqExtractClient(text) {
+  const tokens = text.split(/\s+/).filter(Boolean);
+  const low = tokens.map(vqDeacc);
+  let ki = low.indexOf('cliente');
+  if (ki === -1) return { clientRaw: '', itemsText: text };
+  const nameToks = [];
+  let j = ki + 1;
+  // saltar conectores iniciales ("cliente es", "cliente el", "para el cliente…")
+  while (j < tokens.length && ['es','el','la','señor','senor','señora','senora','sr','sra','don','doña','dona'].includes(low[j])) j++;
+  for (; j < tokens.length; j++) {
+    const dl = low[j];
+    if (/^\d/.test(dl) || VQ_NUM[dl] != null) break;         // empieza un ítem → fin del nombre
+    if (tokens[j].includes(',')) { const before = tokens[j].replace(/,.*/, ''); if (before) nameToks.push(before); j++; break; }
+    nameToks.push(tokens[j]);
+  }
+  const clientRaw = nameToks.join(' ').replace(/,/g, '').trim();
+  const remaining = tokens.slice(0, ki).concat(tokens.slice(j));
+  return { clientRaw, itemsText: remaining.join(' ') };
 }
 
 function vqRenderPreview() {
@@ -14767,6 +14869,188 @@ function veCreateEntry() {
   document.getElementById('iQty').value = '';
   document.getElementById('iUnitPrice').value = '';
   toast('¡Listo! Revisa los ítems y presiona "Registrar Movimiento".');
+}
+
+/* ══ FACTURACIÓN RÁPIDA POR VOZ — reutiliza el motor de voz + detecta el cliente por nombre ══ */
+let _vfItems = [];
+let _vfClient = null;      // cliente existente emparejado (o null)
+let _vfClientRaw = '';     // nombre dictado (aunque no exista aún)
+let _vfRecognition = null;
+let _vfListening = false;
+
+function openVoiceFact() {
+  document.getElementById('voiceFactBackdrop').style.display = 'flex';
+  document.getElementById('vfText').value = '';
+  document.getElementById('vfPreview').innerHTML = '';
+  document.getElementById('vfClientBox').innerHTML = '';
+  _vfItems = []; _vfClient = null; _vfClientRaw = '';
+  vfSetCreateBtn(false);
+}
+function closeVoiceFact() {
+  vfStopMic();
+  document.getElementById('voiceFactBackdrop').style.display = 'none';
+}
+
+function vfToggleMic() {
+  if (_vfListening) { vfStopMic(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { toast('Tu navegador no soporta voz. Escribe manualmente.'); return; }
+  _vfListening = true;
+  const txt = document.getElementById('vfText');
+  const btn = document.getElementById('vfMicBtn');
+  const status = document.getElementById('vfMicStatus');
+  btn.style.background = 'rgba(255,107,107,0.18)';
+  btn.style.color = 'var(--k-expense)';
+  btn.innerHTML = KA_STOP_ICON;
+  status.textContent = '🔴 Escuchando... habla ahora';
+
+  let myBase = (txt.value || '').trim();
+  let sessionFinal = '';
+  const rec = new SR();
+  _vfRecognition = rec;
+  rec.lang = 'es-PE';
+  rec.continuous = true;
+  rec.interimResults = true;
+
+  rec.onresult = e => {
+    if (rec !== _vfRecognition) return;
+    let finalT = '', interim = '';
+    for (const r of e.results) {
+      if (r.isFinal) finalT += r[0].transcript + ' ';
+      else interim += r[0].transcript;
+    }
+    sessionFinal = finalT.trim();
+    const sess = (sessionFinal + (interim ? ' ' + interim : '')).trim();
+    txt.value = (myBase ? myBase + (sess ? ' ' : '') : '') + sess;
+    vfRenderPreview();
+  };
+  rec.onend = () => {
+    if (rec !== _vfRecognition) return;
+    if (_vfListening) {
+      if (sessionFinal) myBase = (myBase ? myBase + ' ' : '') + sessionFinal;
+      sessionFinal = '';
+      try { rec.start(); } catch(e) { setTimeout(() => { if (_vfListening && rec === _vfRecognition) try { rec.start(); } catch(_){} }, 200); }
+    }
+  };
+  rec.onerror = e => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+      vfStopMic();
+      toast('Permiso de micrófono denegado. Actívalo en el candado de la barra de direcciones.');
+      return;
+    }
+    if (_vfListening) { setTimeout(() => { if (_vfListening && rec === _vfRecognition) try { rec.start(); } catch(_){} }, 300); }
+  };
+  rec.start();
+}
+function vfStopMic() {
+  _vfListening = false;
+  const rec = _vfRecognition;
+  _vfRecognition = null;
+  if (rec) { try { rec.stop(); } catch(e){} }
+  const btn = document.getElementById('vfMicBtn');
+  const status = document.getElementById('vfMicStatus');
+  if (btn) { btn.style.background = ''; btn.style.color = ''; btn.innerHTML = KA_MIC_ICON; }
+  if (status) status.textContent = (document.getElementById('vfText').value || '').trim() ? '✅ Toca para dictar más' : 'Toca para hablar';
+}
+
+function vfRenderPreview() {
+  const text = document.getElementById('vfText').value.trim();
+  if (!text) { _vfItems = []; _vfClient = null; _vfClientRaw = '';
+    document.getElementById('vfPreview').innerHTML = '';
+    document.getElementById('vfClientBox').innerHTML = '';
+    vfSetCreateBtn(false); return; }
+  const { clientRaw, itemsText } = vqExtractClient(text);
+  _vfClientRaw = clientRaw;
+  _vfClient = clientRaw ? vqFindClient(clientRaw) : null;
+  _vfItems = vqParseText(itemsText);
+  vfRenderClientBox();
+  vfRenderPreviewFromItems();
+}
+
+function vfRenderClientBox() {
+  const box = document.getElementById('vfClientBox');
+  if (!_vfClientRaw) { box.innerHTML = ''; return; }
+  if (_vfClient) {
+    box.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(196,240,66,0.08);border:1px solid var(--k-accent-line);">
+      <span style="color:var(--k-accent);">${ORD_SVG.person}</span>
+      <span style="font-size:12.5px;color:var(--k-text);font-weight:600;">${_vfClient.name}</span>
+      ${_vfClient.doc ? `<span style="font-size:10px;font-family:var(--mono);color:var(--k-text-3);">${_vfClient.doc}</span>` : ''}
+      <span style="margin-left:auto;font-size:10px;color:var(--k-accent);">✓ cliente encontrado</span>
+    </div>`;
+  } else {
+    box.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid var(--k-line);">
+      <span style="color:var(--k-text-3);">${ORD_SVG.person}</span>
+      <span style="font-size:12.5px;color:var(--k-credit);font-weight:600;">${_vfClientRaw}</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--k-text-3);">nuevo — se usará el nombre</span>
+    </div>`;
+  }
+}
+
+function vfRenderPreviewFromItems() {
+  const preview = document.getElementById('vfPreview');
+  if (!_vfItems.length) {
+    preview.innerHTML = '<div style="padding:8px 0;font-size:12px;color:var(--k-text-3);">No se detectaron ítems</div>';
+    vfSetCreateBtn(!!_vfClient || !!_vfClientRaw ? false : false); return;
+  }
+  const rows = _vfItems.map((it, i) => `
+    <div style="display:grid;grid-template-columns:34px 1fr 66px 66px 26px;gap:5px;align-items:center;
+      padding:6px 8px;border-radius:8px;margin-bottom:4px;font-size:12px;
+      background:${it.matched ? 'rgba(196,240,66,0.06)' : 'rgba(255,255,255,0.03)'};">
+      <span style="font-family:var(--mono);color:var(--k-text-2);text-align:center;">${it.qty}</span>
+      <span style="color:${it.matched ? 'var(--k-text)' : 'var(--k-credit)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.desc}">
+        ${it.desc}${!it.matched ? ' <span style="font-size:10px;opacity:.55;">(nuevo)</span>' : ''}
+      </span>
+      <span style="font-family:var(--mono);font-size:11px;color:${it.matched ? 'var(--k-text-3)' : 'var(--k-expense)'};text-align:right;">
+        ${it.unit > 0 ? 'S/'+it.unit.toFixed(2) : '—'}</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--k-accent);text-align:right;font-weight:600;">
+        ${it.total > 0 ? 'S/'+it.total.toFixed(2) : '—'}</span>
+      <button onclick="vfRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:14px;padding:0;line-height:1;">×</button>
+    </div>`).join('');
+  const total = _vfItems.reduce((s, it) => s + it.total, 0);
+  preview.innerHTML = `
+    <div style="font-size:9.5px;font-family:var(--mono);color:var(--k-text-3);letter-spacing:.07em;text-transform:uppercase;
+      padding:2px 8px 6px;display:grid;grid-template-columns:34px 1fr 66px 66px 26px;gap:5px;">
+      <span style="text-align:center;">Cant</span><span>Producto</span>
+      <span style="text-align:right;">P.U.</span><span style="text-align:right;">Total</span><span></span>
+    </div>
+    ${rows}
+    <div style="text-align:right;padding:8px 8px 4px;font-family:var(--mono);font-size:13px;font-weight:700;
+      color:var(--k-accent);border-top:1px solid var(--k-line);margin-top:4px;">
+      Total: S/ ${total.toFixed(2)}
+    </div>`;
+  vfSetCreateBtn(true);
+}
+
+function vfRemoveItem(idx) {
+  _vfItems.splice(idx, 1);
+  vfRenderPreviewFromItems();
+}
+
+function vfSetCreateBtn(enabled) {
+  const btn = document.getElementById('vfCreateBtn');
+  if (!btn) return;
+  btn.disabled = !enabled;
+  btn.style.opacity = enabled ? '1' : '.45';
+  btn.style.cursor = enabled ? 'pointer' : 'default';
+}
+
+function vfCreateFactura() {
+  if (!_vfItems.length) return;
+  const client = _vfClient, clientRaw = _vfClientRaw;
+  const items = _vfItems.map(it => ({ desc: it.desc, qty: it.qty, price: it.unit, total: it.total, unit: it.unitCode || 'NIU' }));
+  closeVoiceFact();
+  toggleFacturaForm();              // abre la pantalla de creación en blanco
+  if (client) {
+    document.getElementById('pfFactClient').value = client.name;
+    document.getElementById('pfFactDoc').value = client.doc || '';
+  } else if (clientRaw) {
+    document.getElementById('pfFactClient').value = clientRaw;  // nombre libre (el usuario puede crearlo con "+ Nuevo cliente")
+  }
+  _factItems = items;
+  factRenderItems();
+  setTimeout(() => { const d = document.getElementById('pfFactDesc'); if (d) d.blur(); }, 90);
+  toast(client ? `Cliente: ${client.name}. Revisa y guarda.` : 'Revisa el cliente y los ítems, luego guarda.');
 }
 
 // ── Menú contextual (···) ──
@@ -15210,6 +15494,8 @@ function generateComprobantePDF(id) {
     ? `<div class="info-row"><span class="info-lbl">Origen</span><span class="info-val">${c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : FACT_TIPO_LABEL[c.origen.tipo]}</span></div>`
     : '';
 
+  const footerTxt = ((c.pieDePagina != null ? c.pieDePagina : biz.footerText) || '').split('\n').filter(Boolean).join('<br>');
+
   const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 <title>${FACT_DOC_TITLE[c.tipo]} ${c.numeroFormato} — ${bizName}</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -15239,6 +15525,10 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 .letras-card { background: ${soft}; border-radius: 10px; border: 1px solid ${line}; padding: 10px 14px; }
 .letras-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 5px; }
 .letras-val { font-family: 'Fraunces', Georgia, serif; font-size: 13px; font-weight: 700; color: ${ink}; }
+.obs-wrap { padding: 0 32px 20px; }
+.obs-card { border: 1px solid ${line}; border-radius: 10px; padding: 12px 14px; }
+.obs-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 6px; }
+.obs-val { font-size: 11.5px; color: ${gray}; line-height: 1.9; }
 .footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; }
 .footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
 .footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
@@ -15292,6 +15582,8 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
       <div class="letras-val">${letras}</div>
     </div>
   </div>
+
+  ${footerTxt ? `<div class="obs-wrap"><div class="obs-card"><div class="obs-lbl">Cuentas / Observaciones</div><div class="obs-val">${footerTxt}</div></div></div>` : ''}
 
   <div class="footer">
     <div class="footer-thanks">¡Gracias por su preferencia!</div>
@@ -15752,6 +16044,55 @@ function quoteWhatsApp(id) {
     <div style="display:flex;gap:8px;padding:14px 20px 18px;">
       <button onclick="closeVoiceQuote()" style="flex:0 0 auto;padding:10px 16px;border-radius:10px;border:1px solid var(--k-line);background:transparent;color:var(--k-text-3);font-size:13px;cursor:pointer;">Cancelar</button>
       <button id="vqCreateBtn" onclick="vqCreateQuote()" disabled style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--k-accent);color:#000;font-size:13px;font-weight:700;cursor:default;opacity:.45;transition:opacity .2s;">Crear cotización →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: FACTURACIÓN RÁPIDA POR VOZ ══ -->
+<div class="kj-modal-backdrop" id="voiceFactBackdrop" style="display:none;z-index:99980;"
+     onclick="if(event.target===this)closeVoiceFact()">
+  <div class="kj-modal" style="max-width:480px;gap:0;padding:0;">
+    <div class="kj-modal-head">
+      <span class="kj-modal-title" style="display:flex;align-items:center;gap:8px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>Venta rápida por voz</span>
+      <button class="kj-modal-close" onclick="closeVoiceFact()">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 20px 10px;">
+      <button id="vfMicBtn" onclick="vfToggleMic()" style="width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;background:var(--k-accent-l);color:var(--k-accent);transition:all .2s;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg></button>
+      <div id="vfMicStatus" style="font-size:12px;color:var(--k-text-3);">Toca para hablar</div>
+    </div>
+    <div style="padding:0 20px 10px;">
+      <textarea id="vfText" rows="3"
+        placeholder='Ej: "cliente Ferretería El Sol, 30 fierro 1/2, 15 bolsas cemento sol"'
+        oninput="vfRenderPreview()" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--k-line);border-radius:10px;padding:10px 12px;color:var(--k-text);font-family:var(--sans);font-size:13px;resize:none;outline:none;line-height:1.5;"></textarea>
+      <div style="font-size:11px;color:var(--k-text-3);margin-top:5px;">Di <b>"cliente"</b> y el nombre para asignarlo, luego los productos separados por comas.</div>
+    </div>
+    <div id="vfClientBox" style="padding:0 20px 6px;"></div>
+    <div id="vfPreview" style="padding:0 20px;max-height:200px;overflow-y:auto;"></div>
+    <div style="display:flex;gap:8px;padding:14px 20px 18px;">
+      <button onclick="closeVoiceFact()" style="flex:0 0 auto;padding:10px 16px;border-radius:10px;border:1px solid var(--k-line);background:transparent;color:var(--k-text-3);font-size:13px;cursor:pointer;">Cancelar</button>
+      <button id="vfCreateBtn" onclick="vfCreateFactura()" disabled style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--k-accent);color:#000;font-size:13px;font-weight:700;cursor:default;opacity:.45;transition:opacity .2s;">Crear comprobante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: ANULAR COMPROBANTE (con motivo obligatorio) ══ -->
+<div class="kj-modal-backdrop" id="anularFacturaBackdrop" style="display:none;z-index:99985;"
+     onclick="if(event.target===this)closeAnularFacturaModal()">
+  <div class="kj-modal" style="max-width:440px;">
+    <div class="kj-modal-head">
+      <span class="kj-modal-title">Anular documento</span>
+      <button class="kj-modal-close" onclick="closeAnularFacturaModal()">✕</button>
+    </div>
+    <div class="kj-modal-body">
+      <div id="anularFacturaDesc" style="font-family:var(--sans);font-size:13.5px;color:var(--k-text-2);line-height:1.6;"></div>
+      <div class="kj-modal-field">
+        <label>Motivo <span class="req">*</span></label>
+        <textarea class="kj-modal-inp" id="anularMotivo" rows="3" placeholder="Ej: Error en el RUC del cliente" style="resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="kj-modal-footer">
+      <button class="kj-modal-btn-cancel" onclick="closeAnularFacturaModal()">Cancelar</button>
+      <button class="kj-modal-btn-save" id="anularFacturaBtn" onclick="confirmAnularFactura()" style="background:var(--k-expense);border-color:var(--k-expense);">Anular</button>
     </div>
   </div>
 </div>
