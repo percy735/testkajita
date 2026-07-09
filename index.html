@@ -2544,10 +2544,12 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .fact-create-layout { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: 28px; align-items: start; padding: 0 4px; }
 .fact-create-right { position: sticky; top: 0; display: flex; flex-direction: column; gap: 16px; }
 
-/* Fila de búsqueda de producto tipo tabla */
-.fact-search-row { display: grid; grid-template-columns: 1fr 110px 110px 110px auto; gap: 8px; align-items: start; margin-bottom: 16px; }
+/* Fila de búsqueda de producto tipo tabla: buscador arriba, campos (unidad/cantidad/igv/precio) abajo */
+.fact-search-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.fact-search-desc-row { position: relative; width: 100%; }
+.fact-search-fields-row { display: grid; grid-template-columns: 130px 130px 150px 1fr auto; gap: 8px; align-items: end; }
 .fact-search-col { min-width: 0; }
-.fact-search-desc { position: relative; }
+.fact-search-mini-label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: .05em; text-transform: uppercase; color: var(--k-text-3); margin-bottom: 4px; }
 
 /* Alineación pareja: todos los campos/botones de la pantalla de creación comparten la misma altura */
 #facturaCreateScreen .fact-search-row .input-with-toggle,
@@ -2566,47 +2568,62 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 }
 #facturaCreateScreen .fact-search-row .field-toggle-btn { align-self: stretch; height: 44px; min-height: 44px; width: 40px; flex: none; }
 
-/* Encabezado + filas de ítems, estilo tabla (Producto/Cant/P.Unit/Impuesto/Subtotal/Total/quitar) */
+/* Encabezado + filas de ítems, estilo tabla (quitar/Producto/Cant/P.Unit/Impuesto/Subtotal/Total).
+   Cada fila es de solo lectura por defecto; clic en la fila la vuelve editable (igual que Susii). */
 #pfFactItemsList, #pfNotaItemsList, #pfDetailItemsList { overflow-x: auto; }
 .fact-items-head {
-  display: grid; grid-template-columns: minmax(70px,1fr) 76px 56px 44px 56px 60px 20px; gap: 6px;
-  padding: 6px 8px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .06em;
+  display: grid; grid-template-columns: 28px minmax(100px,1fr) 92px 84px 60px 84px 88px; gap: 10px;
+  padding: 8px 10px; font-family: var(--mono); font-size: 9px; letter-spacing: .06em;
   text-transform: uppercase; color: var(--k-text-3); border-bottom: 1px solid var(--k-line); white-space: nowrap;
 }
+/* Cant./P.Unit./Imp./Subt./Total quedan alineados a la derecha, igual que sus valores debajo (solo Producto va a la izquierda) */
+.fact-items-head > div:not(:nth-child(2)) { text-align: right; }
 .fact-item-row {
-  display: grid; grid-template-columns: minmax(70px,1fr) 76px 56px 44px 56px 60px 20px; gap: 6px; align-items: center;
-  padding: 9px 8px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px;
+  display: grid; grid-template-columns: 28px minmax(100px,1fr) 92px 84px 60px 84px 88px; gap: 10px; align-items: center;
+  padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13.5px;
+  cursor: pointer; transition: background .15s;
 }
-.fact-item-row:hover { background: rgba(255,255,255,0.025); }
-/* height:26px fija para que la fila se alinee igual que los demás inputs (26px); la unidad se posiciona debajo sin sumar altura al grid. */
-.fact-item-qty-col { position: relative; height: 26px; }
-.fact-item-unit {
-  position: absolute; top: 100%; left: 0; right: 0; margin-top: 2px; text-align: center;
-  font-family: var(--mono); font-size: 8.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--k-text-3);
+.fact-item-row:hover { background: rgba(255,255,255,0.03); }
+.fact-item-row.fact-item-row-editing { background: rgba(196,240,66,0.045); }
+.fact-item-trash {
+  width: 28px; height: 28px; border-radius: 8px; border: none; background: none; padding: 0;
+  color: var(--k-text-3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .15s;
 }
-.fact-item-row .num-stepper.fact-item-stepper { width: 100%; height: 26px; border-radius: 7px; }
-.fact-item-row .fact-item-stepper .step-btn { width: 18px; height: 24px; font-size: 13px; }
-.fact-item-row .fact-item-stepper input { font-size: 11px; padding: 0; }
-.fact-cell-tax, .fact-cell-subtotal { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fact-item-trash:hover { color: var(--k-expense); }
+.fact-cell-desc { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--k-text); display: flex; align-items: baseline; gap: 8px; }
+.fact-item-unit { font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--k-text-3); flex: none; }
+.fact-cell-plain { font-family: var(--mono); font-size: 13px; color: var(--k-text-2); text-align: right; padding: 0 2px; }
+.fact-cell-plain.fact-cell-total-accent { color: var(--k-accent); font-weight: 700; font-size: 13.5px; }
+.fact-cell-qty, .fact-cell-punit, .fact-cell-total { min-width: 0; }
+.fact-cell-tax, .fact-cell-subtotal {
+  font-family: var(--mono); font-size: 12px; color: var(--k-text-3); text-align: right;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.fact-item-row .num-stepper.fact-item-stepper { width: 100%; height: 32px; border-radius: 8px; }
+.fact-item-row .fact-item-stepper .step-btn { width: 24px; height: 30px; font-size: 15px; }
+.fact-item-row .fact-item-stepper input { font-size: 13px; padding: 0; }
 .fact-item-price-inp {
   width: 100%; box-sizing: border-box; background: var(--k-inset); border: 1px solid var(--k-line);
-  border-radius: 7px; padding: 4px 5px; font-family: var(--mono); font-size: 11.5px; color: var(--k-text);
-  text-align: right; height: 26px;
+  border-radius: 8px; padding: 6px 8px; font-family: var(--mono); font-size: 13px; color: var(--k-text);
+  text-align: right; height: 32px;
 }
 .fact-item-price-inp:focus { outline: none; border-color: var(--k-accent); }
-.fact-item-edit-btn, .fact-cell-editbtn { display: none; }
-.fact-item-edit-btn {
-  align-items: center; justify-content: center; background: none; border: none; color: var(--k-text-3);
-  cursor: pointer; padding: 0; width: 100%; height: 100%;
+.fact-item-price-inp.fact-total-accent { color: var(--k-accent); font-weight: 700; border-color: var(--k-accent-line); }
+/* Los inputs numéricos no reservan espacio para las flechitas del navegador — evita que los montos se corten. */
+.fact-item-price-inp::-webkit-outer-spin-button,
+.fact-item-price-inp::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.fact-item-price-inp { -moz-appearance: textfield; }
+.fact-item-desc-inp {
+  width: 100%; box-sizing: border-box; background: var(--k-inset); border: 1px solid var(--k-line);
+  border-radius: 8px; padding: 8px 10px; font-family: var(--sans); font-size: 13.5px; color: var(--k-text);
 }
-.fact-item-edit-btn:hover { color: var(--k-accent); }
-.fact-item-expand-panel {
-  display: none; flex-direction: column; gap: 8px; padding: 4px 10px 14px; margin-top: -4px;
-  border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015);
+.fact-item-desc-inp:focus { outline: none; border-color: var(--k-accent); }
+/* Botón "listo" (✓) — solo se usa en la tarjeta apilada de edición en móvil, ver media query de abajo. */
+.fact-item-confirm {
+  display: none; width: 26px; height: 26px; border-radius: 8px; padding: 0;
+  border: 1px solid rgba(196,240,66,0.4); background: var(--k-accent-l); color: var(--k-accent);
+  cursor: pointer; align-items: center; justify-content: center;
 }
-.fact-expand-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--sans); font-size: 12px; color: var(--k-text-3); }
-.fact-expand-row input.fact-item-price-inp { width: 100px; flex: none; }
-@media (min-width: 641px) { .fact-item-expand-panel { display: none !important; } }
 
 /* Toggle grande Boleta/Factura */
 .fact-type-row { display: flex; gap: 8px; }
@@ -2639,7 +2656,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 .fact-detail-action-btn.fact-detail-action-primary { background: var(--k-accent); border-color: var(--k-accent); color: #000; }
 .fact-detail-action-btn.fact-detail-action-primary:hover { background: var(--k-accent); opacity: .9; }
 
-.fact-totals-box { margin-top: 4px; padding: 14px 16px; border-radius: var(--r-md, 14px); background: var(--k-panel-2); border: 1px solid var(--k-line); }
+/* Alineada a la derecha y con ancho acotado (no ocupa todo el ancho de la columna) — igual que Susii,
+   donde Descuento/Subtotal/IGV/Total quedan justo bajo la columna "Total" de la tabla de ítems. */
+.fact-totals-box { margin: 10px 0 0 auto; padding: 0; background: none; border: none; width: 100%; max-width: 320px; }
 .fact-totals-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; font-family: var(--mono); font-size: 12.5px; color: var(--k-text-3); }
 .fact-totals-total { border-top: 1px solid var(--k-line); margin-top: 6px; padding-top: 12px; }
 .fact-totals-total span:first-child { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--k-text-2); text-transform: uppercase; letter-spacing: .05em; }
@@ -2671,10 +2690,11 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
 .fact-mobile-tabs { display: none; }
 .fact-mobile-save-btn { display: none; }
+.fact-mobile-footer { display: none; }
 .fact-footer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 4px 4px; margin-top: 20px; border-top: 1px solid var(--k-line); }
 
 @media (max-width: 1180px) {
-  .fact-create-layout { grid-template-columns: 1fr; }
+  .fact-create-layout { grid-template-columns: 1fr; padding-bottom: 92px; }
   .fact-create-right { position: static; }
   .fact-mobile-tabs { display: flex; gap: 4px; margin: -4px 4px 18px; border-bottom: 1px solid var(--k-line); }
   .fact-mobile-tab {
@@ -2684,20 +2704,68 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   .fact-mobile-tab.active { color: var(--k-accent); border-bottom-color: var(--k-accent); }
   .fact-create-layout[data-mtab="productos"] .fact-create-right { display: none; }
   .fact-create-layout[data-mtab="pagos"] .fact-create-left { display: none; }
-  .fact-mobile-save-btn { display: block; }
+  /* Reemplazados por la barra fija compartida (.fact-mobile-footer), que sí se ve en ambas pestañas.
+     El desglose de Subtotal/IGV (#factTotalsBox) también se oculta: en móvil solo Descuento + Total, abajo (igual que Susii). */
+  .fact-mobile-save-btn, #pfFactSaveBtn { display: none; }
   .fact-footer-row { display: none; }
+  #factTotalsBox { display: none !important; }
+  .fact-mobile-footer {
+    display: flex; flex-direction: column; gap: 12px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    background: var(--k-panel); border-top: 1px solid var(--k-line);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.35);
+  }
+  .fact-mobile-footer-summary { display: flex; align-items: center; justify-content: space-between; font-family: var(--sans); }
+  .fact-mobile-footer-desc { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--k-text-3); }
+  .fact-mobile-footer-desc .fact-desc-inp-wrap input { width: 64px; }
+  .fact-mobile-footer-total { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; color: var(--k-text-3); }
+  .fact-mobile-footer-total #factMobileFooterTotal { font-size: 18px; font-weight: 700; color: var(--k-text); }
+  .fact-mobile-footer-btns { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
+  .fact-mobile-footer-cancel, .fact-mobile-footer-save {
+    padding: 12px; border-radius: var(--r-md, 12px); font-family: var(--sans); font-size: 14px; font-weight: 700;
+    border: 1px solid var(--k-line); cursor: pointer;
+  }
+  .fact-mobile-footer-cancel { background: transparent; color: var(--k-text-2); }
+  .fact-mobile-footer-save { background: var(--k-accent); border-color: var(--k-accent); color: #000; }
 }
 @media (max-width: 640px) {
   /* Móvil: solo el buscador — elegir/escribir el producto lo agrega directo (qty 1), se edita luego desde la fila (lápiz) */
-  .fact-search-row { grid-template-columns: 1fr; }
-  .fact-search-qty, .fact-search-unit, .fact-search-amt, .fact-search-row .push-item-btn { display: none; }
-  /* Móvil: minimizar la fila de ítem a Producto/Cantidad/Total — con lápiz para desplegar P.Unit/Impuesto/Subtotal, igual que la referencia */
-  .fact-items-head { grid-template-columns: 1fr 70px 78px 24px 24px; font-size: 8px; min-width: 0; }
-  .fact-item-row { grid-template-columns: 1fr 70px 78px 24px 24px; font-size: 12px; min-width: 0; }
+  .fact-search-fields-row { display: none; }
+  /* Móvil: minimizar a Producto/Cantidad/Total (P.Unit/Impuesto/Subtotal se ocultan) — igual patrón de solo-lectura ⇄ edición al tocar la fila */
+  .fact-items-head { grid-template-columns: 22px 1fr 76px 78px; font-size: 8px; }
+  .fact-item-row { grid-template-columns: 22px 1fr 76px 78px; font-size: 12px; gap: 6px; padding: 10px 8px; }
   .fact-item-row .fact-item-stepper .step-btn { width: 18px; }
-  .fact-item-price-inp { font-size: 11px; padding: 4px; }
+  .fact-item-price-inp { font-size: 11px; padding: 4px; height: 28px; }
+  .fact-item-row .num-stepper.fact-item-stepper { height: 28px; }
   .fact-cell-punit, .fact-cell-tax, .fact-cell-subtotal { display: none; }
-  .fact-item-edit-btn, .fact-cell-editbtn { display: flex; }
+
+  /* Al tocar "editar" en móvil, la fila se convierte en una tarjeta apilada con etiquetas (igual que Susii)
+     en vez de mantener la grilla compacta de solo-lectura. */
+  .fact-item-row.fact-item-row-editing {
+    display: flex; flex-direction: column; align-items: stretch; gap: 10px;
+    padding: 14px 12px 12px; position: relative; font-size: 13px;
+  }
+  .fact-item-row.fact-item-row-editing .fact-cell-desc { order: -2; padding-right: 64px; display: block; width: auto; }
+  .fact-item-row.fact-item-row-editing .fact-item-trash { position: absolute; top: 12px; right: 38px; }
+  .fact-item-row.fact-item-row-editing .fact-item-confirm { display: flex; position: absolute; top: 12px; right: 10px; }
+  .fact-item-row.fact-item-row-editing > div[data-label] {
+    display: flex !important; align-items: center; justify-content: space-between; gap: 10px; width: auto;
+  }
+  .fact-item-row.fact-item-row-editing > div[data-label]::before {
+    content: attr(data-label); font-family: var(--mono); font-size: 10px; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--k-text-3); flex: none;
+  }
+  /* Ancho fijo consistente para los controles de la derecha (Cantidad/Precio U./Total) — bordes alineados en columna */
+  .fact-item-row.fact-item-row-editing .fact-cell-qty .num-stepper,
+  .fact-item-row.fact-item-row-editing .fact-item-price-inp { flex: none; }
+  /* Quita el destello/selección azul al tocar rápido la fila o los botones +/- (tap-highlight de WebKit
+     + selección de texto accidental por clics rápidos seguidos) — no afecta a los <input>, que siguen editables. */
+  .fact-item-row, .fact-item-row *:not(input) { -webkit-tap-highlight-color: transparent; user-select: none; }
+  .fact-item-row.fact-item-row-editing .fact-cell-qty .num-stepper,
+  .fact-item-row.fact-item-row-editing .fact-item-price-inp { width: 140px; }
+  .fact-item-row.fact-item-row-editing .fact-cell-tax,
+  .fact-item-row.fact-item-row-editing .fact-cell-subtotal { font-size: 12.5px; }
 }
 
 /* Acciones CRUD en fila */
@@ -4722,7 +4790,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.174</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.191</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -4975,7 +5043,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.174</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.191</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5752,7 +5820,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <!-- Columna izquierda: búsqueda de productos + ítems -->
         <div class="fact-create-left">
           <div class="fact-search-row">
-            <div class="fact-search-col fact-search-desc">
+            <div class="fact-search-desc-row">
               <div class="input-with-toggle">
                 <input class="panel-form-inp" id="pfFactDesc" type="text" placeholder="Buscar producto..." maxlength="80" autocomplete="off"
                   oninput="factFilterProducts()"
@@ -5762,29 +5830,41 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
               </div>
               <div class="picker-panel" id="factProdDrop" style="display:none;position:fixed;z-index:99999;"></div>
             </div>
-            <div class="fact-search-col fact-search-qty">
-              <div class="num-stepper">
-                <button type="button" class="step-btn" onclick="factStepQty(-1)">−</button>
-                <input type="number" id="pfFactQty" placeholder="1" min="1" step="1" value="1" oninput="factRecalc()">
-                <button type="button" class="step-btn" onclick="factStepQty(1)">+</button>
+            <div class="fact-search-fields-row">
+              <div class="fact-search-col fact-search-unitcode">
+                <label class="fact-search-mini-label">Unidad</label>
+                <select id="pfFactUnitSel" class="panel-form-inp" style="width:100%;box-sizing:border-box;"></select>
               </div>
+              <div class="fact-search-col fact-search-qty">
+                <label class="fact-search-mini-label">Cantidad</label>
+                <div class="num-stepper">
+                  <button type="button" class="step-btn" onclick="factStepQty(-1)">−</button>
+                  <input type="number" id="pfFactQty" placeholder="1" min="1" step="1" value="1" oninput="factRecalc()">
+                  <button type="button" class="step-btn" onclick="factStepQty(1)">+</button>
+                </div>
+              </div>
+              <div class="fact-search-col fact-search-igv">
+                <label class="fact-search-mini-label">IGV</label>
+                <select id="pfFactIgvSel" class="panel-form-inp" style="width:100%;box-sizing:border-box;">
+                  <option value="incl">Incluye IGV (18%)</option>
+                </select>
+              </div>
+              <div class="fact-search-col fact-search-unit">
+                <label class="fact-search-mini-label">Precio unitario</label>
+                <input type="number" id="pfFactUnit" class="panel-form-inp" placeholder="0.00" min="0" step="0.01" oninput="factRecalc()" style="width:100%;box-sizing:border-box;">
+              </div>
+              <input type="hidden" id="pfFactAmt">
+              <button class="push-item-btn" onclick="factPushItem()" title="Agregar ítem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
             </div>
-            <div class="fact-search-col fact-search-unit">
-              <input type="number" id="pfFactUnit" class="panel-form-inp" placeholder="P. Unit." min="0" step="0.01" oninput="factRecalc()" style="width:100%;box-sizing:border-box;">
-            </div>
-            <div class="fact-search-col fact-search-amt">
-              <input type="number" id="pfFactAmt" class="panel-form-inp" placeholder="Monto" min="0" step="0.01" oninput="factRecalcFromAmt()" style="width:100%;box-sizing:border-box;opacity:0.75;">
-            </div>
-            <button class="push-item-btn" onclick="factPushItem()" title="Agregar ítem">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-            </button>
           </div>
 
           <div id="pfFactItemsList" style="display:none;">
             <div class="fact-items-head">
-              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+              <div></div><div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div>
             </div>
             <div id="pfFactItemsRows"></div>
           </div>
@@ -5795,7 +5875,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           <div class="fact-totals-box" id="factTotalsBox" style="display:none;">
             <div class="fact-totals-row fact-totals-desc">
               <span>Descuento</span>
-              <span class="fact-desc-inp-wrap">S/ <input type="number" id="factDescuento" min="0" step="0.01" placeholder="0.00" oninput="factRenderItems()"></span>
+              <span class="fact-desc-inp-wrap">S/ <input type="number" id="factDescuento" min="0" step="0.01" placeholder="0.00" oninput="factSetDescuento(this.value)"></span>
             </div>
             <div class="fact-totals-row"><span>Subtotal</span><span id="factSubtotalVal">S/ 0.00</span></div>
             <div class="fact-totals-row"><span>IGV (18%)</span><span id="factIgvVal">S/ 0.00</span></div>
@@ -5850,11 +5930,34 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
           </div>
 
           <div class="fld">
+            <label>Dirección del cliente</label>
+            <input class="panel-form-inp" id="pfFactAddress" type="text" placeholder="Ej: Av. Los Olivos 123, Lima" maxlength="120" autocomplete="off" style="width:100%;box-sizing:border-box;">
+          </div>
+
+          <div class="fld">
             <label>Fecha</label>
             <input class="panel-form-inp" id="pfFactFecha" type="date" style="width:100%;min-height:44px;flex-shrink:0;box-sizing:border-box;color-scheme:dark;">
           </div>
 
           <button class="ord-btn" id="pfFactSaveBtn" onclick="saveFactura()" style="width:100%;background:var(--k-accent);border-color:var(--k-accent);color:#000;font-weight:700;margin-top:6px;">Guardar comprobante</button>
+        </div>
+      </div>
+
+      <!-- Barra inferior fija (solo móvil): Descuento/Total/Cancelar/Guardar siempre presentes, en ambas pestañas Productos/Pagos (igual que Susii, minimalista — sin desglose de Subtotal/IGV) -->
+      <div class="fact-mobile-footer" id="factMobileFooter">
+        <div class="fact-mobile-footer-summary">
+          <div class="fact-mobile-footer-desc">
+            <span>Descuentos</span>
+            <span class="fact-desc-inp-wrap">S/ <input type="number" id="factDescuentoMobile" min="0" step="0.01" placeholder="0.00" oninput="factSetDescuento(this.value)"></span>
+          </div>
+          <div class="fact-mobile-footer-total">
+            <span>Total</span>
+            <span id="factMobileFooterTotal">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="fact-mobile-footer-btns">
+          <button type="button" class="fact-mobile-footer-cancel" onclick="closeFacturaCreateScreen()">Cancelar</button>
+          <button type="button" class="fact-mobile-footer-save" onclick="saveFactura()">Guardar</button>
         </div>
       </div>
 
@@ -5885,7 +5988,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <div class="fact-create-left">
           <div id="pfNotaItemsList">
             <div class="fact-items-head">
-              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+              <div></div><div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div>
             </div>
             <div id="pfNotaItemsRows"></div>
           </div>
@@ -5943,7 +6046,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
         <div class="fact-create-left">
           <div id="pfDetailItemsList">
             <div class="fact-items-head">
-              <div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div><div class="fact-cell-editbtn"></div><div></div>
+              <div></div><div>Producto</div><div>Cant.</div><div class="fact-cell-punit">P. Unit.</div><div class="fact-cell-tax" title="Impuesto">Imp.</div><div class="fact-cell-subtotal" title="Subtotal">Subt.</div><div>Total</div>
             </div>
             <div id="pfDetailItemsRows"></div>
           </div>
@@ -8709,19 +8812,21 @@ function kjDocHeader(opts) {
     ? `<img src="${logo}" alt="logo" style="max-height:58px;max-width:220px;object-fit:contain;display:block;">`
     : `<div style="font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:800;color:#18181b;letter-spacing:-.5px;line-height:1.1;">${bizName || 'Mi Negocio'}</div>`;
 
+  // Se muestra junto al nombre del negocio (no apretado bajo el número grande) con la misma tipografía
+  // sans-serif del resto del documento, en vez de la monoespaciada de antes.
   const metaHtml = meta
-    .map(l => `<div style="font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:#71717a;margin-top:4px;letter-spacing:.02em;">${l}</div>`)
+    .map(l => `<div style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11.5px;color:#71717a;margin-top:3px;">${l}</div>`)
     .join('');
 
   return `
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 28px;border-bottom:2.5px solid ${accent};">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding:20px 28px;border-bottom:2.5px solid ${accent};">
     <div style="display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0;">
       ${brand}
+      ${metaHtml}
     </div>
     <div style="text-align:right;flex-shrink:0;">
       <div style="display:inline-block;background:${accent};color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11px;font-weight:700;padding:6px 14px;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">${docType}</div>
       ${docNum ? `<div style="font-family:'Fraunces',Georgia,serif;font-size:24px;font-weight:800;color:#18181b;letter-spacing:-.5px;margin-top:8px;">${docNum}</div>` : ''}
-      ${metaHtml}
     </div>
   </div>`;
 }
@@ -8794,7 +8899,7 @@ function generateReceipt(id) {
   };
 
   /* Mismo lenguaje visual A4 que cotización y recibo de pedido */
-  const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = brand, darkBar = '#52525b';
+  const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = brand;
   const bizName = bizProfile?.name || 'Mi Negocio';
   const totalAmt = isCredit && e.pendiente > 0 ? e.pendiente : subtotal;
   const totalLbl = isCredit && e.pendiente > 0 ? 'Pendiente de cobro' : isCredit ? 'Total por cobrar' : isExpense ? 'Total a pagar' : 'Total cobrado';
@@ -8813,14 +8918,15 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.5px; colo
 .info-val { font-size: 12px; color: ${ink}; font-weight: 500; line-height: 1.4; }
 .info-val.big { font-size: 13.5px; font-weight: 700; }
 table { width: 100%; border-collapse: collapse; }
-thead tr { background: ${darkBar}; }
-thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.9); }
+thead tr { border-bottom: 2px solid ${ink}; }
+thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: ${ink}; }
 thead th:first-child { text-align: center; width: 52px; }
-thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
+thead th:nth-child(2) { text-align: center; width: 56px; }
+thead th:nth-child(4), thead th:last-child { text-align: right; width: 90px; }
 .totals-wrap { padding: 0 32px 4px; display: flex; justify-content: flex-end; }
 .totals-card { width: 240px; border: 1px solid ${line}; border-radius: 10px; overflow: hidden; margin-top: 16px; }
 .tot-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; font-size: 12.5px; border-bottom: 1px solid ${line}; color: ${gray}; }
-.tot-row.is-total { background: ${darkBar}; color: #fff; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; }
+.tot-row.is-total { color: ${ink}; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; border-top: 2px solid ${ink}; }
 .letras-wrap { padding: 16px 32px; }
 .letras-card { background: ${soft}; border-radius: 10px; border: 1px solid ${line}; padding: 10px 14px; }
 .letras-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 5px; }
@@ -8831,15 +8937,12 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 .sign-role { font-size: 10px; font-weight: 700; color: ${ink}; }
 .sign-sub { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: ${gray}; margin-top: 2px; }
 .footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; margin-top: 16px; }
-.footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
 .footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
-.kj { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -.5px; color: #888; }
-.kj-j { color: ${accent}; }
 @media print { body { background: #fff; } .page { border-radius: 0; box-shadow: none; margin: 0; } }
 </style></head><body>
 <div class="page">
 
-  ${kjDocHeader({ logo:bizLogo, bizName, docType:docTitle, docNum:`N° ${recNum}`, metaLines:[`Emitido el ${today} · ${nowStr}`], accent:brand })}
+  ${kjDocHeader({ logo:bizLogo, bizName, docType:docTitle, docNum:`N° ${recNum}`, accent:brand })}
 
   <div style="padding:18px 32px;border-bottom:1px solid ${line};">
     <div class="col-title">Datos del comprobante</div>
@@ -8854,17 +8957,25 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   <table>
     <thead><tr>
       <th>Cant.</th>
+      <th>Unidad</th>
       <th style="text-align:left;">Descripción</th>
       <th>P.U.</th>
       <th>Total</th>
     </tr></thead>
     <tbody>
-      <tr style="background:#fff;">
-        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${qty}</td>
-        <td style="padding:9px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${e.desc}</td>
-        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">${fmt(unitPrice)}</td>
-        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">${fmt(subtotal)}</td>
-      </tr>
+      ${(e.items && e.items.length > 0 ? e.items : [{ desc: e.desc, qty, price: subtotal }]).map((it, idx) => {
+        const itQty = it.qty || 1;
+        const itTotal = it.price != null ? it.price : 0;
+        const itUnit = it.unit != null ? it.unit : (itQty ? itTotal / itQty : itTotal);
+        const bg = idx % 2 === 0 ? '#fff' : soft;
+        return `<tr style="background:${bg};">
+        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${itQty}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:center;font-size:11px;color:${gray};">${it.unitMed || 'NIU'}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${it.desc}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">${itUnit.toFixed(2)}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">${itTotal.toFixed(2)}</td>
+      </tr>`;
+      }).join('')}
     </tbody>
   </table>
 
@@ -8889,8 +9000,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   </div>
 
   <div class="footer">
-    <div class="footer-thanks">¡Gracias por su preferencia!</div>
-    <div class="footer-brand">Generado con <span class="kj">Ka<span class="kj-j">j</span>ita</span></div>
+    <div class="footer-brand">Generado con kajita.app</div>
   </div>
 
 </div>
@@ -9528,6 +9638,7 @@ function renderEntries(){
               ${(e.paid && e.type==='income') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();uncobrarEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.undo}</span>Desmarcar cobro</button>` : ''}
               ${(e.paid && e.type==='expense') ? `<button class="ep-item" style="color:var(--k-credit)" onclick="closeAllMenus();unpagarDebt('${e.id}')"><span class="ep-ic">${ORD_SVG.undo}</span>Desmarcar pago</button>` : ''}
               <button class="ep-item" onclick="closeAllMenus();generateReceipt('${e.id}')"><span class="ep-ic">${ORD_SVG.receipt}</span>Generar recibo</button>
+              ${e.type==='income' ? `<button class="ep-item" onclick="closeAllMenus();facturarDesde('entry','${e.id}')"><span class="ep-ic">${ORD_SVG.receipt}</span>Facturar</button>` : ''}
               <button class="ep-item" onclick="closeAllMenus();editEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.edit}</span>Editar</button>
               <button class="ep-item ep-del" onclick="closeAllMenus();delEntry('${e.id}')"><span class="ep-ic">${ORD_SVG.trash}</span>Eliminar</button>
             </div>
@@ -11674,8 +11785,12 @@ function _ordPositionDrop(inputId, dropId) {
   const drop = document.getElementById(dropId);
   if (!inp || !drop) return;
   const r = inp.getBoundingClientRect();
-  drop.style.left  = r.left + 'px';
-  drop.style.top   = (r.bottom + 4) + 'px';
+  // Mismo ajuste que _factPositionDrop: en móvil el panel desliza con transform, lo que vuelve a los
+  // descendientes position:fixed relativos a ese panel en vez del viewport.
+  const anchor = drop.offsetParent;
+  const ar = anchor ? anchor.getBoundingClientRect() : { left: 0, top: 0 };
+  drop.style.left  = (r.left - ar.left) + 'px';
+  drop.style.top   = (r.bottom - ar.top + 4) + 'px';
   drop.style.width = r.width + 'px';
 }
 
@@ -11684,8 +11799,8 @@ function _ordRenderDrop(inputId, dropId, items, onSelectHtml) {
   if (!drop) return;
   if (!items.length) { drop.style.display = 'none'; return; }
   drop.innerHTML = items.map(onSelectHtml).join('');
-  _ordPositionDrop(inputId, dropId);
   drop.style.display = 'block';
+  _ordPositionDrop(inputId, dropId);
 }
 
 function ordFilterClients() {
@@ -11959,7 +12074,7 @@ function generateOrderReceipt(id) {
   const deliveryLbl = o.delivery === 'local' ? '🏪 Recojo en local' : '🚚 Delivery';
 
   /* Mismo lenguaje visual A4 que la cotización */
-  const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = brand, darkBar = '#52525b';
+  const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = brand;
   const bizName  = biz.name    || 'Mi Negocio';
   const bizRuc   = biz.ruc     || '';
   const bizAddr  = biz.address || '';
@@ -11973,9 +12088,10 @@ function generateOrderReceipt(id) {
     const bg = idx%2===0 ? '#fff' : soft;
     return `<tr style="background:${bg};">
       <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${qty}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:11px;color:${gray};">${i.unit || 'NIU'}</td>
       <td style="padding:7px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${i.desc||'—'}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">S/${unitP.toFixed(2)}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">S/${lineTotal.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">${unitP.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">${lineTotal.toFixed(2)}</td>
     </tr>`;
   }).join('');
 
@@ -11996,14 +12112,15 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.5px; colo
 .info-val { font-size: 12px; color: ${ink}; font-weight: 500; line-height: 1.4; }
 .info-val.big { font-size: 13.5px; font-weight: 700; }
 table { width: 100%; border-collapse: collapse; }
-thead tr { background: ${darkBar}; }
-thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.9); }
+thead tr { border-bottom: 2px solid ${ink}; }
+thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: ${ink}; }
 thead th:first-child { text-align: center; width: 52px; }
-thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
+thead th:nth-child(2) { text-align: center; width: 56px; }
+thead th:nth-child(4), thead th:last-child { text-align: right; width: 90px; }
 .totals-wrap { padding: 0 32px 4px; display: flex; justify-content: flex-end; }
 .totals-card { width: 220px; border: 1px solid ${line}; border-radius: 10px; overflow: hidden; margin-top: 16px; }
 .tot-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; font-size: 12.5px; border-bottom: 1px solid ${line}; color: ${gray}; }
-.tot-row.is-total { background: ${darkBar}; color: #fff; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; }
+.tot-row.is-total { color: ${ink}; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; border-top: 2px solid ${ink}; }
 .letras-wrap { padding: 16px 32px; }
 .letras-card { background: ${soft}; border-radius: 10px; border: 1px solid ${line}; padding: 10px 14px; }
 .letras-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 5px; }
@@ -12013,15 +12130,12 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 .obs-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 6px; }
 .obs-val { font-size: 11.5px; color: ${gray}; line-height: 1.9; }
 .footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; }
-.footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
 .footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
-.kj { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -.5px; color: #888; }
-.kj-j { color: ${accent}; }
 @media print { body { background: #fff; } .page { border-radius: 0; box-shadow: none; margin: 0; } }
 </style></head><body>
 <div class="page">
 
-  ${kjDocHeader({ logo:bizLogo, bizName, docType:'Recibo de Pedido', docNum:`N° ${recNum}`, metaLines:[`Emitido el ${today} · ${nowStr}`], accent:brand })}
+  ${kjDocHeader({ logo:bizLogo, bizName, docType:'Recibo de Pedido', docNum:`N° ${recNum}`, accent:brand })}
 
   <div style="padding:18px 32px;border-bottom:1px solid ${line};">
     <div class="col-title">Datos del pedido</div>
@@ -12038,6 +12152,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   <table>
     <thead><tr>
       <th>Cant.</th>
+      <th>Unidad</th>
       <th style="text-align:left;">Descripción</th>
       <th>P.U.</th>
       <th>Total</th>
@@ -12062,8 +12177,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   ${o.note ? `<div class="obs-wrap"><div class="obs-card"><div class="obs-lbl">Nota</div><div class="obs-val">${o.note}</div></div></div>` : ''}
 
   <div class="footer">
-    <div class="footer-thanks">¡Gracias por su preferencia!</div>
-    <div class="footer-brand">Generado con <span class="kj">Ka<span class="kj-j">j</span>ita</span></div>
+    <div class="footer-brand">Generado con kajita.app</div>
   </div>
 
 </div>
@@ -13488,7 +13602,6 @@ let _factItems = [];
 let _factPay = 'cash';
 let _factOrigen = null; // {tipo:'pedido'|'cotizacion', id} cuando se factura desde uno existente
 let _factPendingClientCallback = null; // set por openFacturaNewClient(), consumido en savePanelClient()
-let _factPendingUnit = ''; // unidad SUNAT (NIU/KGM/...) del producto seleccionado, consumida en factPushItem()
 let _factExpandedIdx = null; // índice de la fila expandida en móvil (editar P.Unit/Impuesto/Subtotal), null = ninguna
 
 function openFacturaNewClient() {
@@ -13540,20 +13653,31 @@ document.addEventListener('click', (e) => {
   });
 });
 
+// Llena el <select> de unidad de medida (fila de búsqueda de Facturación) con el catálogo SUNAT completo.
+function _factPopulateUnitSelect() {
+  const sel = document.getElementById('pfFactUnitSel');
+  if (!sel || sel.options.length) return;
+  sel.innerHTML = SUNAT_UNITS.map(u => `<option value="${u.code}">${u.code} — ${u.name}</option>`).join('');
+}
+
 function _factReset() {
   _factItems = [];
   _factOrigen = null;
   _factPay = 'cash';
-  _factPendingUnit = '';
   _factExpandedIdx = null;
+  _factDescuento = 0;
   document.getElementById('pfFactClient').value = '';
   document.getElementById('pfFactDoc').value = '';
+  document.getElementById('pfFactAddress').value = '';
   document.getElementById('pfFactDesc').value = '';
   document.getElementById('pfFactQty').value = '1';
   document.getElementById('pfFactUnit').value = '';
   document.getElementById('pfFactAmt').value = '';
+  _factPopulateUnitSelect();
+  document.getElementById('pfFactUnitSel').value = 'NIU';
   document.getElementById('pfFactFecha').value = _isoToday();
   document.getElementById('factDescuento').value = '';
+  document.getElementById('factDescuentoMobile').value = '';
   document.getElementById('pfFactPie').value = (bizProfile && bizProfile.footerText) || '';
   document.getElementById('pfFactNota').value = '';
   setFactTipo('factura');
@@ -13592,8 +13716,14 @@ function _factPositionDrop(inputId, dropId) {
   const inp = document.getElementById(inputId), drop = document.getElementById(dropId);
   if (!inp || !drop) return;
   const r = inp.getBoundingClientRect();
-  drop.style.left = r.left + 'px';
-  drop.style.top = (r.bottom + 4) + 'px';
+  // En móvil (≤600px) el panel se desliza con transform, y eso convierte a los descendientes position:fixed
+  // en relativos a ESE panel en vez del viewport (quirk de CSS: un ancestro con transform crea su propio
+  // "contenedor" para fixed). drop.offsetParent apunta a ese ancestro cuando existe (si no, es null y no
+  // cambia nada) — restamos su posición para que el desplegable siga cayendo justo debajo del buscador.
+  const anchor = drop.offsetParent;
+  const ar = anchor ? anchor.getBoundingClientRect() : { left: 0, top: 0 };
+  drop.style.left = (r.left - ar.left) + 'px';
+  drop.style.top = (r.bottom - ar.top + 4) + 'px';
   drop.style.width = r.width + 'px';
 }
 function _factRenderDrop(inputId, dropId, items, onSelectHtml) {
@@ -13601,8 +13731,10 @@ function _factRenderDrop(inputId, dropId, items, onSelectHtml) {
   if (!drop) return;
   if (!items.length) { drop.style.display = 'none'; return; }
   drop.innerHTML = items.map(onSelectHtml).join('');
-  _factPositionDrop(inputId, dropId);
+  // display:block va ANTES de posicionar: con display:none el elemento no tiene offsetParent,
+  // lo que le hacía perder de vista el ancestro con transform (ver _factPositionDrop) y calcular mal el top.
   drop.style.display = 'block';
+  _factPositionDrop(inputId, dropId);
 }
 
 function factFilterClients() {
@@ -13661,11 +13793,11 @@ function factSelectClient(id) {
   if (!c) return;
   document.getElementById('pfFactClient').value = c.name;
   document.getElementById('pfFactDoc').value = c.doc || '';
+  document.getElementById('pfFactAddress').value = c.address || '';
   factHideDrop('factClientDrop');
 }
 
 function factFilterProducts() {
-  _factPendingUnit = ''; // se re-establece solo al elegir un producto de la lista (factSelectProduct)
   _factProdCursor = -1;
   const q = (document.getElementById('pfFactDesc').value || '').toLowerCase();
   const list = (typeof products !== 'undefined' ? products : [])
@@ -13732,7 +13864,7 @@ function factSelectProduct(id) {
   }
   document.getElementById('pfFactDesc').value = p.name;
   document.getElementById('pfFactUnit').value = parseFloat(p.price || 0).toFixed(2);
-  _factPendingUnit = p.unit || 'NIU';
+  document.getElementById('pfFactUnitSel').value = p.unit || 'NIU';
   factHideDrop('factProdDrop');
   factRecalc();
   document.getElementById('pfFactQty').focus();
@@ -13761,33 +13893,101 @@ function factPushItem() {
   const amt  = parseFloat(document.getElementById('pfFactAmt').value)  || (qty * unit);
   if (!desc) { document.getElementById('pfFactDesc').focus(); return; }
   if (amt <= 0) { document.getElementById('pfFactUnit').focus(); return; }
-  _factItems.push({ desc, qty, price: unit || (amt / qty), total: amt, unit: _factPendingUnit || 'NIU' });
-  _factPendingUnit = '';
+  const unitCode = document.getElementById('pfFactUnitSel').value || 'NIU';
+  _factItems.push({ desc, qty, price: unit || (amt / qty), total: amt, unit: unitCode });
   document.getElementById('pfFactDesc').value = '';
   document.getElementById('pfFactQty').value  = '1';
   document.getElementById('pfFactUnit').value = '';
   document.getElementById('pfFactAmt').value  = '';
+  document.getElementById('pfFactUnitSel').value = 'NIU';
   factRenderItems();
   document.getElementById('pfFactDesc').focus();
 }
 function factRemoveItem(idx) { _factItems.splice(idx, 1); factRenderItems(); }
 
-// Móvil: expandir una fila para editar P.Unit/Impuesto/Subtotal (columnas ocultas en la vista compacta)
+// Clic en la fila activa/desactiva el modo edición (igual que Susii) — compartida por Nueva venta/Nota/Detalle.
 function factToggleItemExpand(idx) {
   _factExpandedIdx = (_factExpandedIdx === idx) ? null : idx;
   factRenderItems();
+}
+
+// Fila de ítem compartida por las 3 pantallas (Nueva venta / Nota / Detalle): de solo lectura por defecto,
+// clic en la fila la vuelve editable (Cantidad/P.Unit/Total) — Impuesto y Subtotal nunca son editables.
+// `prefix` selecciona el set de funciones a invocar: fact* / factNota* / factDetail*.
+function _factItemRowHtml(it, i, expanded, prefix) {
+  const unit = it.unit || 'NIU';
+  const subtotalTxt = 'S/ ' + (it.total / 1.18).toFixed(2);
+  const qtyCell = expanded
+    ? `<div class="num-stepper fact-item-stepper" onclick="event.stopPropagation()">
+        <button type="button" class="step-btn" onclick="${prefix}ItemStepQty(${i},-1)">−</button>
+        <input type="number" min="1" step="1" value="${it.qty}" onchange="${prefix}ItemSetQty(${i}, this.value)">
+        <button type="button" class="step-btn" onclick="${prefix}ItemStepQty(${i},1)">+</button>
+      </div>`
+    : `<div class="fact-cell-plain">${it.qty}</div>`;
+  const punitCell = expanded
+    ? `<input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onclick="event.stopPropagation()" onchange="${prefix}ItemSetPrice(${i}, this.value)">`
+    : `<div class="fact-cell-plain">S/ ${it.price.toFixed(2)}</div>`;
+  const totalCell = expanded
+    ? `<input type="number" class="fact-item-price-inp fact-total-accent" min="0" step="0.01" value="${it.total.toFixed(2)}" onclick="event.stopPropagation()" onchange="${prefix}ItemSetTotal(${i}, this.value)">`
+    : `<div class="fact-cell-plain fact-cell-total-accent">S/ ${it.total.toFixed(2)}</div>`;
+  const descAttr = it.desc.replace(/"/g, '&quot;');
+  const descCell = expanded
+    ? `<input type="text" class="fact-item-desc-inp" value="${descAttr}" onclick="event.stopPropagation()" onchange="${prefix}ItemSetDesc(${i}, this.value)">`
+    : `${it.desc}<span class="fact-item-unit">${unit}</span>`;
+  // El check "listo" solo se ve en móvil (la tarjeta apilada de edición no deja "fondo" libre donde tocar para cerrar).
+  const confirmBtn = expanded
+    ? `<button type="button" class="fact-item-confirm" onclick="event.stopPropagation();${prefix}ToggleItemExpand(${i})" title="Listo">${ORD_SVG.check}</button>`
+    : '';
+  return `
+    <div class="fact-item-row${expanded ? ' fact-item-row-editing' : ''}" data-idx="${i}" onclick="${prefix}ToggleItemExpand(${i})">
+      <button type="button" class="fact-item-trash" onclick="event.stopPropagation();${prefix}RemoveItem(${i})" title="Quitar">${ORD_SVG.trash}</button>
+      <div class="fact-cell-desc" title="${it.desc}">${descCell}</div>
+      <div class="fact-cell-qty" data-label="Cantidad">${qtyCell}</div>
+      <div class="fact-cell-punit" data-label="Precio U.">${punitCell}</div>
+      <div class="fact-cell-tax" data-label="Impuesto">18%</div>
+      <div class="fact-cell-subtotal" data-label="Subtotal">${subtotalTxt}</div>
+      <div class="fact-cell-total" data-label="Total">${totalCell}</div>
+      ${confirmBtn}
+    </div>`;
+}
+
+// Actualiza en el DOM solo la fila afectada por el stepper +/- (sin reconstruir toda la lista con innerHTML),
+// para que el botón no "parpadee" (pierda el hover) al hacer clic varias veces seguidas. Si la fila no existe
+// en el DOM todavía (primer render), cae de vuelta al render completo.
+function _factStepUpdateDom(rowsId, idx, it, totalIds, netTotal) {
+  const row = document.querySelector(`#${rowsId} [data-idx="${idx}"]`);
+  if (!row) return false;
+  const qtyInput = row.querySelector('.fact-cell-qty input');
+  const totalInput = row.querySelector('.fact-cell-total input');
+  const subtotalEl = row.querySelector('.fact-cell-subtotal');
+  if (!qtyInput || !totalInput || !subtotalEl) return false;
+  qtyInput.value = it.qty;
+  totalInput.value = it.total.toFixed(2);
+  subtotalEl.textContent = 'S/ ' + (it.total / 1.18).toFixed(2);
+  const subtotal = netTotal / 1.18, igv = netTotal - subtotal;
+  document.getElementById(totalIds.subtotal).textContent = 'S/ ' + subtotal.toFixed(2);
+  document.getElementById(totalIds.igv).textContent = 'S/ ' + igv.toFixed(2);
+  document.getElementById(totalIds.total).textContent = 'S/ ' + netTotal.toFixed(2);
+  if (rowsId === 'pfFactItemsRows') _factUpdateMobileFooter(netTotal);
+  return true;
 }
 
 function factItemStepQty(idx, delta) {
   const it = _factItems[idx]; if (!it) return;
   it.qty = Math.max(1, (parseFloat(it.qty) || 1) + delta);
   it.total = it.qty * it.price;
-  factRenderItems();
+  const ok = _factStepUpdateDom('pfFactItemsRows', idx, it, { subtotal: 'factSubtotalVal', igv: 'factIgvVal', total: 'factTotalVal2' }, _factNetTotal());
+  if (!ok) factRenderItems();
 }
 function factItemSetQty(idx, val) {
   const it = _factItems[idx]; if (!it) return;
   it.qty = Math.max(1, parseFloat(val) || 1);
   it.total = it.qty * it.price;
+  factRenderItems();
+}
+function factItemSetDesc(idx, val) {
+  const it = _factItems[idx]; if (!it) return;
+  it.desc = val.trim() || it.desc;
   factRenderItems();
 }
 function factItemSetPrice(idx, val) {
@@ -13803,9 +14003,29 @@ function factItemSetTotal(idx, val) {
   factRenderItems();
 }
 
+// Único valor de descuento en memoria — el input de escritorio (dentro de .fact-totals-box) y el de la
+// barra fija móvil son solo dos "vistas" del mismo dato (factSetDescuento los mantiene sincronizados).
+let _factDescuento = 0;
+function factSetDescuento(val) {
+  _factDescuento = Math.max(0, parseFloat(val) || 0);
+  factRenderItems();
+}
 function _factItemsTotal() { return _factItems.reduce((s, i) => s + i.total, 0); }
-function _factDescuentoVal() { return Math.max(0, parseFloat(document.getElementById('factDescuento').value) || 0); }
+function _factDescuentoVal() { return _factDescuento; }
 function _factNetTotal() { return Math.max(0, _factItemsTotal() - _factDescuentoVal()); }
+
+// Barra inferior fija de "Nueva venta" en móvil (visible en las 2 pestañas Productos/Pagos, igual que Susii:
+// solo Descuento + Total, sin desglose de Subtotal/IGV).
+function _factUpdateMobileFooter(netTotal) {
+  const totalEl = document.getElementById('factMobileFooterTotal');
+  if (!totalEl) return;
+  totalEl.textContent = 'S/ ' + netTotal.toFixed(2);
+  const descVal = _factDescuento ? _factDescuento.toFixed(2) : '';
+  const descDesktop = document.getElementById('factDescuento');
+  const descMobile = document.getElementById('factDescuentoMobile');
+  if (descDesktop && document.activeElement !== descDesktop) descDesktop.value = descVal;
+  if (descMobile && document.activeElement !== descMobile) descMobile.value = descVal;
+}
 
 function factRenderItems() {
   const rows = document.getElementById('pfFactItemsRows');
@@ -13819,37 +14039,10 @@ function factRenderItems() {
   document.getElementById('factSubtotalVal').textContent = 'S/ ' + subtotal.toFixed(2);
   document.getElementById('factIgvVal').textContent = 'S/ ' + igv.toFixed(2);
   document.getElementById('factTotalVal2').textContent = 'S/ ' + netTotal.toFixed(2);
+  _factUpdateMobileFooter(netTotal);
   if (!_factItems.length) { list.style.display = 'none'; empty.style.display = 'block'; totalsBox.style.display = 'none'; return; }
   list.style.display = 'block'; empty.style.display = 'none'; totalsBox.style.display = 'block';
-  rows.innerHTML = _factItems.map((it, i) => {
-    const expanded = _factExpandedIdx === i;
-    const editIcon = expanded
-      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
-    return `
-    <div class="fact-item-row" data-expanded="${expanded}">
-      <div style="color:var(--k-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.desc}</div>
-      <div class="fact-item-qty-col">
-        <div class="num-stepper fact-item-stepper">
-          <button type="button" class="step-btn" onclick="factItemStepQty(${i},-1)">−</button>
-          <input type="number" min="1" step="1" value="${it.qty}" onchange="factItemSetQty(${i}, this.value)">
-          <button type="button" class="step-btn" onclick="factItemStepQty(${i},1)">+</button>
-        </div>
-        <div class="fact-item-unit">${it.unit || 'NIU'}</div>
-      </div>
-      <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factItemSetPrice(${i}, this.value)">
-      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);" title="IGV 18%">18%</div>
-      <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
-      <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
-      <button type="button" class="fact-item-edit-btn" onclick="factToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
-      <button onclick="factRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0;line-height:1;" title="Quitar">×</button>
-    </div>
-    <div class="fact-item-expand-panel" style="display:${expanded ? 'flex' : 'none'};">
-      <div class="fact-expand-row"><span>Precio U.</span><input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factItemSetPrice(${i}, this.value)"></div>
-      <div class="fact-expand-row"><span>Impuesto</span><span style="color:var(--k-text-3);font-family:var(--mono);">IGV 18%</span></div>
-      <div class="fact-expand-row"><span>Subtotal</span><span style="color:var(--k-text-3);font-family:var(--mono);">S/ ${(it.total / 1.18).toFixed(2)}</span></div>
-    </div>`;
-  }).join('');
+  rows.innerHTML = _factItems.map((it, i) => _factItemRowHtml(it, i, _factExpandedIdx === i, 'fact')).join('');
 }
 
 // Crea un comprobante a partir del formulario en blanco, o pre-llenado (origen) desde un Pedido/Cotización.
@@ -13859,7 +14052,7 @@ function _crearComprobante(tipo, client, doc, phone, items, total, origen, opts)
   const nuevo = {
     id: Date.now(), tipo, serie, numero, numeroFormato,
     fecha: (opts && opts.fecha) || _isoToday(), hora: now.toTimeString().slice(0, 8),
-    client, doc: doc || '', phone: phone || '', items, total,
+    client, doc: doc || '', phone: phone || '', address: (opts && opts.address) || '', items, total,
     descuento: (opts && opts.descuento) || 0,
     pay: (opts && opts.pay) || 'cash',
     motivoTipo: (opts && opts.motivoTipo) || '',
@@ -13884,10 +14077,11 @@ function saveFactura() {
   const descuento = _factDescuentoVal();
   const total = _factNetTotal();
   const doc = document.getElementById('pfFactDoc').value.trim();
+  const address = document.getElementById('pfFactAddress').value.trim();
   const fecha = document.getElementById('pfFactFecha').value || _isoToday();
   const pieDePagina = document.getElementById('pfFactPie').value.trim();
   const nota = document.getElementById('pfFactNota').value.trim();
-  const nuevo = _crearComprobante(_factTipo, client, doc, '', [..._factItems], total, _factOrigen, { pay: _factPay, fecha, descuento, pieDePagina, nota });
+  const nuevo = _crearComprobante(_factTipo, client, doc, '', [..._factItems], total, _factOrigen, { pay: _factPay, fecha, descuento, pieDePagina, nota, address });
   closeFacturaCreateScreen();
   renderFacturaPanel();
   toast(`${FACT_TIPO_LABEL[_factTipo]} registrada: ${nuevo.numeroFormato}`);
@@ -13895,23 +14089,36 @@ function saveFactura() {
 
 // Abre la pantalla completa de facturación pre-llenada con los datos de un Pedido o Cotización existente.
 function facturarDesde(origType, id) {
-  const src = origType === 'pedido' ? _orders.find(o => o.id === id) : _quotes.find(q => q.id === id);
+  const src = origType === 'pedido' ? _orders.find(o => o.id === id)
+            : origType === 'cotizacion' ? _quotes.find(q => q.id === id)
+            : entries.find(x => String(x.id) === String(id));
   if (!src) return;
   switchView('factura'); // asegura que el panel de Facturación esté activo antes de mostrar la pantalla de creación
   _factReset();
   document.getElementById('pfFactClient').value = src.client || '';
   document.getElementById('pfFactDoc').value = src.doc || '';
-  _factItems = (src.items || []).map(i => {
+  document.getElementById('pfFactAddress').value = src.address || '';
+  // Movimientos de Registrar (origType==='entry') no siempre traen un array "items" —
+  // los de un solo ítem lo guardan como null y usan los campos planos desc/qty/unitPrice/amount.
+  // Ojo: en los items de Registrar "price" ya es el TOTAL de línea (no unitario, a diferencia de Pedidos) —
+  // se remapea aquí a "total" para que la fórmula de abajo (que sí confía en "total") no lo multiplique de nuevo por qty.
+  const srcItems = origType === 'entry'
+    ? (Array.isArray(src.items) && src.items.length
+        ? src.items.map(i => ({ desc: i.desc, qty: i.qty || 1, unit: i.unit, total: i.price }))
+        : [{ desc: src.desc, qty: src.qty || 1, unit: src.unitPrice, total: src.amount }])
+    : (src.items || []);
+  _factItems = srcItems.map(i => {
     const qty = i.qty || 1;
-    // total es el dato confiable en ambos orígenes; el precio unitario se deriva de él
-    // porque en Cotizaciones "price" guarda el total de la línea, no el precio unitario (a diferencia de Pedidos).
+    // total es el dato confiable en todos los orígenes; el precio unitario se deriva de él
+    // porque en Cotizaciones/Registrar "price" (o no tener "total") no siempre es el precio unitario.
     const total = i.total != null ? i.total : (i.price != null ? i.price * qty : (i.unit || 0) * qty);
     const price = qty > 0 ? total / qty : (i.price != null ? i.price : (i.unit || 0));
     return { desc: i.desc, qty, price, total };
   });
   factRenderItems();
   _factOrigen = { tipo: origType, id: src.id };
-  document.getElementById('factCreateTitle').textContent = origType === 'pedido' ? 'Facturar pedido' : 'Facturar cotización';
+  document.getElementById('factCreateTitle').textContent =
+    origType === 'pedido' ? 'Facturar pedido' : origType === 'cotizacion' ? 'Facturar cotización' : 'Facturar movimiento';
   document.getElementById('facturaListView').style.display = 'none';
   document.getElementById('facturaCreateScreen').style.display = 'block';
   setTimeout(() => document.getElementById('pfFactDoc').focus(), 80);
@@ -14018,12 +14225,19 @@ function factNotaItemStepQty(idx, delta) {
   const it = _factNotaItems[idx]; if (!it) return;
   it.qty = Math.max(1, (parseFloat(it.qty) || 1) + delta);
   it.total = it.qty * it.price;
-  factRenderNotaItems();
+  const grandTotal = _factNotaItems.reduce((s, i) => s + i.total, 0);
+  const ok = _factStepUpdateDom('pfNotaItemsRows', idx, it, { subtotal: 'factNotaSubtotalVal', igv: 'factNotaIgvVal', total: 'factNotaTotalVal' }, grandTotal);
+  if (!ok) factRenderNotaItems();
 }
 function factNotaItemSetQty(idx, val) {
   const it = _factNotaItems[idx]; if (!it) return;
   it.qty = Math.max(1, parseFloat(val) || 1);
   it.total = it.qty * it.price;
+  factRenderNotaItems();
+}
+function factNotaItemSetDesc(idx, val) {
+  const it = _factNotaItems[idx]; if (!it) return;
+  it.desc = val.trim() || it.desc;
   factRenderNotaItems();
 }
 function factNotaItemSetPrice(idx, val) {
@@ -14052,35 +14266,7 @@ function factRenderNotaItems() {
   document.getElementById('factNotaSubtotalVal').textContent = 'S/ ' + subtotal.toFixed(2);
   document.getElementById('factNotaIgvVal').textContent = 'S/ ' + igv.toFixed(2);
   document.getElementById('factNotaTotalVal').textContent = 'S/ ' + grandTotal.toFixed(2);
-  rows.innerHTML = _factNotaItems.map((it, i) => {
-    const expanded = _factNotaExpandedIdx === i;
-    const editIcon = expanded
-      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
-    return `
-    <div class="fact-item-row" data-expanded="${expanded}">
-      <div style="color:var(--k-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.desc}</div>
-      <div class="fact-item-qty-col">
-        <div class="num-stepper fact-item-stepper">
-          <button type="button" class="step-btn" onclick="factNotaItemStepQty(${i},-1)">−</button>
-          <input type="number" min="1" step="1" value="${it.qty}" onchange="factNotaItemSetQty(${i}, this.value)">
-          <button type="button" class="step-btn" onclick="factNotaItemStepQty(${i},1)">+</button>
-        </div>
-        <div class="fact-item-unit">${it.unit || 'NIU'}</div>
-      </div>
-      <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factNotaItemSetPrice(${i}, this.value)">
-      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);" title="IGV 18%">18%</div>
-      <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
-      <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factNotaItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
-      <button type="button" class="fact-item-edit-btn" onclick="factNotaToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
-      <button onclick="factNotaRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0;line-height:1;" title="Quitar">×</button>
-    </div>
-    <div class="fact-item-expand-panel" style="display:${expanded ? 'flex' : 'none'};">
-      <div class="fact-expand-row"><span>Precio U.</span><input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factNotaItemSetPrice(${i}, this.value)"></div>
-      <div class="fact-expand-row"><span>Impuesto</span><span style="color:var(--k-text-3);font-family:var(--mono);">IGV 18%</span></div>
-      <div class="fact-expand-row"><span>Subtotal</span><span style="color:var(--k-text-3);font-family:var(--mono);">S/ ${(it.total / 1.18).toFixed(2)}</span></div>
-    </div>`;
-  }).join('');
+  rows.innerHTML = _factNotaItems.map((it, i) => _factItemRowHtml(it, i, _factNotaExpandedIdx === i, 'factNota')).join('');
 }
 
 function saveNotaFactura() {
@@ -14117,7 +14303,7 @@ function verDetalleFactura(id) {
   const origenWrap = document.getElementById('factDetailOrigenWrap');
   if (c.origen && c.origen.tipo) {
     origenWrap.style.display = 'flex';
-    const origenLabel = c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : (FACT_TIPO_LABEL[c.origen.tipo] || c.origen.tipo);
+    const origenLabel = c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : c.origen.tipo === 'entry' ? 'Movimiento (Registrar)' : (FACT_TIPO_LABEL[c.origen.tipo] || c.origen.tipo);
     document.getElementById('factDetailOrigenBox').textContent = `Generado desde ${origenLabel}`;
   } else {
     origenWrap.style.display = 'none';
@@ -14137,12 +14323,19 @@ function factDetailItemStepQty(idx, delta) {
   const it = _factDetailItems[idx]; if (!it) return;
   it.qty = Math.max(1, (parseFloat(it.qty) || 1) + delta);
   it.total = it.qty * it.price;
-  factRenderDetailItems();
+  const grandTotal = _factDetailItems.reduce((s, i) => s + i.total, 0);
+  const ok = _factStepUpdateDom('pfDetailItemsRows', idx, it, { subtotal: 'factDetailSubtotalVal', igv: 'factDetailIgvVal', total: 'factDetailTotalVal' }, grandTotal);
+  if (!ok) factRenderDetailItems();
 }
 function factDetailItemSetQty(idx, val) {
   const it = _factDetailItems[idx]; if (!it) return;
   it.qty = Math.max(1, parseFloat(val) || 1);
   it.total = it.qty * it.price;
+  factRenderDetailItems();
+}
+function factDetailItemSetDesc(idx, val) {
+  const it = _factDetailItems[idx]; if (!it) return;
+  it.desc = val.trim() || it.desc;
   factRenderDetailItems();
 }
 function factDetailItemSetPrice(idx, val) {
@@ -14171,35 +14364,7 @@ function factRenderDetailItems() {
   document.getElementById('factDetailSubtotalVal').textContent = 'S/ ' + subtotal.toFixed(2);
   document.getElementById('factDetailIgvVal').textContent = 'S/ ' + igv.toFixed(2);
   document.getElementById('factDetailTotalVal').textContent = 'S/ ' + grandTotal.toFixed(2);
-  rows.innerHTML = _factDetailItems.map((it, i) => {
-    const expanded = _factDetailExpandedIdx === i;
-    const editIcon = expanded
-      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
-    return `
-    <div class="fact-item-row" data-expanded="${expanded}">
-      <div style="color:var(--k-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.desc}</div>
-      <div class="fact-item-qty-col">
-        <div class="num-stepper fact-item-stepper">
-          <button type="button" class="step-btn" onclick="factDetailItemStepQty(${i},-1)">−</button>
-          <input type="number" min="1" step="1" value="${it.qty}" onchange="factDetailItemSetQty(${i}, this.value)">
-          <button type="button" class="step-btn" onclick="factDetailItemStepQty(${i},1)">+</button>
-        </div>
-        <div class="fact-item-unit">${it.unit || 'NIU'}</div>
-      </div>
-      <input type="number" class="fact-item-price-inp fact-cell-punit" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factDetailItemSetPrice(${i}, this.value)">
-      <div class="fact-cell-tax" style="font-family:var(--mono);color:var(--k-text-3);" title="IGV 18%">18%</div>
-      <div class="fact-cell-subtotal" style="font-family:var(--mono);color:var(--k-text-3);">S/ ${(it.total / 1.18).toFixed(2)}</div>
-      <input type="number" class="fact-item-price-inp fact-cell-total" min="0" step="0.01" value="${it.total.toFixed(2)}" onchange="factDetailItemSetTotal(${i}, this.value)" style="color:var(--k-accent);font-weight:700;">
-      <button type="button" class="fact-item-edit-btn" onclick="factDetailToggleItemExpand(${i})" title="${expanded ? 'Listo' : 'Editar'}">${editIcon}</button>
-      <button onclick="factDetailRemoveItem(${i})" style="background:none;border:none;color:var(--k-text-3);cursor:pointer;font-size:15px;padding:0;line-height:1;" title="Quitar">×</button>
-    </div>
-    <div class="fact-item-expand-panel" style="display:${expanded ? 'flex' : 'none'};">
-      <div class="fact-expand-row"><span>Precio U.</span><input type="number" class="fact-item-price-inp" min="0" step="0.01" value="${it.price.toFixed(2)}" onchange="factDetailItemSetPrice(${i}, this.value)"></div>
-      <div class="fact-expand-row"><span>Impuesto</span><span style="color:var(--k-text-3);font-family:var(--mono);">IGV 18%</span></div>
-      <div class="fact-expand-row"><span>Subtotal</span><span style="color:var(--k-text-3);font-family:var(--mono);">S/ ${(it.total / 1.18).toFixed(2)}</span></div>
-    </div>`;
-  }).join('');
+  rows.innerHTML = _factDetailItems.map((it, i) => _factItemRowHtml(it, i, _factDetailExpandedIdx === i, 'factDetail')).join('');
 }
 
 function saveFacturaDetail() {
@@ -15271,7 +15436,6 @@ function generateQuoteReceipt(id) {
 
   /* Colores Kajita-print: claros, cálidos, con acento verde */
   const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = getBrandColor();
-  const darkBar = '#52525b';   // gris sobrio para cabecera de tabla y barra de total (en vez de negro)
 
   const today = new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'long',year:'numeric'});
   const recNum = String(qt.num||'').padStart(5,'0');
@@ -15306,9 +15470,10 @@ function generateQuoteReceipt(id) {
     const bg = idx%2===0 ? '#fff' : soft;
     return `<tr style="background:${bg};">
       <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${qty}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:11px;color:${gray};">${i.unit || 'NIU'}</td>
       <td style="padding:7px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${i.desc||'—'}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">S/${unitP.toFixed(2)}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">S/${lineTotal.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">${unitP.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">${lineTotal.toFixed(2)}</td>
     </tr>`;
   }).join('');
 
@@ -15343,16 +15508,17 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.5px; colo
 
 /* ── TABLA ITEMS ── */
 table { width: 100%; border-collapse: collapse; }
-thead tr { background: ${darkBar}; }
-thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.9); }
+thead tr { border-bottom: 2px solid ${ink}; }
+thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: ${ink}; }
 thead th:first-child { text-align: center; width: 52px; border-radius: 0; }
-thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
+thead th:nth-child(2) { text-align: center; width: 56px; }
+thead th:nth-child(4), thead th:last-child { text-align: right; width: 90px; }
 
 /* ── TOTALES ── */
 .totals-wrap { padding: 0 32px 4px; display: flex; justify-content: flex-end; }
 .totals-card { width: 220px; border: 1px solid ${line}; border-radius: 10px; overflow: hidden; margin-top: 16px; }
 .tot-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; font-size: 12.5px; border-bottom: 1px solid ${line}; color: ${gray}; }
-.tot-row.is-total { background: ${darkBar}; color: #fff; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; }
+.tot-row.is-total { color: ${ink}; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; border-top: 2px solid ${ink}; }
 
 /* ── LETRAS ── */
 .letras-wrap { padding: 16px 32px; }
@@ -15368,10 +15534,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 
 /* ── PIE ── */
 .footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; }
-.footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
 .footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
-.kj { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -.5px; color: #888; }
-.kj-j { color: ${accent}; }
 
 @media print {
   body { background: #fff; }
@@ -15381,20 +15544,21 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 <div class="page">
 
   <!-- CABECERA ESTÁNDAR -->
-  ${kjDocHeader({ logo, bizName, docType:'Cotización', docNum:`N° ${recNum}`, metaLines:[`Emitida el ${today}`, `Válida hasta ${validTxt}`], accent })}
+  ${kjDocHeader({ logo, bizName, docType:'Cotización', docNum:`N° ${recNum}`, accent })}
 
   <!-- NOSOTROS / CLIENTE — 2 columnas -->
   <div class="two-col">
-    <!-- Columna izquierda: datos del emisor -->
+    <!-- Columna izquierda: datos del emisor (solo los datos, sin etiquetas de campo) -->
     <div class="col-us">
-      <div class="info-row"><span class="info-lbl">Negocio</span><span class="info-val big">${bizName}</span></div>
-      ${bizRuc ? `<div class="info-row"><span class="info-lbl">RUC</span><span class="info-val">${bizRuc}</span></div>` : ''}
-      ${bizAddr ? `<div class="info-row"><span class="info-lbl">Dirección</span><span class="info-val">${bizAddr}</span></div>` : ''}
-      ${bizPhone ? `<div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${bizPhone}</span></div>` : ''}
+      <div class="info-val big" style="margin-bottom:5px;">${bizName}</div>
+      ${bizRuc ? `<div class="info-val" style="margin-bottom:5px;">${bizRuc}</div>` : ''}
+      ${bizAddr ? `<div class="info-val" style="margin-bottom:5px;">${bizAddr}</div>` : ''}
+      ${bizPhone ? `<div class="info-val" style="margin-bottom:5px;">${bizPhone}</div>` : ''}
     </div>
-    <!-- Columna derecha: datos del cliente -->
+    <!-- Columna derecha: datos del cliente (fecha de emisión primero, igual que Susii) -->
     <div class="col-cli">
-
+      <div class="info-row"><span class="info-lbl">Emitida el</span><span class="info-val">${today}</span></div>
+      <div class="info-row"><span class="info-lbl">Válida hasta</span><span class="info-val">${validTxt}</span></div>
       <div class="info-row"><span class="info-lbl">Cliente</span><span class="info-val big">${qt.client||'Sin nombre'}</span></div>
       ${qt.doc ? `<div class="info-row"><span class="info-lbl">DNI / RUC</span><span class="info-val">${qt.doc}</span></div>` : ''}
       ${qt.phone ? `<div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${qt.phone}</span></div>` : ''}
@@ -15407,6 +15571,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   <table>
     <thead><tr>
       <th>Cant.</th>
+      <th>Unidad</th>
       <th style="text-align:left;">Descripción</th>
       <th>P.U.</th>
       <th>Total</th>
@@ -15435,8 +15600,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 
   <!-- PIE -->
   <div class="footer">
-    <div class="footer-thanks">¡Gracias por su preferencia!</div>
-    <div class="footer-brand">Generado con <span class="kj">Ka<span class="kj-j">j</span>ita</span></div>
+    <div class="footer-brand">Generado con kajita.app</div>
   </div>
 
 </div>
@@ -15462,7 +15626,6 @@ function generateComprobantePDF(id) {
   const logo = localStorage.getItem('kajita_logo') || '';
 
   const ink = '#18181b', gray = '#71717a', line = '#d4d4d8', soft = '#f4f4f5', accent = getBrandColor();
-  const darkBar = '#52525b';
 
   const today = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'long', year:'numeric' });
   const fechaEmision = new Date(c.fecha+'T12:00:00').toLocaleDateString('es-PE', { day:'numeric', month:'long', year:'numeric' });
@@ -15484,14 +15647,15 @@ function generateComprobantePDF(id) {
     const bg = idx%2===0 ? '#fff' : soft;
     return `<tr style="background:${bg};">
       <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:12.5px;color:${gray};">${qty}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:center;font-size:11px;color:${gray};">${i.unit || 'NIU'}</td>
       <td style="padding:7px 10px;border-bottom:1px solid ${line};font-size:12.5px;">${i.desc||'—'}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">S/${unitP.toFixed(2)}</td>
-      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">S/${lineTotal.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;color:${gray};white-space:nowrap;">${unitP.toFixed(2)}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid ${line};text-align:right;font-size:12.5px;font-weight:700;white-space:nowrap;">${lineTotal.toFixed(2)}</td>
     </tr>`;
   }).join('');
 
   const origenTxt = c.origen && c.origen.tipo
-    ? `<div class="info-row"><span class="info-lbl">Origen</span><span class="info-val">${c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : FACT_TIPO_LABEL[c.origen.tipo]}</span></div>`
+    ? `<div class="info-row"><span class="info-lbl">Origen</span><span class="info-val">${c.origen.tipo === 'pedido' ? 'Pedido' : c.origen.tipo === 'cotizacion' ? 'Cotización' : c.origen.tipo === 'entry' ? 'Movimiento (Registrar)' : FACT_TIPO_LABEL[c.origen.tipo]}</span></div>`
     : '';
 
   const footerTxt = ((c.pieDePagina != null ? c.pieDePagina : biz.footerText) || '').split('\n').filter(Boolean).join('<br>');
@@ -15513,14 +15677,15 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12.5px; colo
 .info-val { font-size: 12px; color: ${ink}; font-weight: 500; line-height: 1.4; }
 .info-val.big { font-size: 13.5px; font-weight: 700; }
 table { width: 100%; border-collapse: collapse; }
-thead tr { background: ${darkBar}; }
-thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.9); }
+thead tr { border-bottom: 2px solid ${ink}; }
+thead th { padding: 8px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: ${ink}; }
 thead th:first-child { text-align: center; width: 52px; }
-thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
+thead th:nth-child(2) { text-align: center; width: 56px; }
+thead th:nth-child(4), thead th:last-child { text-align: right; width: 90px; }
 .totals-wrap { padding: 0 32px 4px; display: flex; justify-content: flex-end; }
 .totals-card { width: 220px; border: 1px solid ${line}; border-radius: 10px; overflow: hidden; margin-top: 16px; }
 .tot-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; font-size: 12.5px; border-bottom: 1px solid ${line}; color: ${gray}; }
-.tot-row.is-total { background: ${darkBar}; color: #fff; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; }
+.tot-row.is-total { color: ${ink}; font-family: 'Fraunces', serif; font-weight: 800; font-size: 15px; border-bottom: none; border-top: 2px solid ${ink}; }
 .letras-wrap { padding: 16px 32px; }
 .letras-card { background: ${soft}; border-radius: 10px; border: 1px solid ${line}; padding: 10px 14px; }
 .letras-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 5px; }
@@ -15530,10 +15695,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 .obs-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: ${gray}; margin-bottom: 6px; }
 .obs-val { font-size: 11.5px; color: ${gray}; line-height: 1.9; }
 .footer { text-align: center; padding: 20px 32px 24px; border-top: 1px solid ${line}; }
-.footer-thanks { font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-style: italic; color: ${gray}; }
 .footer-brand { margin-top: 8px; font-size: 10px; color: #aaa; letter-spacing: .04em; }
-.kj { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -.5px; color: #888; }
-.kj-j { color: ${accent}; }
 .local-badge { text-align: center; padding: 8px; font-size: 9.5px; letter-spacing: .05em; color: ${gray}; background: ${soft}; border-bottom: 1px solid ${line}; }
 @media print { body { background: #fff; } .page { border-radius: 0; box-shadow: none; margin: 0; } }
 </style></head><body>
@@ -15541,19 +15703,21 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
 
   ${c.estado === 'registrado' ? '<div class="local-badge">Documento registrado en KAJITA — pendiente de envío a SUNAT</div>' : ''}
 
-  ${kjDocHeader({ logo, bizName, docType: FACT_DOC_TITLE[c.tipo], docNum: c.numeroFormato, metaLines:[`Emitido el ${fechaEmision}`], accent })}
+  ${kjDocHeader({ logo, bizName, docType: FACT_DOC_TITLE[c.tipo], docNum: c.numeroFormato, accent })}
 
   <div class="two-col">
     <div class="col-us">
-      <div class="info-row"><span class="info-lbl">Negocio</span><span class="info-val big">${bizName}</span></div>
-      ${bizRuc ? `<div class="info-row"><span class="info-lbl">RUC</span><span class="info-val">${bizRuc}</span></div>` : ''}
-      ${bizAddr ? `<div class="info-row"><span class="info-lbl">Dirección</span><span class="info-val">${bizAddr}</span></div>` : ''}
-      ${bizPhone ? `<div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${bizPhone}</span></div>` : ''}
+      <div class="info-val big" style="margin-bottom:5px;">${bizName}</div>
+      ${bizRuc ? `<div class="info-val" style="margin-bottom:5px;">${bizRuc}</div>` : ''}
+      ${bizAddr ? `<div class="info-val" style="margin-bottom:5px;">${bizAddr}</div>` : ''}
+      ${bizPhone ? `<div class="info-val" style="margin-bottom:5px;">${bizPhone}</div>` : ''}
     </div>
     <div class="col-cli">
+      <div class="info-row"><span class="info-lbl">Emitido el</span><span class="info-val">${fechaEmision}</span></div>
       <div class="info-row"><span class="info-lbl">Cliente</span><span class="info-val big">${c.client||'Sin nombre'}</span></div>
       ${c.doc ? `<div class="info-row"><span class="info-lbl">RUC / DNI</span><span class="info-val">${c.doc}</span></div>` : ''}
       ${c.phone ? `<div class="info-row"><span class="info-lbl">Teléfono</span><span class="info-val">${c.phone}</span></div>` : ''}
+      ${c.address ? `<div class="info-row"><span class="info-lbl">Dirección</span><span class="info-val">${c.address}</span></div>` : ''}
       ${origenTxt}
     </div>
   </div>
@@ -15561,6 +15725,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   <table>
     <thead><tr>
       <th>Cant.</th>
+      <th>Unidad</th>
       <th style="text-align:left;">Descripción</th>
       <th>P.U.</th>
       <th>Total</th>
@@ -15586,8 +15751,7 @@ thead th:nth-child(3), thead th:last-child { text-align: right; width: 90px; }
   ${footerTxt ? `<div class="obs-wrap"><div class="obs-card"><div class="obs-lbl">Cuentas / Observaciones</div><div class="obs-val">${footerTxt}</div></div></div>` : ''}
 
   <div class="footer">
-    <div class="footer-thanks">¡Gracias por su preferencia!</div>
-    <div class="footer-brand">Generado con <span class="kj">Ka<span class="kj-j">j</span>ita</span></div>
+    <div class="footer-brand">Generado con kajita.app</div>
   </div>
 
 </div>
