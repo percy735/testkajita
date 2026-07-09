@@ -63,6 +63,114 @@
   --shadow: 0 12px 40px rgba(0,0,0,0.4), 0 2px 10px rgba(0,0,0,0.2);
 }
 
+/* ===== Modo claro ("día") — solo redefine color, nunca layout/spacing/radios/fuentes ===== */
+:root[data-theme="light"] {
+  --k-bg:          #f7f6f0;
+  --k-bg-2:        #f0efe6;
+  --k-side:        #ffffff;
+  --k-panel:       #ffffff;
+  --k-panel-2:     #f4f3ec;
+  --k-inset:       #ece9dc;
+
+  --k-line:        rgba(0,0,0,.09);
+  --k-line-2:      rgba(0,0,0,.055);
+
+  --k-text:        #1c1d16;
+  --k-text-2:      #55564a;
+  --k-text-3:      #8b8c7d;
+
+  --k-accent:      #7ea312;
+  --k-accent-2:    #6b8f0d;
+  --k-accent-ink:  #f8ffe8;
+  --k-accent-soft: rgba(126,163,18,.10);
+  --k-accent-line: rgba(126,163,18,.28);
+  --k-accent-hover:#8fb81c;
+  --k-accent-l:    rgba(126,163,18,.12);
+
+  --k-credit:      #b45309;
+  --k-credit-soft: rgba(180,83,9,.09);
+  --k-credit-line: rgba(180,83,9,.24);
+  --k-credit-l:    rgba(180,83,9,.12);
+
+  --k-exp:         #c2372b;
+  --k-exp-soft:    rgba(194,55,43,.08);
+  --k-exp-line:    rgba(194,55,43,.24);
+  --k-expense:     #c2372b;
+  --k-expense-l:   rgba(194,55,43,.12);
+
+  --k-yape:        #7c5cd6;
+  --k-plin:        #0284c7;
+  --k-blue:        #0284c7;
+  --k-blue-l:      rgba(2,132,199,.12);
+  --k-purple:      #7c5cd6;
+  --k-purple-l:    rgba(124,92,214,.12);
+
+  --k-cash:        #6b8f0d;
+  --k-cash-l:      rgba(107,143,13,.12);
+  --k-order:       #0e8f80;
+  --k-order-l:     rgba(14,143,128,.12);
+
+  --shadow: 0 12px 40px rgba(0,0,0,.10), 0 2px 10px rgba(0,0,0,.06);
+}
+
+/* Puntos con color fijo (no variable) detectados durante el barrido de modo claro —
+   overrides puntuales, nunca se tocó la regla original. */
+[data-theme="light"] .notes-col,
+[data-theme="light"] .nc-toggle-tab { background: #fdfcf5; }
+[data-theme="light"] .nc-emoji-picker { background: #ffffff; }
+[data-theme="light"] .kj-cal { background: #ffffff; box-shadow: 0 12px 32px rgba(0,0,0,.15); }
+[data-theme="light"] .cal-modal { background: #ffffff; border-color: rgba(0,0,0,.1); box-shadow: 0 32px 80px rgba(0,0,0,.18); }
+[data-theme="light"] .emoji-picker { background: #ffffff; border-color: rgba(0,0,0,.12); box-shadow: 0 12px 36px rgba(0,0,0,.15); }
+[data-theme="light"] #view-registrar input:focus { background: #fbfaf3; }
+[data-theme="light"] .sb-item:hover { background: rgba(0,0,0,.045); }
+[data-theme="light"] .ord-delivery-btn:hover { background: rgba(0,0,0,.045); }
+[data-theme="light"] .ord-delivery-btn.active { background: var(--k-accent-l); border-color: var(--k-accent-line); }
+[data-theme="light"] .input-with-toggle { background: rgba(0,0,0,.035); border-color: rgba(0,0,0,.09); }
+[data-theme="light"] .input-with-toggle:focus-within { background: rgba(0,0,0,.05); }
+[data-theme="light"] #view-registrar .field-toggle-btn { background: rgba(0,0,0,.04); }
+/* Filas de listas (Clientes/Proveedores/Inventario/Créditos/Pedidos/Cotizaciones/Facturación) —
+   franja intercalada para diferenciar una fila de otra, igual que en modo oscuro. */
+[data-theme="light"] .pl-head-row { background: rgba(0,0,0,.03); }
+[data-theme="light"] .pl-row { border-bottom-color: rgba(0,0,0,.06); }
+[data-theme="light"] .pl-row:nth-child(even) { background: rgba(0,0,0,.03); }
+[data-theme="light"] .pl-row:hover { background: rgba(0,0,0,.055) !important; }
+/* Barras "Pendientes de cobro/pago": en vez del degradado (pensado para fondo oscuro, donde el final
+   del degradado --k-panel es oscuro y armoniza; en claro --k-panel es blanco puro y el degradado se ve
+   parchado), un tinte plano y sutil — más limpio sobre fondo claro. La regla de #view-registrar tiene
+   más especificidad (usa ID) que un simple .reminders-bar, así que el override apunta ahí también. */
+[data-theme="light"] .reminders-bar,
+[data-theme="light"] #view-registrar .reminders-bar { background-image: none; background-color: rgba(251,191,36,.09); }
+[data-theme="light"] .debts-bar,
+[data-theme="light"] #view-registrar .debts-bar { background-image: none; background-color: rgba(255,107,107,.08); }
+/* Pantalla de login: se queda con su branding oscuro fijo pase lo que pase con el tema de la app
+   (decisión original del plan) — re-declarar las variables de color aquí las "bloquea" solo dentro
+   de .auth-screen, sin tocar el resto de la cascada. Sin esto, el logo (texto blanco fijo en HTML)
+   quedaba invisible sobre la tarjeta blanca del modo claro. */
+[data-theme="light"] .auth-screen {
+  --k-bg: #0c0d09; --k-bg-2: #07070420; --k-side: #08080524;
+  --k-panel: #14150e; --k-panel-2: #181a10; --k-inset: #0f100a;
+  --k-line: rgba(255,255,255,.075); --k-line-2: rgba(255,255,255,.045);
+  --k-text: #edeee3; --k-text-2: #a8aa9b; --k-text-3: #6b6d5e;
+}
+/* Tarjetas de Registrar (Balance/Egresos/Por cobrar/Caja física/Banca móvil, formulario, sub-cards):
+   en vez del degradado con resplandor lima (pensado para verse "ambiental" sobre fondo oscuro), un
+   fondo plano — igual de limpio que el resto de las pantallas en modo claro. */
+[data-theme="light"] #view-registrar .form-wrap,
+[data-theme="light"] #view-registrar .stat-card,
+[data-theme="light"] #view-registrar .stat-card.s-bal,
+[data-theme="light"] #view-registrar .sub-card.s-cash,
+[data-theme="light"] #view-registrar .sub-card.s-dig {
+  background-image: none;
+  background-color: var(--k-panel);
+}
+/* Esas mismas tarjetas tenían una sombra pesada (pensada para "flotar" sobre fondo oscuro) que en
+   claro se veía como una mancha oscura detrás — se suaviza a algo apenas perceptible. */
+[data-theme="light"] #view-registrar .form-wrap,
+[data-theme="light"] #view-registrar .stat-card,
+[data-theme="light"] #view-registrar .stat-card.s-bal {
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { 
   background: var(--k-bg); 
@@ -4778,6 +4886,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 </style>
 </head>
 <body>
+<script>(function(){try{if(localStorage.getItem('kajita_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 <!-- notas post-it con alfiler -->
 <div id="kjNotesLayer" style="position:fixed;inset:0;pointer-events:none;z-index:500;overflow:hidden;"></div>
 <div class="kj-toast" id="kjToast"></div>
@@ -4790,7 +4899,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   <div class="auth-box">
     <div class="auth-logo"><div style="font-family:'Fraunces',serif;font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;color:#fff;">Ka<span style="color:#C4F042;">j</span>ita</div></div>
     <div class="auth-subtitle">Tu caja diaria</div>
-    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.191</div>
+    <div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:-8px;margin-bottom:4px;">v14.8.198</div>
     
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
@@ -5018,7 +5127,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
   </aside>
 
   <!-- ══ MAIN CONTENT ══ -->
-  <div class="main-content">
+  <div class="main-content nc-collapsed">
 
     <!-- Overlay para cerrar el drawer en mobile -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
@@ -5043,7 +5152,7 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
     </div>
 
     <!-- Version tag -->
-    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.191</div>
+    <div style="position:fixed;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;color:rgba(196,240,66,0.55);z-index:100;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,0.6);">v14.8.198</div>
 
     <div class="main-body-row">
     <div class="content-body">
@@ -5436,9 +5545,9 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
 
     <!-- ══ NOTAS COLUMNA DERECHA (desktop ≥1100px) ══ -->
     <!-- Toggle tab (always visible, outside the panel) -->
-    <div class="nc-toggle-tab" id="ncToggleTab" onclick="ncTogglePanel()" title="Mostrar/ocultar notas">❯</div>
+    <div class="nc-toggle-tab" id="ncToggleTab" onclick="ncTogglePanel()" title="Mostrar/ocultar notas" style="right:0;">❮</div>
 
-    <div class="notes-col" id="notesCol">
+    <div class="notes-col nc-hidden" id="notesCol">
       <div class="nc-header">
         <div class="nc-title">Notas</div>
         <div style="display:flex;gap:4px;align-items:center;">
@@ -6074,6 +6183,10 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
             <label>RUC / DNI</label>
             <div class="fact-nota-ref-box" id="factDetailDocBox">—</div>
           </div>
+          <div class="fld" id="factDetailAddressWrap" style="display:none;">
+            <label>Dirección</label>
+            <div class="fact-nota-ref-box" id="factDetailAddressBox">—</div>
+          </div>
 
           <div class="fld">
             <label>Orden de compra</label>
@@ -6240,6 +6353,18 @@ input:focus { border-color: var(--k-accent); box-shadow: 0 0 0 3px var(--k-accen
               <button type="button" class="cfg-brand-swatch" data-color="#9d174d" onclick="cfgPickBrand('#9d174d')" title="Vino" style="width:26px;height:26px;border-radius:6px;border:2px solid transparent;background:#9d174d;cursor:pointer;"></button>
               <button type="button" class="cfg-brand-swatch" data-color="#c2410c" onclick="cfgPickBrand('#c2410c')" title="Naranja" style="width:26px;height:26px;border-radius:6px;border:2px solid transparent;background:#c2410c;cursor:pointer;"></button>
               <button type="button" class="cfg-brand-swatch" data-color="#334155" onclick="cfgPickBrand('#334155')" title="Pizarra" style="width:26px;height:26px;border-radius:6px;border:2px solid transparent;background:#334155;cursor:pointer;"></button>
+            </div>
+          </div>
+
+          <div class="cfg-divider"></div>
+
+          <!-- Apariencia -->
+          <div class="cfg-section">
+            <div class="cfg-section-lbl">Apariencia</div>
+            <div style="font-size:12px;color:var(--k-text-3);margin-bottom:10px;line-height:1.6;">Elige cómo se ve KAJITA. El modo oscuro es el predeterminado.</div>
+            <div style="display:flex;gap:8px;">
+              <button type="button" id="cfgThemeDarkBtn" onclick="applyTheme('dark')" style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--k-line);background:var(--k-inset);color:var(--k-text);cursor:pointer;font-size:13px;font-weight:600;">🌙 Oscuro</button>
+              <button type="button" id="cfgThemeLightBtn" onclick="applyTheme('light')" style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--k-line);background:var(--k-inset);color:var(--k-text-2);cursor:pointer;font-size:13px;font-weight:600;">☀️ Claro</button>
             </div>
           </div>
 
@@ -7998,6 +8123,9 @@ function openSettings() {
   const brandInp = document.getElementById('cfgBrandColor');
   if (brandInp) { brandInp.value = getBrandColor(); cfgSyncBrandPreset(); }
 
+  // Reflejar el tema actual en los botones Oscuro/Claro
+  _cfgSyncThemeButtons();
+
   renderUnitChips();
   document.getElementById('cfgOverlay').classList.add('open');
   setTimeout(() => document.getElementById('cfgBizName').focus(), 350);
@@ -8051,6 +8179,32 @@ function cfgPickBrand(color) {
   cfgSyncBrandPreset();
 }
 function cfgResetBrandColor() { cfgPickBrand('#334155'); }
+
+// Modo claro/oscuro — solo cambia el atributo data-theme (todo el color de la app cuelga de las
+// variables CSS --k-*, ver el bloque :root[data-theme="light"]). Oscuro sigue siendo el default:
+// ausencia de kajita_theme en localStorage = oscuro, igual que siempre.
+function _cfgSetThemeBtnActive(btn, active) {
+  if (!btn) return;
+  btn.style.background   = active ? 'var(--k-accent-l)'    : 'var(--k-inset)';
+  btn.style.borderColor   = active ? 'var(--k-accent-line)' : 'var(--k-line)';
+  btn.style.color         = active ? 'var(--k-accent)'      : 'var(--k-text-2)';
+}
+function applyTheme(mode) {
+  if (mode === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  else document.documentElement.removeAttribute('data-theme');
+  localStorage.setItem('kajita_theme', mode);
+  _cfgSetThemeBtnActive(document.getElementById('cfgThemeDarkBtn'), mode === 'dark');
+  _cfgSetThemeBtnActive(document.getElementById('cfgThemeLightBtn'), mode === 'light');
+}
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  applyTheme(isLight ? 'dark' : 'light');
+}
+function _cfgSyncThemeButtons() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  _cfgSetThemeBtnActive(document.getElementById('cfgThemeDarkBtn'), !isLight);
+  _cfgSetThemeBtnActive(document.getElementById('cfgThemeLightBtn'), isLight);
+}
 
 function cfgSelectRubro(btn, rubro) {
   document.querySelectorAll('.cfg-rubro-btn').forEach(b => b.classList.remove('selected'));
@@ -12942,7 +13096,9 @@ function escNC(t) {
 }
 
 /* ── Toggle panel visibility ── */
-let _ncPanelHidden = false;
+/* Oculto por defecto (la pestaña "❮" siempre queda visible en el borde para abrirlo cuando se quiera) —
+   el HTML inicial de #notesCol/#ncToggleTab/.main-content ya arranca en este mismo estado "colapsado". */
+let _ncPanelHidden = true;
 function ncTogglePanel() {
   _ncPanelHidden = !_ncPanelHidden;
   const col = document.getElementById('notesCol');
@@ -13608,6 +13764,7 @@ function openFacturaNewClient() {
   _factPendingClientCallback = (c) => {
     document.getElementById('pfFactClient').value = c.name;
     document.getElementById('pfFactDoc').value = c.doc || '';
+    document.getElementById('pfFactAddress').value = c.address || '';
   };
   openKjModal('cli', null);
 }
@@ -14298,6 +14455,8 @@ function verDetalleFactura(id) {
   document.getElementById('factDetailTitle').textContent = `Documento ${c.numeroFormato} — ${FACT_TIPO_LABEL[c.tipo] || c.tipo}`;
   document.getElementById('factDetailClientBox').textContent = c.client || '—';
   document.getElementById('factDetailDocBox').textContent = c.doc || '—';
+  document.getElementById('factDetailAddressWrap').style.display = c.address ? 'flex' : 'none';
+  document.getElementById('factDetailAddressBox').textContent = c.address || '—';
   document.getElementById('pfDetailOrdenCompra').value = c.ordenCompra || '';
   document.getElementById('pfDetailFecha').value = c.fecha || _isoToday();
   const origenWrap = document.getElementById('factDetailOrigenWrap');
@@ -14385,7 +14544,7 @@ function saveFacturaDetail() {
 function clonarFactura() {
   const c = _comprobantes.find(x => x.id === _factDetailId);
   if (!c) return;
-  const nuevo = _crearComprobante(c.tipo, c.client, c.doc, c.phone, c.items.map(i => ({ ...i })), c.total, { tipo: null, id: null }, { pay: c.pay, fecha: _isoToday() });
+  const nuevo = _crearComprobante(c.tipo, c.client, c.doc, c.phone, c.items.map(i => ({ ...i })), c.total, { tipo: null, id: null }, { pay: c.pay, fecha: _isoToday(), address: c.address });
   closeFacturaDetailScreen();
   renderFacturaPanel();
   toast(`Comprobante clonado: ${nuevo.numeroFormato}`);
